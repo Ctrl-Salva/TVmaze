@@ -36,6 +36,8 @@ public class Serie {
 
   private List<Episodio> episodios = new ArrayList<>();
 
+  private Set<Participacao> participacaos = new HashSet<>();
+
   public Serie() {
   }
 
@@ -125,5 +127,13 @@ public class Serie {
 
   public void removerEpisodio(Episodio episodio) {
     episodios.remove(episodio);
+  }
+
+  public Set<Participacao> getParticipacaos() {
+    return participacaos;
+  }
+
+  public void adicionarParticipacaos(Participacao participacao) {
+    participacaos.add(participacao);
   }
 }
