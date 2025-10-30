@@ -1,49 +1,58 @@
 package com.example.tvmaze.models;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-import org.springframework.data.annotation.Id;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
+@Entity
 public class Serie {
 
   @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long serieId;
+
+  private Long externoId;
 
   private String nome;
 
   private String linguagem;
 
-  private String status;
-
   private String sinopse;
 
-  private Float media;
+  private Double nota;
 
-  private LocalDateTime dataEstreia;
+  private LocalDate dataEstreia;
 
-  private LocalDateTime dataTermino;
+  private LocalDate dataTermino;
 
-  public Serie(Long serieId, String nome, String linguagem, String status, String sinopse, Float media,
-      LocalDateTime dataEstreia, LocalDateTime dataTermino) {
-    this.serieId = serieId;
-    this.nome = nome;
-    this.status = status;
-    this.sinopse = sinopse;
-    this.media = media;
-    this.dataEstreia = dataEstreia;
-    this.dataTermino = dataTermino;
-  }
+  private Set<Genero> generos = new HashSet<>();
+
+  private List<Episodio> episodios = new ArrayList<>();
 
   public Serie() {
-
   }
 
-  public long getSerieId() {
+  public Long getSerieId() {
     return serieId;
   }
 
-  public void setSerieId(long serieId) {
+  public void setSerieId(Long serieId) {
     this.serieId = serieId;
+  }
+
+  public Long getExternoId() {
+    return externoId;
+  }
+
+  public void setExternoId(Long externoId) {
+    this.externoId = externoId;
   }
 
   public String getNome() {
@@ -62,14 +71,6 @@ public class Serie {
     this.linguagem = linguagem;
   }
 
-  public String getStatus() {
-    return status;
-  }
-
-  public void setStatus(String status) {
-    this.status = status;
-  }
-
   public String getSinopse() {
     return sinopse;
   }
@@ -78,27 +79,51 @@ public class Serie {
     this.sinopse = sinopse;
   }
 
-  public float getMedia() {
-    return media;
+  public Double getNota() {
+    return nota;
   }
 
-  public void setMedia(float media) {
-    this.media = media;
+  public void setNota(Double nota) {
+    this.nota = nota;
   }
 
-  public LocalDateTime getDataEstreia() {
+  public LocalDate getDataEstreia() {
     return dataEstreia;
   }
 
-  public void setDataEstreia(LocalDateTime dataEstreia) {
+  public void setDataEstreia(LocalDate dataEstreia) {
     this.dataEstreia = dataEstreia;
   }
 
-  public LocalDateTime getDataTermino() {
+  public LocalDate getDataTermino() {
     return dataTermino;
   }
 
-  public void setDataTermino(LocalDateTime dataTermino) {
+  public void setDataTermino(LocalDate dataTermino) {
     this.dataTermino = dataTermino;
+  }
+
+  public Set<Genero> getGeneros() {
+    return generos;
+  }
+
+  public void adicionarGenero(Genero genero) {
+    generos.add(genero);
+  }
+
+  public void removerGenero(Genero genero) {
+    generos.remove(genero);
+  }
+
+  public List<Episodio> getEpisodios() {
+    return episodios;
+  }
+
+  public void adicionarEpisodio(Episodio episodio) {
+    episodios.add(episodio);
+  }
+
+  public void removerEpisodio(Episodio episodio) {
+    episodios.remove(episodio);
   }
 }
