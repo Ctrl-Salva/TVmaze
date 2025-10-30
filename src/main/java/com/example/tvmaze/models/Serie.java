@@ -6,54 +6,52 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Serie {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long serieId;
+  private Integer serieId;
 
-  private Long externoId;
-
+  private Integer externoId;
   private String nome;
-
   private String linguagem;
-
   private String sinopse;
-
   private Double nota;
-
   private LocalDate dataEstreia;
-
   private LocalDate dataTermino;
 
+  @ManyToMany
+  @JoinTable(
+      name = "serie_genero",
+      joinColumns = @JoinColumn(name = "serie_id"),
+      inverseJoinColumns = @JoinColumn(name = "genero_id")
+  )
   private Set<Genero> generos = new HashSet<>();
 
+  @OneToMany(mappedBy = "serie", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Episodio> episodios = new ArrayList<>();
 
-  private Set<Participacao> participacaos = new HashSet<>();
+  @OneToMany(mappedBy = "serie", cascade = CascadeType.ALL, orphanRemoval = true)
+  private Set<Participacao> participacoes = new HashSet<>();
 
-  public Serie() {
-  }
+  public Serie() {}
 
-  public Long getSerieId() {
+  public Integer getSerieId() {
     return serieId;
   }
 
-  public void setSerieId(Long serieId) {
+  public void setSerieId(Integer serieId) {
     this.serieId = serieId;
   }
 
-  public Long getExternoId() {
+  public Integer getExternoId() {
     return externoId;
   }
 
-  public void setExternoId(Long externoId) {
+  public void setExternoId(Integer externoId) {
     this.externoId = externoId;
   }
 
@@ -123,17 +121,25 @@ public class Serie {
 
   public void adicionarEpisodio(Episodio episodio) {
     episodios.add(episodio);
+    episodio.setSerie(this);
   }
 
   public void removerEpisodio(Episodio episodio) {
     episodios.remove(episodio);
+    episodio.setSerie(null);
   }
 
-  public Set<Participacao> getParticipacaos() {
-    return participacaos;
+  public Set<Participacao> getParticipacoes() {
+    return participacoes;
   }
 
-  public void adicionarParticipacaos(Participacao participacao) {
-    participacaos.add(participacao);
+  public void adicionarParticipacao(Participacao participacao) {
+    participacoes.add(participacao);
+    participacao.setSerie(this);
+  }
+
+  public void removerParticipacao(Participacao participacao) {
+    participacoes.remove(participacao);
+    participacao.setSerie(null);
   }
 }

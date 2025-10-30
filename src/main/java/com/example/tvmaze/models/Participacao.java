@@ -1,27 +1,36 @@
 package com.example.tvmaze.models;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
+@Entity
 public class Participacao {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long participacaoId;
+  private Integer participacaoId;
 
   private String personagem;
 
+  @ManyToOne  
+  @JoinColumn(name = "pessoa_id")
   private Pessoa pessoa;
 
-  public Participacao() {
-  }
+  @ManyToOne 
+  @JoinColumn(name = "serie_id")
+  private Serie serie;
 
-  public Long getParticipacaoId() {
+  public Participacao() {}
+
+  public Integer getParticipacaoId() {
     return participacaoId;
   }
 
-  public void setParticipacaoId(Long participacaoId) {
+  public void setParticipacaoId(Integer participacaoId) {
     this.participacaoId = participacaoId;
   }
 
@@ -41,4 +50,11 @@ public class Participacao {
     this.pessoa = pessoa;
   }
 
+  public Serie getSerie() {
+    return serie;
+  }
+
+  public void setSerie(Serie serie) {
+    this.serie = serie;
+  }
 }

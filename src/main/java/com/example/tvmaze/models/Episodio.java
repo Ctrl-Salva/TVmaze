@@ -1,11 +1,12 @@
 package com.example.tvmaze.models;
 
 import java.time.LocalDate;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
 
 @Entity
 public class Episodio {
@@ -15,17 +16,16 @@ public class Episodio {
   private Integer episodioId;
 
   private String nome;
-
   private Integer temporada;
-
   private Integer numero;
-
   private LocalDate dataExibicao;
-
   private Integer duracao;
 
-  public Episodio() {
-  }
+  @ManyToOne                 // ✅ Correto — vários episódios pertencem a uma série
+  @JoinColumn(name = "serie_id")  // ✅ Cria a FK no banco
+  private Serie serie;
+
+  public Episodio() {}
 
   public Integer getEpisodioId() {
     return episodioId;
@@ -73,5 +73,13 @@ public class Episodio {
 
   public void setDuracao(Integer duracao) {
     this.duracao = duracao;
+  }
+
+  public Serie getSerie() {
+    return serie;
+  }
+
+  public void setSerie(Serie serie) {
+    this.serie = serie;
   }
 }
