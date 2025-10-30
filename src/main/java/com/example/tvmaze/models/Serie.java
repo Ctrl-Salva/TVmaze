@@ -1,9 +1,7 @@
 package com.example.tvmaze.models;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.*;
@@ -30,12 +28,6 @@ public class Serie {
       inverseJoinColumns = @JoinColumn(name = "genero_id")
   )
   private Set<Genero> generos = new HashSet<>();
-
-  @OneToMany(mappedBy = "serie", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<Episodio> episodios = new ArrayList<>();
-
-  @OneToMany(mappedBy = "serie", cascade = CascadeType.ALL, orphanRemoval = true)
-  private Set<Participacao> participacoes = new HashSet<>();
 
   public Serie() {}
 
@@ -107,39 +99,11 @@ public class Serie {
     return generos;
   }
 
-  public void adicionarGenero(Genero genero) {
-    generos.add(genero);
-  }
+  public void adicionarGeneros(Set<Genero> generos) {
+    this.generos.addAll(generos);
+}
 
   public void removerGenero(Genero genero) {
     generos.remove(genero);
-  }
-
-  public List<Episodio> getEpisodios() {
-    return episodios;
-  }
-
-  public void adicionarEpisodio(Episodio episodio) {
-    episodios.add(episodio);
-    episodio.setSerie(this);
-  }
-
-  public void removerEpisodio(Episodio episodio) {
-    episodios.remove(episodio);
-    episodio.setSerie(null);
-  }
-
-  public Set<Participacao> getParticipacoes() {
-    return participacoes;
-  }
-
-  public void adicionarParticipacao(Participacao participacao) {
-    participacoes.add(participacao);
-    participacao.setSerie(this);
-  }
-
-  public void removerParticipacao(Participacao participacao) {
-    participacoes.remove(participacao);
-    participacao.setSerie(null);
   }
 }

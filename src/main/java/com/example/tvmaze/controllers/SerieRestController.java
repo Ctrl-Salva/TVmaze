@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.tvmaze.dto.SerieRespostaDTO;
+import com.example.tvmaze.dto.SerieCriacaoDTO;
 import com.example.tvmaze.models.Serie;
 import com.example.tvmaze.services.SerieService;
 
@@ -23,7 +25,7 @@ public class SerieRestController {
     SerieService serieService;
 
     @GetMapping
-    public List<Serie> listar(){
+    public List<SerieRespostaDTO> listar(){
         return serieService.listarSeries();
     }
 
@@ -33,13 +35,13 @@ public class SerieRestController {
     }
 
     @PostMapping
-    public Serie criar(@RequestBody Serie serie){
-        return serieService.salvarSerie(serie);
+    public Serie criar(@RequestBody SerieCriacaoDTO dto){
+        return serieService.salvarSerie(dto);
     }
 
     @PutMapping("/{id}")
-    public Serie atualizar(@PathVariable Integer id, @RequestBody Serie serieAtualizada){
-        return serieService.atualizarSerie(id, serieAtualizada);
+    public Serie atualizar(@PathVariable Integer id, @RequestBody SerieCriacaoDTO dto){
+        return serieService.atualizarSerie(id, dto);
     }
 
     @DeleteMapping("/{id}")
