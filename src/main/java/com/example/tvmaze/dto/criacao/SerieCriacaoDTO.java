@@ -1,7 +1,12 @@
-package com.example.tvmaze.dto;
+package com.example.tvmaze.dto.criacao;
 
 import java.time.LocalDate;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import com.example.tvmaze.models.Genero;
+import com.example.tvmaze.models.Serie;
+import com.example.tvmaze.repositories.GeneroRepository;
 
 public class SerieCriacaoDTO {
     private Integer externoId;
@@ -12,7 +17,30 @@ public class SerieCriacaoDTO {
     private LocalDate dataEstreia;
     private LocalDate dataTermino;
     private Set<String> generos;
-    
+
+    public Serie toEntity(GeneroRepository generoRepository) {
+        Serie serie = new Serie();
+        serie.setExternoId(externoId);
+        serie.setNome(nome);
+        serie.setLinguagem(linguagem);
+        serie.setSinopse(sinopse);
+        serie.setNota(nota);
+        serie.setDataEstreia(dataEstreia);
+        serie.setDataTermino(dataTermino);
+
+        Set<Genero> generosConvertidos = this.generos.stream()
+                .map(nomeGenero -> generoRepository.findByNome(nomeGenero)
+                        .orElseGet(() -> {
+                            Genero novoGenero = new Genero();
+                            novoGenero.setNome(nomeGenero);
+                            return generoRepository.save(novoGenero);
+                        }))
+                .collect(Collectors.toSet());
+
+        serie.adicionarGeneros(generosConvertidos);
+
+        return serie;
+    }
 
     public Integer getExternoId() {
         return externoId;

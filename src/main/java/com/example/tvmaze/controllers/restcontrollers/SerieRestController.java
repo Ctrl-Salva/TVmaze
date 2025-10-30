@@ -1,4 +1,4 @@
-package com.example.tvmaze.controllers;
+package com.example.tvmaze.controllers.restcontrollers;
 
 import java.util.List;
 
@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.tvmaze.dto.SerieRespostaDTO;
-import com.example.tvmaze.dto.SerieCriacaoDTO;
+import com.example.tvmaze.dto.criacao.SerieCriacaoDTO;
+import com.example.tvmaze.dto.respota.SerieRespostaDTO;
 import com.example.tvmaze.models.Serie;
 import com.example.tvmaze.services.SerieService;
 
@@ -30,7 +30,7 @@ public class SerieRestController {
     }
 
     @GetMapping("/{id}")
-    public Serie buscarPorId(@PathVariable Integer id){
+    public SerieRespostaDTO buscarPorId(@PathVariable Integer id){
         return serieService.buscarPorId(id);
     }
 

@@ -3,6 +3,9 @@ package com.example.tvmaze.models;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,12 +19,15 @@ public class Genero {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer generoId;
 
+  @Column(nullable = false, unique = true)
   private String nome;
 
-  @ManyToMany(mappedBy = "generos") // ✅ indica o lado inverso da relação
+  @ManyToMany(mappedBy = "generos")
+  @JsonIgnore
   private Set<Serie> series = new HashSet<>();
 
-  public Genero() {}
+  public Genero() {
+  }
 
   public Integer getGeneroId() {
     return generoId;

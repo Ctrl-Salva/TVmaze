@@ -1,7 +1,11 @@
-package com.example.tvmaze.dto;
+package com.example.tvmaze.dto.respota;
 
 import java.time.LocalDate;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import com.example.tvmaze.models.Genero;
+import com.example.tvmaze.models.Serie;
 
 public class SerieRespostaDTO {
     private Integer serieId;
@@ -12,9 +16,22 @@ public class SerieRespostaDTO {
     private Double nota;
     private LocalDate dataEstreia;
     private LocalDate dataTermino;
-    private Set<String> genres;
-    
+    private Set<String> generos;
 
+    public SerieRespostaDTO(Serie serie) {
+        this.serieId = serie.getSerieId();
+        this.externoId = serie.getExternoId();
+        this.nome = serie.getNome();
+        this.linguagem = serie.getLinguagem();
+        this.sinopse = serie.getSinopse();
+        this.nota = serie.getNota();
+        this.dataEstreia = serie.getDataEstreia();
+        this.dataTermino = serie.getDataTermino();
+        this.generos = serie.getGeneros().stream()
+                .map(Genero::getNome)
+                .collect(Collectors.toSet());
+    }
+    
     public Integer getSerieId() {
         return serieId;
     }
@@ -57,11 +74,11 @@ public class SerieRespostaDTO {
     public void setDataTermino(LocalDate dataTermino) {
         this.dataTermino = dataTermino;
     }
-    public Set<String> getGenres() {
-        return genres;
+    public Set<String> getGeneros() {
+        return generos;
     }
-    public void setGenres(Set<String> genres) {
-        this.genres = genres;
+    public void setGeneros(Set<String> generos) {
+        this.generos = generos;
     }
     public Integer getExternoId() {
         return externoId;
