@@ -1,7 +1,8 @@
-package com.example.tvmaze.dto.criacao;
+package com.example.tvmaze.dtos.serie;
 
 import java.time.LocalDate;
 import java.util.Set;
+
 
 public class SerieCriacaoDTO {
     private Integer externoId;
@@ -12,6 +13,9 @@ public class SerieCriacaoDTO {
     private LocalDate dataEstreia;
     private LocalDate dataTermino;
     private Set<String> generos;
+
+
+    public SerieCriacaoDTO(){}
 
     public Integer getExternoId() {
         return externoId;

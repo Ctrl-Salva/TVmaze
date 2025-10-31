@@ -1,4 +1,4 @@
-package com.example.tvmaze.controllers.webcontrolers;
+package com.example.tvmaze.controllers.web;
 
 
 import java.util.List;
@@ -8,18 +8,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import com.example.tvmaze.dto.resposta.SerieRespostaDTO;
+import com.example.tvmaze.dtos.serie.SerieRespostaDTO;
 import com.example.tvmaze.services.SerieService;
 
 @Controller
-public class IndexWebController {
+public class HomeController {
 
     @Autowired
     private SerieService serieService;
 
     @GetMapping("/")
-    public String index(Model model) {
-        List<SerieRespostaDTO> series = serieService.listarSeries();
+    public String home(Model model) {
+        List<SerieRespostaDTO> series = serieService.listarSeriesOrdenadas();
         /*
          * 
          if (series.size() > 5) {

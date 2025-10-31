@@ -1,4 +1,4 @@
-package com.example.tvmaze.controllers.restcontrollers;
+package com.example.tvmaze.controllers.externo;
 
 
 import java.util.List;
@@ -14,15 +14,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.tvmaze.models.Serie;
-import com.example.tvmaze.services.TvMazeIntegracaoService;
+import com.example.tvmaze.entities.Serie;
+import com.example.tvmaze.integration.tvmaze.TvMazeSerieIntegracaoService;
 
 @RestController
 @RequestMapping("/api/external")
-public class SerieExternaRestController {
+public class TvMazeSerieController {
 
     @Autowired
-    private TvMazeIntegracaoService tvMazeService;
+    private TvMazeSerieIntegracaoService tvMazeService;
 
     @GetMapping("/buscar")
     public ResponseEntity<?> buscarSeriePorNome(@RequestParam String nome) {

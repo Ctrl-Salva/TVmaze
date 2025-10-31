@@ -1,9 +1,8 @@
-package com.example.tvmaze.controllers.restcontrollers;
+package com.example.tvmaze.controllers.rest;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.tvmaze.dto.criacao.SerieCriacaoDTO;
-import com.example.tvmaze.dto.resposta.SerieRespostaDTO;
-import com.example.tvmaze.models.Serie;
+import com.example.tvmaze.dtos.serie.SerieCriacaoDTO;
+import com.example.tvmaze.dtos.serie.SerieRespostaDTO;
+import com.example.tvmaze.entities.Serie;
 import com.example.tvmaze.services.SerieService;
 
 @RestController

@@ -1,10 +1,8 @@
-package com.example.tvmaze.dto.resposta;
+package com.example.tvmaze.dtos.serie;
 
 import java.time.LocalDate;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-import com.example.tvmaze.models.Serie;
 
 public class SerieRespostaDTO {
     private Integer serieId;

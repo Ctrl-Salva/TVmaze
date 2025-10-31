@@ -1,4 +1,4 @@
-package com.example.tvmaze.controllers.restcontrollers;
+package com.example.tvmaze.controllers.rest;
 
 import java.util.List;
 
@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.tvmaze.dto.GeneroDTO;
-import com.example.tvmaze.models.Genero;
+import com.example.tvmaze.dtos.genero.GeneroCriacaoDTO;
+import com.example.tvmaze.dtos.genero.GeneroRespostaDTO;
+import com.example.tvmaze.entities.Genero;
 import com.example.tvmaze.services.GeneroService;
 
 @RestController
@@ -24,27 +26,32 @@ public class GeneroRestController {
     private GeneroService generoService;
 
     @GetMapping
-    public List<Genero> listar() {
-        return generoService.listarTodos();
+    public List<GeneroRespostaDTO> listar() {
+        return generoService.listarGeneros();
+    }
+
+    @GetMapping("/buscar")
+    GeneroRespostaDTO listarNomes(@RequestParam String nome){
+        return generoService.buscarPorNome(nome);
     }
 
     @GetMapping("/{id}")
-    public Genero buscarPorId(@PathVariable Integer id) {
+    public GeneroRespostaDTO buscarPorId(@PathVariable Integer id) {
         return generoService.buscarPorId(id);
     }
 
     @PostMapping
-    public Genero criar(@RequestBody GeneroDTO dto) {
-        return generoService.salvar(dto);
+    public GeneroRespostaDTO criar(@RequestBody GeneroCriacaoDTO dto) {
+        return generoService.salvarGenero(dto);
     }
 
     @PutMapping("/{id}")
-    public Genero atualizar(@PathVariable Integer id, @RequestBody GeneroDTO dto){
-        return generoService.atualizar(id, dto);
+    public GeneroRespostaDTO atualizar(@PathVariable Integer id, @RequestBody GeneroCriacaoDTO dto){
+        return generoService.atualizarGenero(id, dto);
     }
 
     @DeleteMapping("/{id}")
     public void deletar(@PathVariable Integer id) {
-        generoService.deletar(id);
+        generoService.deletarGenero(id);
     }
 }

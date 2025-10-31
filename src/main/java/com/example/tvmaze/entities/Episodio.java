@@ -1,4 +1,4 @@
-package com.example.tvmaze.models;
+package com.example.tvmaze.entities;
 
 import java.time.LocalDate;
 import jakarta.persistence.Entity;
@@ -14,6 +14,7 @@ public class Episodio {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer episodioId;
+  private Integer externoId;
 
   private String nome;
   private Integer temporada;
@@ -21,20 +22,29 @@ public class Episodio {
   private LocalDate dataExibicao;
   private Integer duracao;
 
-  @ManyToOne                 // ✅ Correto — vários episódios pertencem a uma série
-  @JoinColumn(name = "serie_id")  // ✅ Cria a FK no banco
+  @ManyToOne                
+  @JoinColumn(name = "serie_id")  
   private Serie serie;
-
+  
   public Episodio() {}
-
+  
   public Integer getEpisodioId() {
     return episodioId;
   }
-
+  
   public void setEpisodioId(Integer episodioId) {
     this.episodioId = episodioId;
   }
+  
+  public Integer getExternoId() {
+    return externoId;
+  }
 
+  public void setExternoId(Integer externoId) {
+    this.externoId = externoId;
+  }
+  
+  
   public String getNome() {
     return nome;
   }
@@ -82,4 +92,5 @@ public class Episodio {
   public void setSerie(Serie serie) {
     this.serie = serie;
   }
+
 }

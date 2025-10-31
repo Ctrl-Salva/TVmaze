@@ -1,4 +1,4 @@
-package com.example.tvmaze.models;
+package com.example.tvmaze.entities;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -1,4 +1,4 @@
-package com.example.tvmaze.models;
+package com.example.tvmaze.entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

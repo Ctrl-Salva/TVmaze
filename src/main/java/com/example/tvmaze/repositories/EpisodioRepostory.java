@@ -1,9 +1,42 @@
 package com.example.tvmaze.repositories;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
 
-import com.example.tvmaze.models.Episodio;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import com.example.tvmaze.entities.Episodio;
 
 public interface EpisodioRepostory extends JpaRepository<Episodio, Integer>{
-    
+    /**
+     * Busca todos os episódios de uma série
+     */
+    List<Episodio> findBySerieSerieId(Integer serieId);
+
+    /**
+     * Busca episódios de uma temporada específica
+     */
+    List<Episodio> findBySerieSerieIdAndTemporada(Integer serieId, Integer temporada);
+
+    /**
+     * Busca um episódio específico (série, temporada, número)
+     */
+    @Query("SELECT e FROM Episodio e WHERE e.serie.serieId = :serieId " +
+           "AND e.temporada = :temporada AND e.numero = :numero")
+    Episodio findBySerieTemporadaNumero(@Param("serieId") Integer serieId,
+                                        @Param("temporada") Integer temporada,
+                                        @Param("numero") Integer numero);
+
+    /**
+     * Conta episódios de uma série
+     */
+    long countBySerieSerieId(Integer serieId);
+
+    /**
+     * Busca todas as temporadas de uma série (distintas)
+     */
+    @Query("SELECT DISTINCT e.temporada FROM Episodio e WHERE e.serie.serieId = :serieId ORDER BY e.temporada")
+    List<Integer> findTemporadasBySerieId(@Param("serieId") Integer serieId);
 }
+
