@@ -8,11 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.tvmaze.dto.criacao.SerieCriacaoDTO;
-import com.example.tvmaze.dto.respota.SerieRespostaDTO;
+import com.example.tvmaze.dto.resposta.SerieRespostaDTO;
 import com.example.tvmaze.models.Genero;
 import com.example.tvmaze.models.Serie;
 import com.example.tvmaze.repositories.GeneroRepository;
 import com.example.tvmaze.repositories.SerieRepository;
+import com.example.tvmaze.utils.Quicksort;
 
 @Service
 public class SerieService {
@@ -23,9 +24,22 @@ public class SerieService {
     @Autowired
     GeneroRepository generoRepository;
 
+
     public List<SerieRespostaDTO> listarSeries() {
         List<Serie> series = serieRepository.findAll();
 
+        return series.stream()
+                .map(this::converterRepostaDTO)
+                .collect(Collectors.toList());
+    }
+
+    public List<SerieRespostaDTO> listarSeriesOrdenadas() {
+        List<Serie> series = serieRepository.findAll();
+
+        // aplica ordenação personalizada
+        Quicksort.quickSort(series, 0, series.size() - 1);
+
+        // converte para DTO antes de retornar
         return series.stream()
                 .map(this::converterRepostaDTO)
                 .collect(Collectors.toList());

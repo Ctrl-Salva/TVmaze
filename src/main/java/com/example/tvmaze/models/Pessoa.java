@@ -21,7 +21,7 @@ public class Pessoa {
 
   private LocalDate dataNascimento;
 
-  @OneToMany(mappedBy = "pessoa") // ✅ mapeamento correto
+  @OneToMany(mappedBy = "pessoa") 
   private Set<Participacao> participacoes = new HashSet<>();
 
   public Pessoa() {}
@@ -55,6 +55,7 @@ public class Pessoa {
   }
 
   public void setParticipacoes(Set<Participacao> participacoes) {
-    this.participacoes = participacoes;
+    this.participacoes.clear();
+    this.participacoes.addAll(participacoes);
   }
 }
