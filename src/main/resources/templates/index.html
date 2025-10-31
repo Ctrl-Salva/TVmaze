@@ -38,18 +38,32 @@
         </div>
     </nav>
 
-    <main class="container mt-5">
+       <main class="container mt-5">
         <div class="row">
-            <div class="col-sm-6 col-md-4 col-lg-3 mb-4" th:each="serie : ${series}">
-                <div class="card h-100">
-                    <img src="..." class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title" th:text="${serie.nome}">Card title</h5>
-                        <p class="card-text" th:text="${serie.sinopse}">Some quick example text...</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
-                    </div>
-                </div>
-            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Titulo</th>
+                        <th>Liguagem</th>
+                        <th>Sinopse</th>
+                        <th>Nota</th>
+                        <th>Data de Estreia</th>
+                        <th>Data de Termino</th>
+                        <th>Generos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each=" serie : ${series}">
+                        <td th:text="${serie.nome}"></td>
+                        <td th:text="${serie.linguagem}"></td>
+                        <td th:text="${serie.sinopse}"></td>
+                        <td th:text="${serie.nota}"></td>
+                        <td th:text="${serie.dataEstreia}"></td>
+                        <td th:text="${serie.dataTermino}"></td>
+                        <td th:text="${serie.generos}"></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
     </main>

@@ -36,7 +36,13 @@ public class GeneroService {
         return generoRepository.save(genero);
     }
 
+    public Genero atualizar(Integer id, GeneroDTO dto){
+        Genero exitente = buscarPorId(id);
+        
+        exitente.setNome(dto.getNome());
 
+        return generoRepository.save(exitente);
+    }
 
     public void deletar(Integer id) {
         generoRepository.deleteById(id);

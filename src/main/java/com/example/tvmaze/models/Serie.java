@@ -22,14 +22,11 @@ public class Serie {
   private LocalDate dataTermino;
 
   @ManyToMany
-  @JoinTable(
-      name = "serie_genero",
-      joinColumns = @JoinColumn(name = "serie_id"),
-      inverseJoinColumns = @JoinColumn(name = "genero_id")
-  )
+  @JoinTable(name = "serie_genero", joinColumns = @JoinColumn(name = "serie_id"), inverseJoinColumns = @JoinColumn(name = "genero_id"))
   private Set<Genero> generos = new HashSet<>();
 
-  public Serie() {}
+  public Serie() {
+  }
 
   public Integer getSerieId() {
     return serieId;
@@ -99,11 +96,8 @@ public class Serie {
     return generos;
   }
 
-  public void adicionarGeneros(Set<Genero> generos) {
+  public void setGeneros(Set<Genero> generos) {
+    this.generos.clear();
     this.generos.addAll(generos);
-}
-
-  public void removerGenero(Genero genero) {
-    generos.remove(genero);
   }
 }
