@@ -1,12 +1,6 @@
 package com.example.tvmaze.dtos.pessoa;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
-
-import com.example.tvmaze.entities.Participacao;
-
-import jakarta.persistence.OneToMany;
 
 public class PessoaCriacaoDTO {
 
