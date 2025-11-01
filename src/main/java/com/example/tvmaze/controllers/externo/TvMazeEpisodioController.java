@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.tvmaze.dtos.episodio.EpisodioRespostaDTO;
-import com.example.tvmaze.integration.tvmaze.TvMazeEpisodioIntregracaoService;
+import com.example.tvmaze.integration.tvmaze.TvMazeEpisodioIntegracaoService;
 
 
 
@@ -18,7 +18,7 @@ import com.example.tvmaze.integration.tvmaze.TvMazeEpisodioIntregracaoService;
 public class TvMazeEpisodioController {
     
     @Autowired
-    TvMazeEpisodioIntregracaoService tvMazeEpisodioIntregracaoService;
+    TvMazeEpisodioIntegracaoService tvMazeEpisodioIntregracaoService;
 
     @GetMapping("/{id}")
     public List<EpisodioRespostaDTO> buscarEpisodio(@PathVariable Integer externoId){

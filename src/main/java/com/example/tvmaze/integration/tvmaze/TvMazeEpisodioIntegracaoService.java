@@ -11,7 +11,6 @@ import com.example.tvmaze.dtos.episodio.EpisodioRespostaDTO;
 
 import com.example.tvmaze.entities.Episodio;
 import com.example.tvmaze.entities.Serie;
-import com.example.tvmaze.integration.apimappers.EpisodioApiMapper;
 import com.example.tvmaze.mappers.EpisodioMapper;
 import com.example.tvmaze.repositories.EpisodioRepository;
 import com.example.tvmaze.repositories.SerieRepository;
@@ -21,7 +20,7 @@ import jakarta.transaction.Transactional;
 
 @Service
 @Transactional
-public class TvMazeEpisodioIntregracaoService {
+public class TvMazeEpisodioIntegracaoService {
 
     @Autowired
     private TvMazeClient tvMazeClient;
@@ -31,9 +30,6 @@ public class TvMazeEpisodioIntregracaoService {
 
     @Autowired
     private EpisodioRepository episodioRepository;
-
-    @Autowired
-    private EpisodioApiMapper episodioApiMapper;
 
     @Autowired
     private EpisodioMapper episodioMapper;
@@ -86,9 +82,9 @@ public class TvMazeEpisodioIntregracaoService {
 
     private EpisodioRespostaDTO processarEpisodio(EpisodioApiDTO episodioApi, Serie serie) {
         Episodio episodio = episodioRepository.findByExternoId(episodioApi.getExternoId())
-                .orElseGet(() -> episodioApiMapper.toEntity(episodioApi, serie));
+                .orElseGet(() -> episodioMapper.toEntity(episodioApi, serie));
 
-        episodioApiMapper.updateEntity(episodioApi, episodio);
+        episodioMapper.updateEntity(episodioApi, episodio);
 
         Episodio episodioSalvo = episodioRepository.save(episodio);
         return episodioMapper.toRespostaDTO(episodioSalvo);
