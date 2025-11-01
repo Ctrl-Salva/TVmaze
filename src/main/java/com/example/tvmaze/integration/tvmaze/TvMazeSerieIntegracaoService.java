@@ -15,7 +15,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.example.tvmaze.dtos.serie.SerieApiDTO;
 import com.example.tvmaze.entities.Serie;
-import com.example.tvmaze.integration.mappers.SerieApiMapper;
+import com.example.tvmaze.integration.apimappers.SerieApiMapper;
 import com.example.tvmaze.repositories.SerieRepository;
 import com.example.tvmaze.services.GeneroService;
 import com.google.gson.*;

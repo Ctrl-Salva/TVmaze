@@ -1,4 +1,4 @@
-package com.example.tvmaze.integration.mappers;
+package com.example.tvmaze.integration.apimappers;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

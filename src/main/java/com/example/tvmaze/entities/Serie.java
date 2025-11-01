@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.google.gson.annotations.SerializedName;
 
 import jakarta.persistence.*;
 
