@@ -5,7 +5,7 @@ import com.example.tvmaze.dtos.pessoa.PessoaApiDTO;
 import com.google.gson.annotations.SerializedName;
 
 public class ParticipacaoApiDTO {
-    
+
     @SerializedName("person") // ou @JsonProperty("person")
     private PessoaApiDTO pessoa;
      // AGORA USA SEU PessoaApiDTO
@@ -15,6 +15,7 @@ public class ParticipacaoApiDTO {
     public ParticipacaoApiDTO() {}
 
     // Getters e Setters
+
     public PessoaApiDTO getPessoa() {
         return pessoa;
     }
@@ -30,4 +31,5 @@ public class ParticipacaoApiDTO {
     public void setPersonagem(PersonagemApiDTO personagem) {
         this.personagem = personagem;
     }
+
 }

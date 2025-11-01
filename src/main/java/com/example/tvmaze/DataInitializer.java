@@ -1,6 +1,5 @@
 package com.example.tvmaze;
 
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -28,28 +27,24 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) throws Exception {
         System.out.println("🚀 Iniciando DataInitializer...");
 
-        // Exemplo de IDs externos de séries para importar
+        try {
+            System.out.println(">> Importando Séries Padrão...");
+            serieIntegracaoService.importarSeriesPadrao(); // Este método deve ter o loop interno
 
-        
-            try {
-                System.out.println(">> Importando Série: ");
-                serieIntegracaoService.importarSeriesPadrao();
+            System.out.println(">> Importando Episódios de Todas as Séries...");
+            episodioIntegracaoService.importarEpisodiosDeTodasAsSeries(); // Este método deve ter o loop interno
 
-                System.out.println(">> Importando Episódios para a Série: ");
-                episodioIntegracaoService.importarEpisodiosDeTodasAsSeries(); 
+            System.out.println(">> Importando Participações de Todas as Séries...");
+            participacaoIntegracaoService.importarParticipacoesDeTodasAsSeries(); // Este método deve ter o loop interno
 
-                System.out.println(">> Importando Participações para a Série: ");
-                participacaoIntegracaoService.importarParticipacoesDeTodasAsSeries();;
+            System.out.println("✅ DataInitializer concluído com sucesso.");
 
-            } catch (Exception e) {
-                System.err.println("❌ Erro ao importar dados para a série "  + ": " + e.getMessage());
-                // Continue para a próxima série mesmo se uma falhar
-            }
-        
-
-        // Se você tiver um método para importar participações de TODAS as séries salvas
-        // participacaoIntegracaoService.importarParticipacoesDeTodasAsSeries();
-
-        System.out.println("✅ DataInitializer concluído.");
+        } catch (Exception e) {
+            // Este catch agora pega erros gerais que possam ocorrer em qualquer um dos *inícios*
+            // dos processos de importação, ou se um dos métodos falhar catastroficamente antes de terminar.
+            // Os erros específicos por série devem ser tratados *dentro* dos serviços de integração.
+            System.err.println("❌ Erro fatal durante a inicialização de dados: " + e.getMessage());
+            e.printStackTrace(); // Imprime o stack trace para depuração
+        }
     }
 }

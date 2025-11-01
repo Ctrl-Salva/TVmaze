@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.tvmaze.dtos.participacao.ParticipacaoRespostaDTO;
-import com.example.tvmaze.integration.tvmaze.TvMazeEpisodioIntegracaoService;
+import com.example.tvmaze.integration.tvmaze.TvMazeParticipacaoIntegracaoService;
 
 @RestController
 @RequestMapping("/integracao/tvmaze/participacoes") // Endpoint base para integrações de participações
 public class TvMazeParticipacaoController {
 
     @Autowired
-    private TvMazeEpisodioIntegracaoService tvMazeParticipacaoIntegracaoService;
+    private TvMazeParticipacaoIntegracaoService tvMazeParticipacaoIntegracaoService;
 
     /**
      * Endpoint para importar as participações (cast) de uma série específica

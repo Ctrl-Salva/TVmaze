@@ -35,10 +35,9 @@ public class ParticipacaoMapper {
     public ParticipacaoRespostaDTO toRespostaDTO(Participacao participacao) {
         ParticipacaoRespostaDTO dto = new ParticipacaoRespostaDTO();
         dto.setParticipacaoId(participacao.getParticipacaoId());
-        dto.setExternoId(participacao.getExternoId()); // Adicionado ExternoId
+        dto.setExternoId(participacao.getExternoId()); 
         dto.setPersonagem(participacao.getPersonagem());
 
-        // Mapeia informações da Pessoa
         if (participacao.getPessoa() != null) {
             dto.setPessoaId(participacao.getPessoa().getPessoaId());
             dto.setPessoaNome(participacao.getPessoa().getNome());
@@ -62,6 +61,7 @@ public class ParticipacaoMapper {
         // 2. Mapear o personagem
         if (dto.getPersonagem() != null) {
             participacao.setPersonagem(dto.getPersonagem().getNomePersonagem());
+            participacao.setExternoId(dto.getPersonagem().getExternoId());
         }
 
         // 3. Associar a Série
