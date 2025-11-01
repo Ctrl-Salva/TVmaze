@@ -15,7 +15,7 @@ import com.example.tvmaze.integration.apimappers.EpisodioApiMapper;
 import com.example.tvmaze.mappers.EpisodioMapper;
 import com.example.tvmaze.repositories.EpisodioRepository;
 import com.example.tvmaze.repositories.SerieRepository;
-import com.example.tvmaze.services.SerieService;
+
 
 import jakarta.transaction.Transactional;
 

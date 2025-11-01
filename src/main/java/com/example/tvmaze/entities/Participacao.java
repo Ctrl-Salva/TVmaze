@@ -14,6 +14,8 @@ public class Participacao {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer participacaoId;
 
+  private Integer externoId;
+
   private String personagem;
 
   @ManyToOne  
@@ -25,7 +27,7 @@ public class Participacao {
   private Serie serie;
 
   public Participacao() {}
-
+  
   public Integer getParticipacaoId() {
     return participacaoId;
   }
@@ -56,5 +58,13 @@ public class Participacao {
 
   public void setSerie(Serie serie) {
     this.serie = serie;
+  }
+
+  public Integer getExternoId() {
+    return externoId;
+  }
+
+  public void setExternoId(Integer externoId) {
+    this.externoId = externoId;
   }
 }

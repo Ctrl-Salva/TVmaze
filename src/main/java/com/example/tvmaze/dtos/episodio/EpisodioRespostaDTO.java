@@ -2,7 +2,7 @@ package com.example.tvmaze.dtos.episodio;
 
 import java.time.LocalDate;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+
 
 public class EpisodioRespostaDTO {
 

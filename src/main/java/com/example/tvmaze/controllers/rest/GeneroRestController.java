@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.tvmaze.dtos.genero.GeneroCriacaoDTO;
 import com.example.tvmaze.dtos.genero.GeneroRespostaDTO;
-import com.example.tvmaze.entities.Genero;
+
 import com.example.tvmaze.services.GeneroService;
 
 @RestController

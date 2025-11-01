@@ -17,6 +17,8 @@ public class Pessoa {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer pessoaId;
 
+  private Integer externoId;
+
   private String nome;
 
   private LocalDate dataNascimento;
@@ -25,6 +27,7 @@ public class Pessoa {
   private Set<Participacao> participacoes = new HashSet<>();
 
   public Pessoa() {}
+  
 
   public Integer getPessoaId() {
     return pessoaId;
@@ -32,6 +35,15 @@ public class Pessoa {
 
   public void setPessoaId(Integer pessoaId) {
     this.pessoaId = pessoaId;
+  }
+
+  
+  public Integer getExternoId() {
+    return externoId;
+  }
+
+  public void setExternoId(Integer externoId) {
+    this.externoId = externoId;
   }
 
   public String getNome() {
@@ -58,4 +70,5 @@ public class Pessoa {
     this.participacoes.clear();
     this.participacoes.addAll(participacoes);
   }
+
 }

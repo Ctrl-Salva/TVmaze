@@ -2,23 +2,21 @@ package com.example.tvmaze.integration.tvmaze;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.lang.reflect.Type;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+
 
 import com.example.tvmaze.dtos.serie.SerieApiDTO;
 import com.example.tvmaze.entities.Serie;
-import com.example.tvmaze.integration.apimappers.SerieApiMapper;
+import com.example.tvmaze.mappers.SerieMapper;
 import com.example.tvmaze.repositories.SerieRepository;
 import com.example.tvmaze.services.GeneroService;
-import com.google.gson.*;
+
 
 import jakarta.transaction.Transactional;
 
@@ -33,7 +31,7 @@ public class TvMazeSerieIntegracaoService {
     private SerieRepository serieRepository;
 
     @Autowired
-    private SerieApiMapper serieApiMapper;
+    private SerieMapper serieMapper;
 
     @Autowired
     private GeneroService generoService;
@@ -60,7 +58,7 @@ public class TvMazeSerieIntegracaoService {
             }
 
             // 🧩 Converte DTO em entidade
-            Serie serie = serieApiMapper.toEntity(dto);
+            Serie serie = serieMapper.toEntity(dto);
 
             // 🧹 Limpa HTML da sinopse
             if (serie.getSinopse() != null) {

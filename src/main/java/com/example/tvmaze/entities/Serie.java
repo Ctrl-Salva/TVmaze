@@ -18,7 +18,7 @@ public class Serie {
   private String nome;
   private String linguagem;
 
-  @Column(columnDefinition = "TEXT") // evita erro de sinopse > 255 chars
+  @Column(columnDefinition = "TEXT")
   private String sinopse;
 
   private Double nota;
