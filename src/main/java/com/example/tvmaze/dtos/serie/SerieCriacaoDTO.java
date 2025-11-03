@@ -3,6 +3,8 @@ package com.example.tvmaze.dtos.serie;
 import java.time.LocalDate;
 import java.util.Set;
 
+import com.example.tvmaze.entities.vo.Imagem;
+
 
 public class SerieCriacaoDTO {
     private Integer externoId;
@@ -13,6 +15,7 @@ public class SerieCriacaoDTO {
     private LocalDate dataEstreia;
     private LocalDate dataTermino;
     private Set<String> generos;
+    private Imagem imagem;
 
 
     public SerieCriacaoDTO(){}
@@ -80,5 +83,15 @@ public class SerieCriacaoDTO {
     public void setGeneros(Set<String> generos) {
         this.generos = generos;
     }
+
+    public Imagem getImagem() {
+        return imagem;
+    }
+
+    public void setImagem(Imagem imagem) {
+        this.imagem = imagem;
+    }
+
+    
 
 }

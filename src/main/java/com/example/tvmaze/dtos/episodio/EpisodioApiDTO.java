@@ -2,6 +2,7 @@ package com.example.tvmaze.dtos.episodio;
 
 import java.time.LocalDate;
 
+import com.example.tvmaze.entities.vo.Imagem;
 import com.google.gson.annotations.SerializedName;
 
 public class EpisodioApiDTO {
@@ -27,6 +28,9 @@ public class EpisodioApiDTO {
 
     @SerializedName("summary")
     private String sinopse;
+
+    @SerializedName("image")
+    private Imagem imagem;
 
 
     public EpisodioApiDTO() {}
@@ -87,4 +91,16 @@ public class EpisodioApiDTO {
     public void setSinopse(String sinopse) {
         this.sinopse = sinopse;
     }
+
+
+    public Imagem getImagem() {
+        return imagem;
+    }
+
+
+    public void setImagem(Imagem imagem) {
+        this.imagem = imagem;
+    }
+
+    
 }

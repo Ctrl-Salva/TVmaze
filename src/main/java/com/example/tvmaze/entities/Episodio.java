@@ -1,6 +1,9 @@
 package com.example.tvmaze.entities;
 
 import java.time.LocalDate;
+
+import com.example.tvmaze.entities.vo.Imagem;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,6 +28,8 @@ public class Episodio {
   @ManyToOne                
   @JoinColumn(name = "serie_id")  
   private Serie serie;
+
+  private Imagem imagem;
   
   public Episodio() {}
   
@@ -93,4 +98,13 @@ public class Episodio {
     this.serie = serie;
   }
 
+  public Imagem getImagem() {
+    return imagem;
+  }
+
+  public void setImagem(Imagem imagem) {
+    this.imagem = imagem;
+  }
+
+  
 }

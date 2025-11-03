@@ -33,6 +33,8 @@ public class EpisodioMapper {
             dto.setSerieNome(episodio.getSerie().getNome());
         }
 
+        dto.setImagem(episodio.getImagem());
+
         return dto;
     }
 
@@ -50,6 +52,7 @@ public class EpisodioMapper {
         episodio.setDataExibicao(dto.getDataExibicao());
 
         episodio.setDuracao(dto.getDuracao());
+        episodio.setImagem(dto.getImagem());
 
     }
 
@@ -65,6 +68,7 @@ public class EpisodioMapper {
         episodio.setNumero(dto.getNumero());
         episodio.setDataExibicao(dto.getDataExibicao());
         episodio.setDuracao(dto.getDuracao());
+        episodio.setImagem(dto.getImagem());
         episodio.setSerie(serie);
 
         return episodio;
@@ -83,6 +87,7 @@ public class EpisodioMapper {
         episodio.setNumero(dto.getNumero());
         episodio.setDataExibicao(dto.getDataExibicao());
         episodio.setDuracao(dto.getDuracao());
+        episodio.setImagem(dto.getImagem());
     }
 
     /**

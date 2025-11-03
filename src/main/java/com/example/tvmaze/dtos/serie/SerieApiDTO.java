@@ -1,14 +1,12 @@
 package com.example.tvmaze.dtos.serie;
 
-
 import java.util.Set;
 
+import com.example.tvmaze.entities.vo.Imagem;
 import com.google.gson.annotations.SerializedName;
 
-
-
 public class SerieApiDTO {
-    
+
     @SerializedName("id")
     private Integer externoId;
 
@@ -25,7 +23,7 @@ public class SerieApiDTO {
     private Rating rating;
 
     @SerializedName("premiered")
-    private String dataEstreia; 
+    private String dataEstreia;
 
     @SerializedName("ended")
     private String dataTermino;
@@ -33,35 +31,92 @@ public class SerieApiDTO {
     @SerializedName("genres")
     private Set<String> generos;
 
+    @SerializedName("image")
+    private Imagem imagem;
+
     public static class Rating {
         private Double average;
-        public Double getAverage() { return average; }
-        public void setAverage(Double average) { this.average = average; }
+
+        public Double getAverage() {
+            return average;
+        }
+
+        public void setAverage(Double average) {
+            this.average = average;
+        }
     }
 
     // GETTERS E SETTERS
-    public Integer getExternoId() { return externoId; }
-    public void setExternoId(Integer externoId) { this.externoId = externoId; }
+    public Integer getExternoId() {
+        return externoId;
+    }
 
-    public String getNome() { return nome; }
-    public void setNome(String nome) { this.nome = nome; }
+    public void setExternoId(Integer externoId) {
+        this.externoId = externoId;
+    }
 
-    public String getLinguagem() { return linguagem; }
-    public void setLinguagem(String linguagem) { this.linguagem = linguagem; }
+    public String getNome() {
+        return nome;
+    }
 
-    public String getSinopse() { return sinopse; }
-    public void setSinopse(String sinopse) { this.sinopse = sinopse; }
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
 
-    public Rating getRating() { return rating; }
-    public void setRating(Rating rating) { this.rating = rating; }
+    public String getLinguagem() {
+        return linguagem;
+    }
 
-    public String getDataEstreia() { return dataEstreia; }
-    public void setDataEstreia(String dataEstreia) { this.dataEstreia = dataEstreia; }
+    public void setLinguagem(String linguagem) {
+        this.linguagem = linguagem;
+    }
 
-    public String getDataTermino() { return dataTermino; }
-    public void setDataTermino(String dataTermino) { this.dataTermino = dataTermino; }
+    public String getSinopse() {
+        return sinopse;
+    }
 
-    public Set<String> getGeneros() { return generos; }
-    public void setGeneros(Set<String> generos) { this.generos = generos; }
+    public void setSinopse(String sinopse) {
+        this.sinopse = sinopse;
+    }
+
+    public Rating getRating() {
+        return rating;
+    }
+
+    public void setRating(Rating rating) {
+        this.rating = rating;
+    }
+
+    public String getDataEstreia() {
+        return dataEstreia;
+    }
+
+    public void setDataEstreia(String dataEstreia) {
+        this.dataEstreia = dataEstreia;
+    }
+
+    public String getDataTermino() {
+        return dataTermino;
+    }
+
+    public void setDataTermino(String dataTermino) {
+        this.dataTermino = dataTermino;
+    }
+
+    public Set<String> getGeneros() {
+        return generos;
+    }
+
+    public void setGeneros(Set<String> generos) {
+        this.generos = generos;
+    }
+
+    public Imagem getImagem() {
+        return imagem;
+    }
+
+    public void setImagem(Imagem imagem) {
+        this.imagem = imagem;
+    }
 
 }

@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.example.tvmaze.entities.vo.Imagem;
 
 import jakarta.persistence.*;
 
@@ -29,8 +30,22 @@ public class Serie {
   @JoinTable(name = "serie_genero", joinColumns = @JoinColumn(name = "serie_id"), inverseJoinColumns = @JoinColumn(name = "genero_id"))
   private Set<Genero> generos = new HashSet<>();
 
+  private Imagem imagem;
+
   public Integer getSerieId() {
     return serieId;
+  }
+
+  public void setSerieId(Integer serieId) {
+    this.serieId = serieId;
+  }
+
+  public Imagem getImagem() {
+    return imagem;
+  }
+
+  public void setImagem(Imagem imagem) {
+    this.imagem = imagem;
   }
 
   public Integer getExternoId() {

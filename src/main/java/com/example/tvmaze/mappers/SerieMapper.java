@@ -34,6 +34,7 @@ public class SerieMapper {
         dto.setNota(serie.getNota());
         dto.setDataEstreia(serie.getDataEstreia());
         dto.setDataTermino(serie.getDataTermino());
+        dto.setImagem(serie.getImagem());
         
         Set<String> nomesGeneros = serie.getGeneros().stream()
                 .map(Genero::getNome)
@@ -55,6 +56,7 @@ public class SerieMapper {
         serie.setNota(dto.getNota());
         serie.setDataEstreia(dto.getDataEstreia());
         serie.setDataTermino(dto.getDataTermino());
+        serie.setImagem(dto.getImagem());
         
         Set<Genero> generosConvertidos = dto.getGeneros().stream()
                 .map(this::buscarOuCriarGenero)
@@ -68,6 +70,7 @@ public class SerieMapper {
         serie.setNome(dto.getNome());
         serie.setLinguagem(dto.getLinguagem());
         serie.setNota(dto.getRating() != null ? dto.getRating().getAverage() : null);
+        serie.setImagem(dto.getImagem());
 
         // Remove tags HTML da sinopse
         if (dto.getSinopse() != null) {

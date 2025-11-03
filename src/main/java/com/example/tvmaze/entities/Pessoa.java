@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.example.tvmaze.entities.vo.Imagem;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,6 +27,8 @@ public class Pessoa {
 
   @OneToMany(mappedBy = "pessoa") 
   private Set<Participacao> participacoes = new HashSet<>();
+
+  private Imagem imagem;
 
   public Pessoa() {}
   
@@ -70,5 +74,17 @@ public class Pessoa {
     this.participacoes.clear();
     this.participacoes.addAll(participacoes);
   }
+
+
+  public Imagem getImagem() {
+    return imagem;
+  }
+
+
+  public void setImagem(Imagem imagem) {
+    this.imagem = imagem;
+  }
+
+  
 
 }

@@ -2,6 +2,8 @@ package com.example.tvmaze.dtos.episodio;
 
 import java.time.LocalDate;
 
+import com.example.tvmaze.entities.vo.Imagem;
+
 
 
 public class EpisodioRespostaDTO {
@@ -11,12 +13,11 @@ public class EpisodioRespostaDTO {
     private String nome;
     private Integer temporada;
     private Integer numero;
-
     private LocalDate dataExibicao;
-
     private Integer duracao;
     private Integer serieId;
     private String serieNome;
+    private Imagem imagem;
 
     // Construtores
     public EpisodioRespostaDTO() {
@@ -98,4 +99,14 @@ public class EpisodioRespostaDTO {
     public void setSerieNome(String serieNome) {
         this.serieNome = serieNome;
     }
+
+    public Imagem getImagem() {
+        return imagem;
+    }
+
+    public void setImagem(Imagem imagem) {
+        this.imagem = imagem;
+    }
+
+    
 }

@@ -2,6 +2,9 @@ package com.example.tvmaze.dtos.pessoa;
 
 import java.time.LocalDate;
 
+import com.example.tvmaze.entities.vo.Imagem;
+import com.google.gson.annotations.SerializedName;
+
 public class PessoaCriacaoDTO {
 
     private Integer externoId;
@@ -10,6 +13,7 @@ public class PessoaCriacaoDTO {
 
     private LocalDate dataNascimento;
     
+    private Imagem imagem;
 
     public PessoaCriacaoDTO() {
     }
@@ -36,6 +40,14 @@ public class PessoaCriacaoDTO {
 
     public void setDataNascimento(LocalDate dataNascimento) {
         this.dataNascimento = dataNascimento;
+    }
+
+    public Imagem getImagem() {
+        return imagem;
+    }
+
+    public void setImagem(Imagem imagem) {
+        this.imagem = imagem;
     }
 
   
