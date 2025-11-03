@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/layout}">
+
+<head>
+    <title th:text="${pessoa.nome + ' - Perfil'}">Perfil da Pessoa</title>
+</head>
+
+<body>
+
+    <section layout:fragment="conteudo">
+
+        <!-- Hero Section -->
+        <section class="position-relative py-5 text-white bg-dark">
+            <div class="container position-relative z-1">
+                <div class="row align-items-center justify-content-center text-center text-md-start">
+
+                    <!-- Foto da Pessoa -->
+                    <div class="col-md-4 mb-4 mb-md-0 d-flex justify-content-center">
+                        <div class="position-relative">
+                            <img th:src="${pessoa.imagem != null ? pessoa.imagem.original : 'https://via.placeholder.com/300x400/111111/ffffff?text=Sem+Foto'}"
+                                th:alt="${pessoa.nome}" class="rounded-circle shadow-lg border border-3 border-primary"
+                                style="width: 260px; height: 260px; object-fit: cover; box-shadow: 0 0 25px rgba(0,123,255,0.3);">
+                        </div>
+                    </div>
+
+                    <!-- Informações Principais -->
+                    <div class="col-md-8">
+                        <h1 class="display-4 fw-bold mb-3" th:text="${pessoa.nome}">Nome da Pessoa</h1>
+
+                        <!-- Data e Idade -->
+                        <div class="fs-5 mb-3" th:if="${pessoa.dataNascimento != null}">
+                            <p class="mb-1">
+                                <i class="bi bi-calendar-event text-primary me-2"></i>
+                                <strong>Data de Nascimento:</strong>
+                                <span
+                                    th:text="${#temporals.format(pessoa.dataNascimento, 'dd/MM/yyyy')}">01/01/1990</span>
+                            </p>
+                            <p class="mb-0" th:if="${idade != null}">
+                                <i class="bi bi-cake text-primary me-2"></i>
+                                <strong>Idade:</strong>
+                                <span th:text="${idade + ' anos'}">30 anos</span>
+                            </p>
+                        </div>
+
+                        <!-- Caso não tenha data -->
+                        <div th:if="${pessoa.dataNascimento == null}"
+                            class="alert alert-secondary bg-opacity-25 border-0 text-light py-2 px-3 d-inline-flex align-items-center">
+                            <i class="bi bi-info-circle me-2 text-primary"></i> Data de nascimento não informada
+                        </div>
+
+                        <!-- Estatísticas -->
+                        <div class="mt-4 d-flex flex-wrap gap-3">
+                            <span class="badge bg-primary text-white px-3 py-2 fs-6">
+                                <i class="bi bi-tv me-1"></i>
+                                <span th:text="${participacoes != null ? participacoes.size() : 0}">0</span>
+                                Participações
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fundo decorativo -->
+            <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark-subtle">
+            </div>
+        </section>
+
+        <!-- Conteúdo Principal -->
+        <div class="container my-5">
+
+            <!-- Informações Adicionais -->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">
+                        <i class="bi bi-info-circle text-primary"></i> Informações
+                    </h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul class="list-unstyled">
+                                <li><strong>ID:</strong> <span th:text="${pessoa.pessoaId}">1</span></li>
+                                <li th:if="${pessoa.externoId != null}">
+                                    <strong>ID Externo:</strong> <span th:text="${pessoa.externoId}">123</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="list-unstyled">
+                                <li th:if="${pessoa.dataNascimento != null}">
+                                    <strong>Nascimento:</strong>
+                                    <span
+                                        th:text="${#temporals.format(pessoa.dataNascimento, 'dd/MM/yyyy')}">01/01/1990</span>
+                                </li>
+                                <li th:if="${idade != null}">
+                                    <strong>Idade:</strong> <span th:text="${idade + ' anos'}">30 anos</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Participações -->
+            <div th:if="${participacoes != null and !participacoes.isEmpty()}" class="mb-5">
+                <h3 class="mb-4">
+                    <i class="bi bi-collection-play text-primary"></i> Séries e Personagens
+                </h3>
+
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                    <div class="col" th:each="part : ${participacoes}">
+                        <div class="card h-100 shadow-sm">
+
+                            <!-- Imagem -->
+                            <img th:src="${part.personagem != null and part.personagem.imagem != null ? part.personagem.imagem.medio : 'https://via.placeholder.com/300x400?text=Sem+Imagem'}"
+                                class="card-img-top" style="height: 350px; object-fit: cover;"
+                                th:alt="${part.personagem != null ? part.personagem.nomePersonagem : 'Sem imagem'}">
+
+                            <div class="card-body">
+                                <!-- Nome do Personagem -->
+                                <h5 class="card-title mb-2"
+                                    th:if="${part.personagem != null and part.personagem.nomePersonagem != null}">
+                                    <i class="bi bi-mask"></i>
+                                    <span th:text="${part.personagem.nomePersonagem}">Personagem</span>
+                                </h5>
+                                <h5 class="card-title mb-2 text-muted"
+                                    th:if="${part.personagem == null or part.personagem.nomePersonagem == null}">
+                                    <i class="bi bi-mask"></i> <em>Personagem não informado</em>
+                                </h5>
+
+                                <!-- Série -->
+                                <h6 class="card-subtitle mb-3 text-muted">
+                                    <i class="bi bi-tv"></i>
+                                    <span th:text="${part.serie_nome}">Nome da Série</span>
+                                </h6>
+
+                                <!-- Link -->
+                                <a th:href="@{/series/{id}(id=${part.serie_id})}" class="btn btn-primary w-100">
+                                    <i class="bi bi-arrow-right-circle"></i> Ver Série
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sem participações -->
+            <div class="card text-center mb-5" th:if="${participacoes == null or participacoes.isEmpty()}">
+                <div class="card-body py-5">
+                    <i class="bi bi-collection-play text-muted" style="font-size: 3rem;"></i>
+                    <h4 class="mt-3">Nenhuma participação cadastrada</h4>
+                    <p class="text-muted">Esta pessoa ainda não tem participações registradas em séries.</p>
+                </div>
+            </div>
+
+            <!-- Resumo da Carreira -->
+            <div th:if="${participacoes != null and participacoes.size() > 0}">
+                <h3 class="mb-4">
+                    <i class="bi bi-clock-history text-primary"></i> Resumo da Carreira
+                </h3>
+
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-md-4 mb-3 mb-md-0">
+                                <h2 class="text-primary mb-0" th:text="${participacoes.size()}">0</h2>
+                                <p class="text-muted mb-0">Participações</p>
+                            </div>
+                            <div class="col-md-4 mb-3 mb-md-0">
+                                <h2 class="text-success mb-0" th:text="${totalSeriesDiferentes}">0</h2>
+                                <p class="text-muted mb-0">Séries Diferentes</p>
+                            </div>
+                            <div class="col-md-4">
+                                <h2 class="text-info mb-0" th:text="${totalPersonagens}">0</h2>
+                                <p class="text-muted mb-0">Personagens Registrados</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botão de Voltar -->
+            <div class="text-center mt-5 mb-4">
+                <a th:href="@{/pessoas}" class="btn btn-primary btn-lg px-5">
+                    <i class="bi bi-arrow-left"></i> Voltar para a lista de pessoas
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+</body>
+
+</html>

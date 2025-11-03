@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layouts/layout}">
+
+<head>
+  <title>Lista de Pessoas</title>
+  <style>
+    
+  </style>
+</head>
+
+<body>
+
+  <section layout:fragment="conteudo">
+    <div class="container my-5">
+      <div class="text-center mb-5">
+        <h2 class="display-5 fw-bold">Pessoas</h2>
+        <p class="text-muted">Explore atores, atrizes e personalidades</p>
+      </div>
+
+      <!-- Filtros -->
+      <div class="filter-card  shadow-sm bg-dark-subtle rounded p-3 mb-5">
+        <form method="get" th:action="@{/pessoas}" id="filterForm">
+          <div class="row g-3 align-items-end">
+            <div class="col-md-5">
+              <label for="nome" class="form-label fw-bold">Buscar por nome</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                <input type="text" 
+                       class="form-control search-input" 
+                       id="nome" 
+                       name="nome" 
+                       placeholder="Digite o nome..."
+                       th:value="${nomeSelecionado}">
+              </div>
+            </div>
+
+            <div class="col-md-2">
+              <label for="decadaNascimento" class="form-label fw-bold">Década</label>
+              <select class="form-select" id="decadaNascimento" name="decadaNascimento" onchange="document.getElementById('filterForm').submit()">
+                <option value="">Todas</option>
+                <option th:each="dec : ${decadasDisponiveis}" 
+                        th:value="${dec}" 
+                        th:text="${dec + 's'}"
+                        th:selected="${dec == decadaSelecionada}">
+                </option>
+              </select>
+            </div>
+
+            <div class="col-md-3">
+              <label for="ordenar" class="form-label fw-bold">Ordenar por</label>
+              <div class="input-group">
+                <select class="form-select" id="ordenar" name="ordenar" onchange="document.getElementById('filterForm').submit()">
+                  <option value="nome" th:selected="${ordenarSelecionado == 'nome'}">Nome</option>
+                  <option value="dataNascimento" th:selected="${ordenarSelecionado == 'dataNascimento'}">Data de Nascimento</option>
+                  <option value="pessoaId" th:selected="${ordenarSelecionado == 'pessoaId'}">Mais Recentes</option>
+                </select>
+                <select class="form-select" id="direcao" name="direcao" onchange="document.getElementById('filterForm').submit()" style="max-width: 100px;">
+                  <option value="asc" th:selected="${direcaoSelecionada == 'asc'}">↑</option>
+                  <option value="desc" th:selected="${direcaoSelecionada == 'desc'}">↓</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-md-2">
+              <button type="submit" class="btn btn-dark w-100">
+                Buscar
+              </button>
+            </div>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col-12">
+              <a th:href="@{/pessoas}" class="btn btn-outline-secondary">
+                Limpar Filtros
+              </a>
+              <span class="text-muted ms-3">
+                <strong th:text="${pessoasPage.totalElements}">0</strong> pessoa(s) encontrada(s)
+              </span>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Grid de Pessoas -->
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4 mb-5">
+        <div class="col" th:each="pessoa : ${pessoasPage.content}">
+          <div class="card h-100 shadow-sm hover-card">
+            <div class="position-relative">
+              <img th:src="${pessoa.imagem != null ? pessoa.imagem.medio : 'https://via.placeholder.com/250x350?text=Sem+Foto'}" 
+                   class="card-img-top person-img" 
+                   th:alt="${pessoa.nome}">
+            </div>
+            
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title fw-bold text-center mb-3" th:text="${pessoa.nome}">Nome da Pessoa</h5>
+              
+              <div class="text-center mb-3" th:if="${pessoa.dataNascimento != null}">
+                <small class="text-muted">
+                  <i class="bi bi-calendar"></i>
+                  📅 Nascimento: <br>
+                  <strong th:text="${#temporals.format(pessoa.dataNascimento, 'dd/MM/yyyy')}">01/01/1990</strong>
+                </small>
+                <br>
+                <small class="text-muted">
+                  <span th:with="idade=${#temporals.year(#temporals.createNow()) - #temporals.year(pessoa.dataNascimento)}">
+                    <span th:text="${idade + ' anos'}">30 anos</span>
+                  </span>
+                </small>
+              </div>
+
+              <div class="text-center mb-3" th:unless="${pessoa.dataNascimento != null}">
+                <small class="text-muted">Data de nascimento não informada</small>
+              </div>
+              
+              <a th:href="@{/pessoas/{id}(id=${pessoa.pessoaId})}" class="btn btn-primary text-white mt-auto">
+                Ver Detalhes
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mensagem quando não há resultados -->
+      <div class="text-center mt-5" th:if="${pessoasPage.content == null || pessoasPage.content.isEmpty()}">
+        <div class="alert alert-info d-inline-block">
+          <h5>Nenhuma pessoa encontrada</h5>
+          <p class="mb-0">Tente ajustar os filtros de busca.</p>
+        </div>
+      </div>
+
+      <!-- Paginação -->
+      <nav th:if="${pessoasPage.totalPages > 1}" aria-label="Navegação de páginas">
+        <ul class="pagination justify-content-center">
+          
+          <!-- Primeira página -->
+          <li class="page-item" th:classappend="${pessoasPage.first} ? 'disabled'">
+            <a class="page-link" 
+               th:href="@{/pessoas(page=0, size=${pessoasPage.size}, nome=${nomeSelecionado}, decadaNascimento=${decadaSelecionada}, ordenar=${ordenarSelecionado}, direcao=${direcaoSelecionada})}">
+              &laquo; Primeira
+            </a>
+          </li>
+
+          <!-- Página anterior -->
+          <li class="page-item" th:classappend="${!pessoasPage.hasPrevious()} ? 'disabled'">
+            <a class="page-link" 
+               th:href="@{/pessoas(page=${pessoasPage.number - 1}, size=${pessoasPage.size}, nome=${nomeSelecionado}, decadaNascimento=${decadaSelecionada}, ordenar=${ordenarSelecionado}, direcao=${direcaoSelecionada})}">
+              Anterior
+            </a>
+          </li>
+
+          <!-- Números de página (mostra 5 páginas ao redor da atual) -->
+          <li class="page-item" 
+              th:each="i : ${#numbers.sequence(0, pessoasPage.totalPages - 1)}"
+              th:if="${i >= pessoasPage.number - 2 && i <= pessoasPage.number + 2}"
+              th:classappend="${i == pessoasPage.number} ? 'active'">
+            <a class="page-link" 
+               th:href="@{/pessoas(page=${i}, size=${pessoasPage.size}, nome=${nomeSelecionado}, decadaNascimento=${decadaSelecionada}, ordenar=${ordenarSelecionado}, direcao=${direcaoSelecionada})}"
+               th:text="${i + 1}">1</a>
+          </li>
+
+          <!-- Próxima página -->
+          <li class="page-item" th:classappend="${!pessoasPage.hasNext()} ? 'disabled'">
+            <a class="page-link" 
+               th:href="@{/pessoas(page=${pessoasPage.number + 1}, size=${pessoasPage.size}, nome=${nomeSelecionado}, decadaNascimento=${decadaSelecionada}, ordenar=${ordenarSelecionado}, direcao=${direcaoSelecionada})}">
+              Próxima
+            </a>
+          </li>
+
+          <!-- Última página -->
+          <li class="page-item" th:classappend="${pessoasPage.last} ? 'disabled'">
+            <a class="page-link" 
+               th:href="@{/pessoas(page=${pessoasPage.totalPages - 1}, size=${pessoasPage.size}, nome=${nomeSelecionado}, decadaNascimento=${decadaSelecionada}, ordenar=${ordenarSelecionado}, direcao=${direcaoSelecionada})}">
+              Última &raquo;
+            </a>
+          </li>
+        </ul>
+
+        <!-- Informações da paginação -->
+        <div class="text-center text-muted mb-4">
+          Página <strong th:text="${pessoasPage.number + 1}">1</strong> de 
+          <strong th:text="${pessoasPage.totalPages}">1</strong>
+          (mostrando <strong th:text="${pessoasPage.numberOfElements}">0</strong> de 
+          <strong th:text="${pessoasPage.totalElements}">0</strong> pessoas)
+        </div>
+      </nav>
+    </div>
+  </section>
+
+</body>
+
+</html>

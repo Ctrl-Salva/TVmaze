@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layouts/layout}">
+
+<head>
+  <title th:text="${serie.nome + ' - Detalhes'}">Detalhes da Série</title>
+</head>
+
+<body>
+
+  <section layout:fragment="conteudo">
+    
+    <!-- Hero Section com imagem de fundo -->
+    <div class="position-relative bg-dark text-white" style="min-height: 400px;">
+      <div th:if="${serie.imagem != null}" 
+           class="position-absolute top-0 start-0 w-100 h-100" 
+           style="overflow: hidden;">
+        <img th:src="${serie.imagem.original}" 
+             class="w-100 h-100 object-fit-cover opacity-25" 
+             style="filter: blur(5px);"
+             th:alt="${serie.nome}">
+      </div>
+      
+      <div class="container position-relative py-5">
+        <div class="row align-items-center">
+          
+          <!-- Poster -->
+          <div class="col-md-3 text-center mb-4 mb-md-0">
+            <img th:src="${serie.imagem != null ? serie.imagem.original : 'https://via.placeholder.com/300x450?text=Sem+Imagem'}" 
+                 class="img-fluid rounded shadow-lg" 
+                 style="max-width: 250px;"
+                 th:alt="${serie.nome}">
+          </div>
+          
+          <!-- Informações Principais -->
+          <div class="col-md-9">
+            <a th:href="@{/series}" class="btn btn-outline-light mb-3">
+              <i class="bi bi-arrow-left"></i> Voltar
+            </a>
+            
+            <h1 class="display-4 fw-bold mb-3" th:text="${serie.nome}">Nome da Série</h1>
+            
+            <!-- Nota -->
+            <div class="mb-3" th:if="${serie.nota != null}">
+              <span class="badge bg-warning text-dark fs-5 px-3 py-2">
+                <i class="bi bi-star-fill"></i> <span th:text="${#numbers.formatDecimal(serie.nota, 1, 1)}">0.0</span>
+              </span>
+            </div>
+            
+            <!-- Gêneros -->
+            <div class="mb-3" th:if="${serie.generos != null && !serie.generos.isEmpty()}">
+              <span th:each="genero : ${serie.generos}" 
+                    class="badge bg-light text-dark me-2" 
+                    th:text="${genero}">Gênero</span>
+            </div>
+            
+            <!-- Idioma e Status -->
+            <div class="mb-3">
+              <span class="badge bg-info me-2" th:if="${serie.linguagem != null}">
+                <i class="bi bi-globe"></i> <span th:text="${serie.linguagem}">Idioma</span>
+              </span>
+              
+              <span th:if="${serie.dataTermino != null}" class="badge bg-danger">
+                <i class="bi bi-stop-circle"></i> Finalizada
+              </span>
+              <span th:unless="${serie.dataTermino != null}" class="badge bg-success">
+                <i class="bi bi-play-circle"></i> Em exibição
+              </span>
+            </div>
+            
+            <!-- Datas -->
+            <div>
+              <p class="mb-1" th:if="${serie.dataEstreia != null}">
+                <strong>Estreia:</strong> <span th:text="${#temporals.format(serie.dataEstreia, 'dd/MM/yyyy')}">01/01/2020</span>
+              </p>
+              <p class="mb-1" th:if="${serie.dataTermino != null}">
+                <strong>Término:</strong> <span th:text="${#temporals.format(serie.dataTermino, 'dd/MM/yyyy')}">01/01/2023</span>
+              </p>
+              <p class="mb-0" th:if="${totalEpisodios > 0}">
+                <strong>Total de Episódios:</strong> <span th:text="${totalEpisodios}">0</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Conteúdo Principal -->
+    <div class="container my-5">
+      
+      <!-- Sinopse -->
+      <div class="card mb-4 shadow-sm" th:if="${serie.sinopse != null && !serie.sinopse.isEmpty()}">
+        <div class="card-body">
+          <h3 class="card-title mb-3">
+            <i class="bi bi-book text-primary"></i> Sinopse
+          </h3>
+          <p class="card-text" th:utext="${serie.sinopse}">Sinopse da série</p>
+        </div>
+      </div>
+      
+      <!-- Episódios por Temporada -->
+      <div th:if="${temporadas != null && !temporadas.isEmpty()}" class="mb-5">
+        <h3 class="mb-4">
+          <i class="bi bi-collection-play text-primary"></i> Episódios
+        </h3>
+        
+        <!-- Accordion de Temporadas -->
+        <div class="accordion " id="accordionTemporadas">
+          <div class="accordion-item " th:each="temporada, iterStat : ${temporadas}">
+            <h2 class="accordion-header" th:id="'heading' + ${temporada}">
+              <button class="accordion-button " 
+                      th:classappend="${iterStat.index != 0} ? 'collapsed'"
+                      type="button" 
+                      data-bs-toggle="collapse" 
+                      th:data-bs-target="'#collapse' + ${temporada}" 
+                      th:aria-expanded="${iterStat.index == 0 ? 'true' : 'false'}"
+                      th:aria-controls="'collapse' + ${temporada}">
+                <strong>Temporada <span th:text="${temporada}">1</span></strong>
+                <span class="badge bg-primary ms-3" 
+                      th:text="${episodiosPorTemporada.get(temporada).size()} + ' episódios'">
+                  10 episódios
+                </span>
+              </button>
+            </h2>
+            <div th:id="'collapse' + ${temporada}" 
+                 class="accordion-collapse collapse"
+                 th:classappend="${iterStat.index == 0} ? 'show'"
+                 th:aria-labelledby="'heading' + ${temporada}"
+                 data-bs-parent="#accordionTemporadas">
+              <div class="accordion-body p-0">
+                
+                <!-- Lista de Episódios -->
+                <div class="list-group list-group-flush">
+                  <div class="list-group-item" 
+                       th:each="episodio : ${episodiosPorTemporada.get(temporada)}">
+                    <div class="row align-items-center">
+                      
+                      <!-- Imagem do Episódio -->
+                      <div class="col-md-2 mb-2 mb-md-0">
+                        <img th:src="${episodio.imagem != null ? episodio.imagem.medio : 'https://via.placeholder.com/210x118?text=Episódio'}" 
+                             class="img-fluid rounded" 
+                             th:alt="${episodio.nome}">
+                      </div>
+                      
+                      <!-- Informações do Episódio -->
+                      <div class="col-md-7">
+                        <h5 class="mb-1">
+                          <span class="badge bg-secondary me-2" 
+                                th:text="'E' + ${episodio.numero}">E1</span>
+                          <span th:text="${episodio.nome}">Nome do Episódio</span>
+                        </h5>
+                        <p class="mb-1 text-muted small" th:if="${episodio.dataExibicao != null}">
+                          <i class="bi bi-calendar"></i> 
+                          <span th:text="${#temporals.format(episodio.dataExibicao, 'dd/MM/yyyy')}">01/01/2020</span>
+                        </p>
+                        <p class="mb-0 text-muted small" th:if="${episodio.duracao != null}">
+                          <i class="bi bi-clock"></i> 
+                          <span th:text="${episodio.duracao + ' minutos'}">45 minutos</span>
+                        </p>
+                      </div>
+                      
+                      <!-- Ações -->
+                      <div class="col-md-3 text-md-end">
+                        <span class="badge bg-light text-dark">
+                          Temp. <span th:text="${episodio.temporada}">1</span> - 
+                          Ep. <span th:text="${episodio.numero}">1</span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Mensagem se não houver episódios -->
+      <div class="card text-center mb-5" th:if="${temporadas == null || temporadas.isEmpty()}">
+        <div class="card-body py-5">
+          <i class="bi bi-collection-play text-muted" style="font-size: 3rem;"></i>
+          <h4 class="mt-3">Nenhum episódio cadastrado</h4>
+          <p class="text-muted">Os episódios desta série ainda não foram adicionados.</p>
+        </div>
+      </div>
+      
+      <!-- Elenco Principal -->
+      <div th:if="${elenco != null && !elenco.isEmpty()}" class="mb-5">
+        <h3 class="mb-4">
+          <i class="bi bi-people text-primary"></i> Elenco Principal
+        </h3>
+        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-6 g-3">
+          <div class="col" th:each="participacao : ${elenco}">
+            <div class="card h-100 shadow-sm">
+              <a th:href="@{/pessoas/{id}(id=${participacao.pessoa.pessoaId})}" 
+                 class="text-decoration-none">
+                <img th:src="${participacao.personagem?.imagem != null ? participacao.personagem.imagem.medio : (participacao.pessoa?.imagem != null ? participacao.pessoa.imagem.medio : 'https://via.placeholder.com/200x300?text=Sem+Foto')}" 
+                     class="card-img-top" 
+                     style="height: 250px; object-fit: cover;"
+                     th:alt="${participacao.pessoa?.nome}">
+                <div class="card-body p-2">
+                  <h6 class="card-title mb-1 small fw-bold text-dark" 
+                      th:text="${participacao.pessoa?.nome}">Nome do Ator</h6>
+                  <p class="card-text small text-muted mb-0" 
+                     th:if="${participacao.personagem?.nomePersonagem != null}" 
+                     th:text="${participacao.personagem.nomePersonagem}">
+                    Personagem
+                  </p>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Mensagem se não houver elenco -->
+      <div class="card text-center mb-5" th:if="${elenco == null || elenco.isEmpty()}">
+        <div class="card-body py-5">
+          <i class="bi bi-people text-muted" style="font-size: 3rem;"></i>
+          <h4 class="mt-3">Nenhum membro do elenco cadastrado</h4>
+          <p class="text-muted">O elenco desta série ainda não foi adicionado.</p>
+        </div>
+      </div>
+      
+      <!-- Informações Adicionais -->
+      <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title mb-3">
+            <i class="bi bi-info-circle text-primary"></i> Informações Adicionais
+          </h5>
+          <div class="row">
+            <div class="col-md-6">
+              <ul class="list-unstyled">
+                <li><strong>ID da Série:</strong> <span th:text="${serie.serieId}">1</span></li>
+                <li th:if="${serie.externoId != null}">
+                  <strong>ID Externo:</strong> <span th:text="${serie.externoId}">123</span>
+                </li>
+                <li th:if="${temporadas != null && !temporadas.isEmpty()}">
+                  <strong>Número de Temporadas:</strong> <span th:text="${temporadas.size()}">0</span>
+                </li>
+              </ul>
+            </div>
+            <div class="col-md-6">
+              <ul class="list-unstyled">
+                <li th:if="${serie.linguagem != null}">
+                  <strong>Idioma Original:</strong> <span th:text="${serie.linguagem}">Inglês</span>
+                </li>
+                <li th:if="${serie.nota != null}">
+                  <strong>Avaliação:</strong> 
+                  <span th:text="${serie.nota + ' / 10.0'}">8.5 / 10.0</span>
+                </li>
+                <li th:if="${totalEpisodios > 0}">
+                  <strong>Total de Episódios:</strong> <span th:text="${totalEpisodios}">0</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Botão de Voltar -->
+      <div class="text-center mt-5 mb-4">
+        <a th:href="@{/series}" class="btn btn-primary btn-lg px-5">
+          <i class="bi bi-arrow-left"></i> Voltar para a lista de séries
+        </a>
+      </div>
+    </div>
+  </section>
+
+</body>
+
+</html>

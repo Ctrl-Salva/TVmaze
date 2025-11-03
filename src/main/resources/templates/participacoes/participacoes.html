@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layouts/layout}">
+
+<head>
+  <title>Elenco e Participações</title>
+  
+  </style>
+</head>
+
+<body>
+
+  <section layout:fragment="conteudo">
+    <div class="container my-5">
+      <div class="text-center mb-5">
+        <h2 class="display-5 fw-bold">Elenco e Participações</h2>
+        <p class="text-muted">Explore atores e seus personagens nas séries</p>
+      </div>
+
+      <!-- Filtros -->
+      <div class="filter-card shadow-sm bg-dark-subtle rounded p-3 mb-5">
+        <form method="get" th:action="@{/participacoes}" id="filterForm">
+          <div class="row g-3 align-items-end">
+            <div class="col-md-3">
+              <label for="serieId" class="form-label fw-bold">Série</label>
+              <select class="form-select" id="serieId" name="serieId" onchange="document.getElementById('filterForm').submit()">
+                <option value="">Todas as séries</option>
+                <option th:each="serie : ${seriesDisponiveis}" 
+                        th:value="${serie.key}" 
+                        th:text="${serie.value}"
+                        th:selected="${serie.key == serieIdSelecionada}">
+                </option>
+              </select>
+            </div>
+
+            <div class="col-md-3">
+              <label for="pessoaId" class="form-label fw-bold">Ator/Atriz</label>
+              <select class="form-select" id="pessoaId" name="pessoaId" onchange="document.getElementById('filterForm').submit()">
+                <option value="">Todos os atores</option>
+                <option th:each="pessoa : ${pessoasDisponiveis}" 
+                        th:value="${pessoa.key}" 
+                        th:text="${pessoa.value}"
+                        th:selected="${pessoa.key == pessoaIdSelecionada}">
+                </option>
+              </select>
+            </div>
+
+            <div class="col-md-3">
+              <label for="nomePersonagem" class="form-label fw-bold">Personagem</label>
+              <div class="input-group">
+                <span class="input-group-text">🎭</span>
+                <input type="text" 
+                       class="form-control" 
+                       id="nomePersonagem" 
+                       name="nomePersonagem" 
+                       placeholder="Nome do personagem..."
+                       th:value="${nomePersonagemSelecionado}">
+              </div>
+            </div>
+
+            <div class="col-md-2">
+              <label for="ordenar" class="form-label fw-bold">Ordenar</label>
+              <select class="form-select" id="ordenar" name="ordenar" onchange="document.getElementById('filterForm').submit()">
+                <option value="participacaoId" th:selected="${ordenarSelecionado == 'participacaoId'}">Mais Recentes</option>
+                <option value="serie" th:selected="${ordenarSelecionado == 'serie'}">Série</option>
+                <option value="pessoa" th:selected="${ordenarSelecionado == 'pessoa'}">Ator/Atriz</option>
+                <option value="personagem" th:selected="${ordenarSelecionado == 'personagem'}">Personagem</option>
+              </select>
+            </div>
+
+            <div class="col-md-1">
+              <select class="form-select" id="direcao" name="direcao" onchange="document.getElementById('filterForm').submit()">
+                <option value="asc" th:selected="${direcaoSelecionada == 'asc'}">↑</option>
+                <option value="desc" th:selected="${direcaoSelecionada == 'desc'}">↓</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col-12 d-flex justify-content-between align-items-center">
+              <div>
+                <button type="submit" class="btn btn-dark me-2">
+                  Buscar
+                </button>
+                <a th:href="@{/participacoes}" class="btn btn-outline-secondary">
+                  Limpar Filtros
+                </a>
+              </div>
+              <span class="text-muted">
+                <strong th:text="${participacoesPage.totalElements}">0</strong> participação(ões) encontrada(s)
+              </span>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Grid de Participações -->
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4 mb-5">
+        <div class="col" th:each="part : ${participacoesPage.content}">
+          <div class="card h-100 shadow-sm hover-card character-card">
+            <div class="card-body p-0">
+              <!-- Imagem do Personagem -->
+              <div class="position-relative">
+                <img th:src="${part.personagem?.imagem != null ? part.personagem.imagem.medio : (part.pessoa?.imagem != null ? part.pessoa.imagem.medio : 'https://via.placeholder.com/250x280?text=Sem+Imagem')}" 
+                     class="w-100 character-img" 
+                     th:alt="${part.personagem?.nomePersonagem}">
+                
+                <!-- Badge com nome do ator -->
+                <div class="position-absolute bottom-0 start-0 m-3">
+                  <span class=" bg-white bg-opacity-25 p-2 rounded-pill">
+                    <small><strong th:text="${part.pessoa?.nome}">Nome do Ator</strong></small>
+                  </span>
+                </div>
+              </div>
+              
+              <!-- Informações -->
+              <div class="p-3">
+                <h5 class="card-title text-center mb-2" th:if="${part.personagem?.nomePersonagem != null}">
+                  <strong th:text="${part.personagem.nomePersonagem}">Personagem</strong>
+                </h5>
+                <h5 class="card-title text-center mb-2 text-muted" th:unless="${part.personagem?.nomePersonagem != null}">
+                  <em>Personagem não informado</em>
+                </h5>
+                
+                <div class="text-center">
+                  <small class="d-block mb-2">
+                    📺 <strong th:text="${part.serie_nome}">Nome da Série</strong>
+                  </small>
+                </div>
+                
+                <div class="d-flex justify-content-center gap-2 mt-3">
+                  <a th:href="@{/series/{id}(id=${part.serie_id})}" 
+                     class="btn btn-primary  rounded"
+                     title="Ver Série">
+                    📺 Série
+                  </a>
+                  <a th:href="@{/pessoas/{id}(id=${part.pessoa?.pessoaId})}" 
+                     class="btn btn-primary  rounded"
+                     title="Ver Ator/Atriz">
+                    👤 Ator
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mensagem quando não há resultados -->
+      <div class="text-center mt-5" th:if="${participacoesPage.content == null || participacoesPage.content.isEmpty()}">
+        <div class="alert alert-warning d-inline-block">
+          <h5>😕 Nenhuma participação encontrada</h5>
+          <p class="mb-0">Tente ajustar os filtros de busca.</p>
+        </div>
+        <br>
+        <a th:href="@{/participacoes}" class="btn btn-primary mt-3">Ver todas as participações</a>
+      </div>
+
+      <!-- Paginação -->
+      <nav th:if="${participacoesPage.totalPages > 1}" aria-label="Navegação de páginas">
+        <ul class="pagination justify-content-center">
+          
+          <!-- Primeira página -->
+          <li class="page-item" th:classappend="${participacoesPage.first} ? 'disabled'">
+            <a class="page-link" 
+               th:href="@{/participacoes(page=0, size=${participacoesPage.size}, serieId=${serieIdSelecionada}, pessoaId=${pessoaIdSelecionada}, nomePersonagem=${nomePersonagemSelecionado}, ordenar=${ordenarSelecionado}, direcao=${direcaoSelecionada})}">
+              &laquo; Primeira
+            </a>
+          </li>
+
+          <!-- Página anterior -->
+          <li class="page-item" th:classappend="${!participacoesPage.hasPrevious()} ? 'disabled'">
+            <a class="page-link" 
+               th:href="@{/participacoes(page=${participacoesPage.number - 1}, size=${participacoesPage.size}, serieId=${serieIdSelecionada}, pessoaId=${pessoaIdSelecionada}, nomePersonagem=${nomePersonagemSelecionado}, ordenar=${ordenarSelecionado}, direcao=${direcaoSelecionada})}">
+              Anterior
+            </a>
+          </li>
+
+          <!-- Números de página -->
+          <li class="page-item" 
+              th:each="i : ${#numbers.sequence(0, participacoesPage.totalPages - 1)}"
+              th:if="${i >= participacoesPage.number - 2 && i <= participacoesPage.number + 2}"
+              th:classappend="${i == participacoesPage.number} ? 'active'">
+            <a class="page-link" 
+               th:href="@{/participacoes(page=${i}, size=${participacoesPage.size}, serieId=${serieIdSelecionada}, pessoaId=${pessoaIdSelecionada}, nomePersonagem=${nomePersonagemSelecionado}, ordenar=${ordenarSelecionado}, direcao=${direcaoSelecionada})}"
+               th:text="${i + 1}">1</a>
+          </li>
+
+          <!-- Próxima página -->
+          <li class="page-item" th:classappend="${!participacoesPage.hasNext()} ? 'disabled'">
+            <a class="page-link" 
+               th:href="@{/participacoes(page=${participacoesPage.number + 1}, size=${participacoesPage.size}, serieId=${serieIdSelecionada}, pessoaId=${pessoaIdSelecionada}, nomePersonagem=${nomePersonagemSelecionado}, ordenar=${ordenarSelecionado}, direcao=${direcaoSelecionada})}">
+              Próxima
+            </a>
+          </li>
+
+          <!-- Última página -->
+          <li class="page-item" th:classappend="${participacoesPage.last} ? 'disabled'">
+            <a class="page-link" 
+               th:href="@{/participacoes(page=${participacoesPage.totalPages - 1}, size=${participacoesPage.size}, serieId=${serieIdSelecionada}, pessoaId=${pessoaIdSelecionada}, nomePersonagem=${nomePersonagemSelecionado}, ordenar=${ordenarSelecionado}, direcao=${direcaoSelecionada})}">
+              Última &raquo;
+            </a>
+          </li>
+        </ul>
+
+        <!-- Informações da paginação -->
+        <div class="text-center text-muted mb-4">
+          Página <strong th:text="${participacoesPage.number + 1}">1</strong> de 
+          <strong th:text="${participacoesPage.totalPages}">1</strong>
+          (mostrando <strong th:text="${participacoesPage.numberOfElements}">0</strong> de 
+          <strong th:text="${participacoesPage.totalElements}">0</strong> participações)
+        </div>
+      </nav>
+    </div>
+  </section>
+
+</body>
+
+</html>
