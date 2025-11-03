@@ -1,79 +1,76 @@
 package com.example.tvmaze.dtos.participacao;
 
+import com.example.tvmaze.dtos.pessoa.PessoaRespostaDTO;
+
 public class ParticipacaoRespostaDTO {
 
-    private Integer participacaoId;
+    private Integer participacao_id;
 
-    private Integer externoId;
+    private Integer serie_id;
 
-    private String personagem;
+    private String serie_nome;
 
-    private Integer pessoaId;
+    private PessoaRespostaDTO pessoa;
 
-    private String pessoaNome;
+    private PersonagemApiDTO personagem;
 
-    private Integer serieId;
 
-    private String serieNome;
 
     public ParticipacaoRespostaDTO() {
     }
 
-    public Integer getParticipacaoId() {
-        return participacaoId;
+
+    public Integer getParticipacao_id() {
+        return participacao_id;
     }
 
-    public void setParticipacaoId(Integer participacaoId) {
-        this.participacaoId = participacaoId;
+
+    public void setParticipacao_id(Integer participacao_id) {
+        this.participacao_id = participacao_id;
     }
 
-    public Integer getExternoId() {
-        return externoId;
+
+
+    public Integer getSerie_id() {
+        return serie_id;
     }
 
-    public void setExternoId(Integer externoId) {
-        this.externoId = externoId;
+
+    public void setSerie_id(Integer serie_id) {
+        this.serie_id = serie_id;
     }
 
-    public String getPersonagem() {
+
+    public String getSerie_nome() {
+        return serie_nome;
+    }
+
+
+    public void setSerie_nome(String serie_nome) {
+        this.serie_nome = serie_nome;
+    }
+
+
+    public PersonagemApiDTO getPersonagem() {
         return personagem;
     }
 
-    public void setPersonagem(String personagem) {
+
+    public void setPersonagem(PersonagemApiDTO personagem) {
         this.personagem = personagem;
     }
 
-    public Integer getPessoaId() {
-        return pessoaId;
+
+    public PessoaRespostaDTO getPessoa() {
+        return pessoa;
     }
 
-    public void setPessoaId(Integer pessoaId) {
-        this.pessoaId = pessoaId;
+
+    public void setPessoa(PessoaRespostaDTO pessoa) {
+        this.pessoa = pessoa;
     }
 
-    public String getPessoaNome() {
-        return pessoaNome;
-    }
-
-    public void setPessoaNome(String pessoaNome) {
-        this.pessoaNome = pessoaNome;
-    }
-
-    public Integer getSerieId() {
-        return serieId;
-    }
-
-    public void setSerieId(Integer serieId) {
-        this.serieId = serieId;
-    }
-
-    public String getSerieNome() {
-        return serieNome;
-    }
-
-    public void setSerieNome(String serieNome) {
-        this.serieNome = serieNome;
-    }
-
+    
+  
     
 }

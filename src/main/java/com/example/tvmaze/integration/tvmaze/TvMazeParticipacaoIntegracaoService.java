@@ -98,7 +98,7 @@ public class TvMazeParticipacaoIntegracaoService {
         participacaoMapper.findOrCreatePessoa(participacaoApi.getPessoa()); // Garante que a pessoa existe e está atualizada
 
         // Tenta encontrar uma participação existente (Pessoa, Série e Personagem devem ser únicos para uma participação)
-        Optional<Participacao> existingParticipacaoOpt = participacaoRepository.findByPessoaAndSerieAndPersonagem(
+        Optional<Participacao> existingParticipacaoOpt = participacaoRepository.findByPessoaAndSerieAndPersonagem_NomePersonagem(
             pessoaRepository.findByExternoId(participacaoApi.getPessoa().getExternoId()).get(), // Busca a pessoa recém-garantida
             serie,
             participacaoApi.getPersonagem().getNomePersonagem()

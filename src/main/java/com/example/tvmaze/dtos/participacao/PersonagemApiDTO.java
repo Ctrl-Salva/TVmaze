@@ -1,5 +1,6 @@
 package com.example.tvmaze.dtos.participacao;
 
+import com.example.tvmaze.entities.vo.Imagem;
 import com.google.gson.annotations.SerializedName;
 
 public class PersonagemApiDTO {
@@ -9,6 +10,9 @@ public class PersonagemApiDTO {
     
     @SerializedName("name") // ou @JsonProperty("name")
     private String nomePersonagem;
+
+    @SerializedName("image")
+    private Imagem imagem;
 
     public PersonagemApiDTO() {}
 
@@ -31,4 +35,13 @@ public class PersonagemApiDTO {
         this.nomePersonagem = nomePersonagem;
     }
 
+    public Imagem getImagem() {
+        return imagem;
+    }
+
+    public void setImagem(Imagem imagem) {
+        this.imagem = imagem;
+    }
+
+    
 }

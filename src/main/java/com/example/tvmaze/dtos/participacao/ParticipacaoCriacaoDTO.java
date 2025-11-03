@@ -4,19 +4,10 @@ package com.example.tvmaze.dtos.participacao;
 public class ParticipacaoCriacaoDTO {
 
   private Integer pessoaId; 
-  private Integer externoId;
   private Integer serieId;
   private String personagem;
 
   public ParticipacaoCriacaoDTO() {
-  }
-
-  public Integer getExternoId() {
-    return externoId;
-  }
-  
-  public void setExternoId(Integer externoId) {
-    this.externoId = externoId;
   }
   
     public Integer getPessoaId() {

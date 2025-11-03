@@ -11,7 +11,11 @@ import com.example.tvmaze.entities.Serie;
 
 public interface ParticipacaoRepository extends JpaRepository<Participacao, Integer> {
 
-    Optional<Participacao> findByPessoaAndSerieAndPersonagem(Pessoa pessoa, Serie serie, String personagem);
+     Optional<Participacao> findByPessoaAndSerieAndPersonagem_NomePersonagem(
+        Pessoa pessoa,
+        Serie serie,
+        String nomePersonagem
+    );
 
    List<Participacao> findBySerie_SerieId(Integer serieId);
 }
