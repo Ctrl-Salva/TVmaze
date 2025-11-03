@@ -2,7 +2,7 @@ package com.example.tvmaze.dtos.serie;
 
 import java.util.Set;
 
-import com.example.tvmaze.entities.vo.Imagem;
+import com.example.tvmaze.models.vo.Imagem;
 import com.google.gson.annotations.SerializedName;
 
 public class SerieApiDTO {

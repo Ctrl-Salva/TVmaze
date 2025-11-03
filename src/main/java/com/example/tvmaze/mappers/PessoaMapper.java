@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import com.example.tvmaze.dtos.pessoa.PessoaApiDTO;
 import com.example.tvmaze.dtos.pessoa.PessoaCriacaoDTO;
 import com.example.tvmaze.dtos.pessoa.PessoaRespostaDTO;
-import com.example.tvmaze.entities.Pessoa;
+import com.example.tvmaze.models.Pessoa;
 
 @Component
 public class PessoaMapper {

@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 
 
 import com.example.tvmaze.dtos.serie.SerieApiDTO;
-import com.example.tvmaze.entities.Serie;
 import com.example.tvmaze.mappers.SerieMapper;
+import com.example.tvmaze.models.Serie;
 import com.example.tvmaze.repositories.SerieRepository;
 import com.example.tvmaze.services.GeneroService;
 
@@ -84,16 +84,56 @@ public class TvMazeSerieIntegracaoService {
      */
     public List<Serie> importarSeriesPadrao() {
         List<String> nomes = List.of(
-                "Breaking Bad",
-                "Game of Thrones",
-                "Friends",
-                "Stranger Things",
-                "The Office",
-                "The Mandalorian",
-                "Peaky Blinders",
-                "The Witcher",
-                "The Boys",
-                "Sherlock");
+               "Breaking Bad",
+            "Game of Thrones",
+            "Friends",
+            "Stranger Things",
+            "The Office",
+            "The Mandalorian",
+            "Peaky Blinders",
+            "The Witcher",
+            "The Boys",
+            "Sherlock",
+            "The Crown",
+            "Narcos",
+            "House of Cards",
+            "Westworld",
+            "Black Mirror",
+            "Vikings",
+            "Succession",
+            "The Walking Dead",
+            "Better Call Saul",
+            "Lost",
+            "Prison Break",
+            "Dexter",
+            "Grey's Anatomy",
+            "Supernatural",
+            "The Big Bang Theory",
+            "How I Met Your Mother",
+            "Arrow",
+            "The Flash",
+            "Lucifer",
+            "Brooklyn Nine-Nine",
+            "Parks and Recreation",
+            "Community",
+            "Scrubs",
+            "Doctor Who",
+            "Gotham",
+            "Daredevil",
+            "Jessica Jones",
+            "The Punisher",
+            "Luke Cage",
+            "Iron Fist",
+            "Agents of S.H.I.E.L.D.",
+            "True Detective",
+            "Fargo",
+            "The Expanse",
+            "Altered Carbon",
+            "Dark",
+            "Money Heist",
+            "The Handmaid's Tale",
+            "Ozark",
+            "Mindhunter");
 
         List<Serie> importadas = new ArrayList<>();
 

@@ -1,7 +1,6 @@
-package com.example.tvmaze.entities;
+package com.example.tvmaze.models;
 
-import com.example.tvmaze.entities.vo.Imagem;
-
+import com.example.tvmaze.models.vo.Imagem;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

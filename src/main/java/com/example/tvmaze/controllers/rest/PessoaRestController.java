@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.tvmaze.dtos.pessoa.PessoaCriacaoDTO;
 import com.example.tvmaze.dtos.pessoa.PessoaRespostaDTO;
-import com.example.tvmaze.entities.Pessoa;
+import com.example.tvmaze.models.Pessoa;
 import com.example.tvmaze.services.PessoaService;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;

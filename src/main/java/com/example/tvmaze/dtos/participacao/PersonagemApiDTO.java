@@ -1,6 +1,6 @@
 package com.example.tvmaze.dtos.participacao;
 
-import com.example.tvmaze.entities.vo.Imagem;
+import com.example.tvmaze.models.vo.Imagem;
 import com.google.gson.annotations.SerializedName;
 
 public class PersonagemApiDTO {

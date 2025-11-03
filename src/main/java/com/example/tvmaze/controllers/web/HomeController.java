@@ -1,6 +1,5 @@
 package com.example.tvmaze.controllers.web;
 
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,21 +13,20 @@ import com.example.tvmaze.services.SerieService;
 @Controller
 public class HomeController {
 
-    @Autowired
-    private SerieService serieService;
+  @Autowired
+  private SerieService serieService;
 
-    @GetMapping("/")
-    public String home(Model model) {
-        List<SerieRespostaDTO> series = serieService.listarSeriesOrdenadas();
-        /*
-         * 
-         if (series.size() > 5) {
-             series = series.subList(0, 5);
-         }
-         * 
-         */
+  @GetMapping("/")
+  public String home(Model model) {
+    List<SerieRespostaDTO> seriesPopulares = serieService.listarSeriesOrdenadas();
+    List<SerieRespostaDTO> seriesRecentes = serieService.listarSeriesRecentes();
 
-        model.addAttribute("series", series);
-        return "index";
+    if (seriesPopulares.size() > 5) {
+      seriesPopulares = seriesPopulares.subList(0, 5);
     }
+
+    model.addAttribute("seriesPopulares", seriesPopulares);
+    model.addAttribute("seriesRecentes", seriesRecentes);
+    return "home/index";
+  }
 }

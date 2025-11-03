@@ -3,9 +3,9 @@ package com.example.tvmaze.integration.tvmaze; // Ajuste o pacote conforme sua e
 import com.example.tvmaze.repositories.ParticipacaoRepository;
 import com.example.tvmaze.repositories.PessoaRepository;
 import com.example.tvmaze.repositories.SerieRepository;
-import com.example.tvmaze.entities.Participacao;
-import com.example.tvmaze.entities.Serie;
 import com.example.tvmaze.mappers.ParticipacaoMapper;
+import com.example.tvmaze.models.Participacao;
+import com.example.tvmaze.models.Serie;
 import com.example.tvmaze.dtos.participacao.ParticipacaoApiDTO;
 import com.example.tvmaze.dtos.participacao.ParticipacaoRespostaDTO;
 

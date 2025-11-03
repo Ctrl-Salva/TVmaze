@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.tvmaze.dtos.pessoa.PessoaApiDTO;
-import com.example.tvmaze.entities.Pessoa;
 import com.example.tvmaze.mappers.PessoaMapper;
+import com.example.tvmaze.models.Pessoa;
 import com.example.tvmaze.repositories.PessoaRepository;
 
 @Service

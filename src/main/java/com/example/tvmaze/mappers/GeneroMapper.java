@@ -6,9 +6,9 @@ import org.springframework.stereotype.Component;
 import com.example.tvmaze.dtos.episodio.EpisodioApiDTO;
 import com.example.tvmaze.dtos.genero.GeneroCriacaoDTO;
 import com.example.tvmaze.dtos.genero.GeneroRespostaDTO;
-import com.example.tvmaze.entities.Episodio;
-import com.example.tvmaze.entities.Genero;
-import com.example.tvmaze.entities.Serie;
+import com.example.tvmaze.models.Episodio;
+import com.example.tvmaze.models.Genero;
+import com.example.tvmaze.models.Serie;
 
 
 @Component

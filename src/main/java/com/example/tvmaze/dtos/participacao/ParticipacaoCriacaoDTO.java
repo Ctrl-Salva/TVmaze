@@ -1,7 +1,7 @@
 package com.example.tvmaze.dtos.participacao;
 
 import com.example.tvmaze.dtos.personagem.PersonagemCriacaoDTO;
-import com.example.tvmaze.entities.Personagem;
+
 
 public class ParticipacaoCriacaoDTO {
 

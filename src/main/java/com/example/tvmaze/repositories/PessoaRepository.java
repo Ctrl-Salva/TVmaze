@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.example.tvmaze.entities.Pessoa;
+import com.example.tvmaze.models.Pessoa;
 
 public interface PessoaRepository extends JpaRepository<Pessoa, Integer>{
     Optional<Pessoa> findByExternoId(Integer externoId);

@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 
 import com.example.tvmaze.dtos.genero.GeneroCriacaoDTO;
 import com.example.tvmaze.dtos.genero.GeneroRespostaDTO;
-import com.example.tvmaze.entities.Genero;
 import com.example.tvmaze.mappers.GeneroMapper;
+import com.example.tvmaze.models.Genero;
 import com.example.tvmaze.repositories.GeneroRepository;
 
 @Service

@@ -1,4 +1,4 @@
-package com.example.tvmaze.entities.vo;
+package com.example.tvmaze.models.vo;
 
 import com.google.gson.annotations.SerializedName;
 

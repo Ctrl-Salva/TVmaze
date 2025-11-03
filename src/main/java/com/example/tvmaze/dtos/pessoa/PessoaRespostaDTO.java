@@ -2,8 +2,8 @@ package com.example.tvmaze.dtos.pessoa;
 
 import java.time.LocalDate;
 
-import com.example.tvmaze.entities.vo.Imagem;
-import com.google.gson.annotations.SerializedName;
+import com.example.tvmaze.models.vo.Imagem;
+
 
 public class PessoaRespostaDTO {
     

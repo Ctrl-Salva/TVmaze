@@ -2,7 +2,7 @@ package com.example.tvmaze.dtos.episodio;
 
 import java.time.LocalDate;
 
-import com.example.tvmaze.entities.vo.Imagem;
+import com.example.tvmaze.models.vo.Imagem;
 
 
 

@@ -12,8 +12,8 @@ import org.springframework.stereotype.Component;
 import com.example.tvmaze.dtos.serie.SerieApiDTO;
 import com.example.tvmaze.dtos.serie.SerieCriacaoDTO;
 import com.example.tvmaze.dtos.serie.SerieRespostaDTO;
-import com.example.tvmaze.entities.Genero;
-import com.example.tvmaze.entities.Serie;
+import com.example.tvmaze.models.Genero;
+import com.example.tvmaze.models.Serie;
 import com.example.tvmaze.repositories.GeneroRepository;
 
 

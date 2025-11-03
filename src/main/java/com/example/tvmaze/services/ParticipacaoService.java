@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 
 import com.example.tvmaze.dtos.participacao.ParticipacaoCriacaoDTO;
 import com.example.tvmaze.dtos.participacao.ParticipacaoRespostaDTO;
-import com.example.tvmaze.entities.Participacao;
 import com.example.tvmaze.mappers.ParticipacaoMapper;
+import com.example.tvmaze.models.Participacao;
 import com.example.tvmaze.repositories.ParticipacaoRepository;
 
 import java.util.List;

@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 
 import com.example.tvmaze.dtos.serie.SerieCriacaoDTO;
 import com.example.tvmaze.dtos.serie.SerieRespostaDTO;
-import com.example.tvmaze.entities.Serie;
 import com.example.tvmaze.mappers.SerieMapper;
+import com.example.tvmaze.models.Serie;
 import com.example.tvmaze.repositories.SerieRepository;
 import com.example.tvmaze.utils.Quicksort;
 
@@ -36,6 +36,13 @@ public class SerieService {
                 .map(serieMapper::toRespostaDTO)
                 .collect(Collectors.toList());
     }
+
+    public List<SerieRespostaDTO> listarSeriesRecentes() {
+    return serieRepository.findTop5ByOrderBySerieIdDesc()
+        .stream()
+        .map(serieMapper::toRespostaDTO)
+        .collect(Collectors.toList());
+}
 
     public SerieRespostaDTO buscarPorId(Integer id) {
         Serie serie = serieRepository.findById(id)

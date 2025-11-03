@@ -1,4 +1,4 @@
-package com.example.tvmaze.entities;
+package com.example.tvmaze.models;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;

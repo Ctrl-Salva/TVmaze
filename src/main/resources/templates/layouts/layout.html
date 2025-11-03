@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layouts/">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title layout:title-pattern="$CONTENT_TITLE - TVmaze Manager">TVmaze Manager</title>
+  <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+  <link th:href="@{/css/header.css}" rel="stylesheet">
+  <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+
+</head>
+
+<body class="bg-dark text-white" data-bs-theme="dark">
+
+  <!-- Navbar -->
+  <header th:replace="~{fragments/header :: header}"></header>
+
+  <!-- Conteúdo Principal -->
+  <main class="main-content">
+    <div layout:fragment="conteudo">
+      <!-- O conteúdo das páginas será inserido aqui -->
+    </div>
+  </main>
+
+
+
+</body>
+
+</html>

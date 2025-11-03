@@ -5,8 +5,8 @@ import org.springframework.stereotype.Component;
 import com.example.tvmaze.dtos.episodio.EpisodioApiDTO;
 import com.example.tvmaze.dtos.episodio.EpisodioCriacaoDTO;
 import com.example.tvmaze.dtos.episodio.EpisodioRespostaDTO;
-import com.example.tvmaze.entities.Episodio;
-import com.example.tvmaze.entities.Serie;
+import com.example.tvmaze.models.Episodio;
+import com.example.tvmaze.models.Serie;
 
 @Component
 public class EpisodioMapper {

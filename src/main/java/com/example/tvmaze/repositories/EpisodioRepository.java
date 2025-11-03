@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.example.tvmaze.entities.Episodio;
+import com.example.tvmaze.models.Episodio;
 
 public interface EpisodioRepository extends JpaRepository<Episodio, Integer>{
     /**

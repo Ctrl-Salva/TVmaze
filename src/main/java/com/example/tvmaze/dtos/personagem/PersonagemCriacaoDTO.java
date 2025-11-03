@@ -1,6 +1,6 @@
 package com.example.tvmaze.dtos.personagem;
 
-import com.example.tvmaze.entities.vo.Imagem;
+import com.example.tvmaze.models.vo.Imagem;
 
 public class PersonagemCriacaoDTO {
     private String nomePersonagem;

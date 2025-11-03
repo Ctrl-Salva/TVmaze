@@ -5,9 +5,9 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.example.tvmaze.entities.Participacao;
-import com.example.tvmaze.entities.Pessoa;
-import com.example.tvmaze.entities.Serie;
+import com.example.tvmaze.models.Participacao;
+import com.example.tvmaze.models.Pessoa;
+import com.example.tvmaze.models.Serie;
 
 public interface ParticipacaoRepository extends JpaRepository<Participacao, Integer> {
 

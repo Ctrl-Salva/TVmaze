@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 
 import com.example.tvmaze.dtos.episodio.EpisodioCriacaoDTO;
 import com.example.tvmaze.dtos.episodio.EpisodioRespostaDTO;
-import com.example.tvmaze.entities.Episodio;
-import com.example.tvmaze.entities.Serie;
 import com.example.tvmaze.mappers.EpisodioMapper;
+import com.example.tvmaze.models.Episodio;
+import com.example.tvmaze.models.Serie;
 import com.example.tvmaze.repositories.EpisodioRepository;
 import com.example.tvmaze.repositories.SerieRepository;
 

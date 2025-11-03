@@ -2,7 +2,7 @@ package com.example.tvmaze.utils;
 
 import java.util.List;
 
-import com.example.tvmaze.entities.Serie;
+import com.example.tvmaze.models.Serie;
 
 public class Quicksort {
 

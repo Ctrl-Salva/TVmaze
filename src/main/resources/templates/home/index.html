@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/layout}">
+
+<head>
+</head>
+
+<body>
+    <section layout:fragment="conteudo">
+        <div class="container my-5">
+            <!-- Séries Mais Populares -->
+            <div class="text-center mb-5">
+                <h1 class="display-4 fw-bold">Séries Mais Populares</h1>
+                <p class="lead text-muted">Confira as séries com melhor avaliação</p>
+            </div>
+
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-5 g-4 mb-5">
+                <div class="col" th:each="serie : ${seriesPopulares}">
+                    <div class="card h-100 shadow-sm hover-card">
+                        <img th:src="${serie.imagem != null ? serie.imagem.medio : 'https://via.placeholder.com/210x295?text=Sem+Imagem'}" 
+                             class="card-img-top" 
+                             th:alt="${serie.nome}"
+                             style="height: 295px; object-fit: cover;">
+                        
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title text-truncate" th:text="${serie.nome}">Nome da Série</h5>
+                            
+                            <div class="mb-2">
+                                <span class="badge bg-warning text-dark" th:if="${serie.nota != null}">
+                                    <span th:text="${serie.nota}">0.0</span>
+                                </span>
+                                <span class="badge bg-secondary" th:unless="${serie.nota != null}">
+                                    Sem nota
+                                </span>
+                            </div>
+                            
+                            <div class="mb-2" th:if="${serie.generos != null && !serie.generos.isEmpty()}">
+                                <small class="text-muted">
+                                    <span th:each="genero, iterStat : ${serie.generos}">
+                                        <span th:text="${genero}">Gênero</span><span th:if="${!iterStat.last}">, </span>
+                                    </span>
+                                </small>
+                            </div>
+                            
+                            <small class="text-muted mb-3" th:if="${serie.dataEstreia != null}">
+                                <i>Estreia: </i><span th:text="${#temporals.format(serie.dataEstreia, 'dd/MM/yyyy')}">01/01/2020</span>
+                            </small>
+                            
+                            <a th:href="@{/series/{id}(id=${serie.serieId})}" class="btn btn-primary mt-auto">
+                                Ver Detalhes
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-5" th:if="${seriesPopulares == null || seriesPopulares.isEmpty()}">
+                <p class="lead text-muted">Nenhuma série popular encontrada no momento.</p>
+            </div>
+
+            <!-- Divisor -->
+            <hr class="my-5">
+
+            <!-- Séries Adicionadas Recentemente -->
+            <div class="text-center mb-5">
+                <h2 class="display-5 fw-bold">Adicionadas Recentemente</h2>
+                <p class="lead text-muted">As últimas séries cadastradas no sistema</p>
+            </div>
+
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-5 g-4 mb-5">
+                <div class="col" th:each="serie : ${seriesRecentes}">
+                    <div class="card h-100 shadow-sm hover-card border-success">
+                        <div class="position-relative">
+                            <img th:src="${serie.imagem != null ? serie.imagem.medio : 'https://via.placeholder.com/210x295?text=Sem+Imagem'}" 
+                                 class="card-img-top" 
+                                 th:alt="${serie.nome}"
+                                 style="height: 295px; object-fit: cover;">
+                            <span class="position-absolute top-0 end-0 badge bg-success m-2">
+                                NOVO
+                            </span>
+                        </div>
+                        
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title text-truncate" th:text="${serie.nome}">Nome da Série</h5>
+                            
+                            <div class="mb-2">
+                                <span class="badge bg-warning text-dark" th:if="${serie.nota != null}">
+                                    <span th:text="${serie.nota}">0.0</span>
+                                </span>
+                                <span class="badge bg-secondary" th:unless="${serie.nota != null}">
+                                    Sem nota
+                                </span>
+                            </div>
+                            
+                            <div class="mb-2" th:if="${serie.generos != null && !serie.generos.isEmpty()}">
+                                <small class="text-muted">
+                                    <span th:each="genero, iterStat : ${serie.generos}">
+                                        <span th:text="${genero}">Gênero</span><span th:if="${!iterStat.last}">, </span>
+                                    </span>
+                                </small>
+                            </div>
+                            
+                            <small class="text-muted mb-3" th:if="${serie.dataEstreia != null}">
+                                <i>Estreia: </i><span th:text="${#temporals.format(serie.dataEstreia, 'dd/MM/yyyy')}">01/01/2020</span>
+                            </small>
+                            
+                            <a th:href="@{/series/{id}(id=${serie.serieId})}" class="btn btn-success mt-auto">
+                                Ver Detalhes
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-5" th:if="${seriesRecentes == null || seriesRecentes.isEmpty()}">
+                <p class="lead text-muted">Nenhuma série recente encontrada no momento.</p>
+            </div>
+
+            <!-- Botão Ver Todas -->
+            <div class="text-center mt-5">
+                <a th:href="@{/series}" class="btn btn-outline-primary btn-lg">
+                    Ver Todas as Séries →
+                </a>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.tvmaze.dtos.serie.SerieCriacaoDTO;
 import com.example.tvmaze.dtos.serie.SerieRespostaDTO;
-import com.example.tvmaze.entities.Serie;
+import com.example.tvmaze.models.Serie;
 import com.example.tvmaze.services.SerieService;
 
 @RestController
