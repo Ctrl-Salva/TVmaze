@@ -1,9 +1,6 @@
 package com.example.tvmaze.entities;
 
-import com.example.tvmaze.entities.vo.Personagem;
-
-import jakarta.persistence.AttributeOverride;
-import jakarta.persistence.Column;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,22 +15,21 @@ public class Participacao {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer participacaoId;
 
-  @AttributeOverride(
-        name = "externoId", // Nome do campo no objeto embutido (Personagem)
-        column = @Column(name = "personagem_externo_id") // Novo nome da coluna no banco
-    )
-  private Personagem personagem;
-
-  @ManyToOne  
+  @ManyToOne
   @JoinColumn(name = "pessoa_id")
   private Pessoa pessoa;
 
-  @ManyToOne 
+  @ManyToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "personagem_id", nullable = false)
+  private Personagem personagem;
+
+  @ManyToOne
   @JoinColumn(name = "serie_id")
   private Serie serie;
 
-  public Participacao() {}
-  
+  public Participacao() {
+  }
+
   public Integer getParticipacaoId() {
     return participacaoId;
   }

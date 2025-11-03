@@ -1,11 +1,13 @@
 package com.example.tvmaze.dtos.participacao;
 
+import com.example.tvmaze.dtos.personagem.PersonagemCriacaoDTO;
+import com.example.tvmaze.entities.Personagem;
 
 public class ParticipacaoCriacaoDTO {
 
   private Integer pessoaId; 
   private Integer serieId;
-  private String personagem;
+  private PersonagemCriacaoDTO personagem;
 
   public ParticipacaoCriacaoDTO() {
   }
@@ -26,11 +28,11 @@ public class ParticipacaoCriacaoDTO {
       this.serieId = serieId;
     }
   
-  public String getPersonagem() {
+  public PersonagemCriacaoDTO getPersonagem() {
     return personagem;
   }
   
-  public void setPersonagem(String personagem) {
+  public void setPersonagem(PersonagemCriacaoDTO personagem) {
     this.personagem = personagem;
   }
 

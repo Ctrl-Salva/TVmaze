@@ -12,10 +12,11 @@ import com.example.tvmaze.dtos.participacao.PersonagemApiDTO;
 import com.example.tvmaze.dtos.pessoa.PessoaApiDTO;
 import com.example.tvmaze.dtos.pessoa.PessoaRespostaDTO;
 import com.example.tvmaze.entities.Participacao;
+import com.example.tvmaze.entities.Personagem;
 import com.example.tvmaze.entities.Pessoa;
 import com.example.tvmaze.entities.Serie;
-import com.example.tvmaze.entities.vo.Personagem;
 import com.example.tvmaze.repositories.ParticipacaoRepository;
+import com.example.tvmaze.repositories.PersonagemRepository;
 import com.example.tvmaze.repositories.PessoaRepository;
 import com.example.tvmaze.repositories.SerieRepository;
 
@@ -29,6 +30,9 @@ public class ParticipacaoMapper {
 
     @Autowired
     private ParticipacaoRepository participacaoRepository;
+
+    @Autowired
+    private PersonagemRepository personagemRepository;
 
     // Para buscar a Série
 
@@ -66,39 +70,40 @@ public class ParticipacaoMapper {
     }
 
     public Participacao toEntity(ParticipacaoApiDTO dto, Serie serie) {
-    Participacao participacao = new Participacao();
+        Participacao participacao = new Participacao();
 
-    // 1. Gerenciar a Pessoa
-    Pessoa pessoa = findOrCreatePessoa(dto.getPessoa());
-    participacao.setPessoa(pessoa);
+        // 1. Gerenciar a Pessoa
+        Pessoa pessoa = findOrCreatePessoa(dto.getPessoa());
+        participacao.setPessoa(pessoa);
 
-    // 2. Mapear o personagem (A CORREÇÃO DE TIPO ESTÁ AQUI)
-    if (dto.getPersonagem() != null) {
-        
-        // DTOs de integração (ApiDTO) geralmente usam o nome do personagem
-        String nomeDoPersonagem = dto.getPersonagem().getNomePersonagem(); 
-        Integer idExternoPersonagem = dto.getPersonagem().getExternoId();
-        
-        // Cria uma nova instância do Value Object Personagem
-        Personagem personagemVO = new Personagem(); 
-        
-        // Preenche o VO Personagem com os dados
-        personagemVO.setNomePersonagem(nomeDoPersonagem);
-        personagemVO.setExternoId(idExternoPersonagem);
-        personagemVO.setImagem(dto.getPersonagem().getImagem());
-        
-        // Define o objeto Personagem na entidade Participacao (CORRIGIDO)
-        participacao.setPersonagem(personagemVO);
-        
-        // Define o ID externo da Participação (usando o ID do Personagem da API)
-   
+        // 2. Mapear o personagem (A CORREÇÃO DE TIPO ESTÁ AQUI)
+        if (dto.getPersonagem() != null) {
+
+            // DTOs de integração (ApiDTO) geralmente usam o nome do personagem
+            String nomeDoPersonagem = dto.getPersonagem().getNomePersonagem();
+            Integer idExternoPersonagem = dto.getPersonagem().getExternoId();
+
+            // Cria uma nova instância do Value Object Personagem
+            Personagem personagemVO = new Personagem();
+
+            // Preenche o VO Personagem com os dados
+            personagemVO.setNomePersonagem(nomeDoPersonagem);
+            personagemVO.setExternoId(idExternoPersonagem);
+            personagemVO.setImagem(dto.getPersonagem().getImagem());
+
+            // Define o objeto Personagem na entidade Participacao (CORRIGIDO)
+            participacao.setPersonagem(personagemVO);
+
+            // Define o ID externo da Participação (usando o ID do Personagem da API)
+
+        }
+
+        // 3. Associar a Série
+        participacao.setSerie(serie);
+
+        return participacao;
     }
 
-    // 3. Associar a Série
-    participacao.setSerie(serie);
-
-    return participacao;
-}
     public Pessoa findOrCreatePessoa(PessoaApiDTO pessoaApiDTO) { // AGORA RECEBE SEU PessoaApiDTO
         if (pessoaApiDTO == null || pessoaApiDTO.getExternoId() == null) {
             throw new IllegalArgumentException("Dados de pessoa da API inválidos para mapeamento.");
@@ -148,7 +153,7 @@ public class ParticipacaoMapper {
             participacao.setPersonagem(personagemVO);
 
             // 4. Atualiza o ID externo da Participação (se ele for o ID do personagem)
-            
+
         }
     }
 
@@ -159,22 +164,27 @@ public class ParticipacaoMapper {
     public Participacao toEntity(ParticipacaoCriacaoDTO dto) {
     Participacao participacao = new Participacao();
 
-    
-    
-    // CORREÇÃO: Criar o objeto Personagem (VO) a partir do dado do DTO
-    if (dto.getPersonagem() != null) {
-        Personagem personagemVO = new Personagem();
-        
-        // Assumindo que dto.getPersonagem() retorna o NOME do personagem (String)
-        personagemVO.setNomePersonagem(dto.getPersonagem()); 
-        
-        // Se o DTO tem um campo para o ID Externo do Personagem, você deve buscá-lo aqui.
-        // Como não temos esse campo no DTO, apenas definiremos o nome.
-        
-        participacao.setPersonagem(personagemVO); // Passa o objeto Personagem correto
-    }
+    // --- Associa a pessoa ---
+    Pessoa pessoa = pessoaRepository.findById(dto.getPessoaId())
+            .orElseThrow(() -> new RuntimeException("Pessoa não encontrada com ID: " + dto.getPessoaId()));
+    participacao.setPessoa(pessoa);
 
-    // Busca e associa a Pessoa e Série... (Restante do código OK)
+    // --- Associa a série ---
+    Serie serie = serieRepository.findById(dto.getSerieId())
+            .orElseThrow(() -> new RuntimeException("Série não encontrada com ID: " + dto.getSerieId()));
+    participacao.setSerie(serie);
+
+    // --- Cria o personagem (SEM externoId, pois é criação manual/local) ---
+    if (dto.getPersonagem() != null) {
+        Personagem personagem = new Personagem();
+        personagem.setNomePersonagem(dto.getPersonagem().getNomePersonagem());
+        personagem.setImagem(dto.getPersonagem().getImagem());
+
+        // ID será gerado automaticamente no banco
+        personagem = personagemRepository.save(personagem);
+
+        participacao.setPersonagem(personagem);
+    }
 
     return participacao;
 }
@@ -184,32 +194,27 @@ public class ParticipacaoMapper {
      * ParticipacaoCriacaoDTO.
      * Lança RuntimeException se Pessoa ou Serie não forem encontradas.
      */
-    public void toEntity(ParticipacaoCriacaoDTO dto, Participacao participacao) {
-    
-    
-    // --- CORREÇÃO DE TIPO AQUI ---
+   public void toEntity(ParticipacaoCriacaoDTO dto, Participacao participacao) {
+
     if (dto.getPersonagem() != null) {
-        
-        // 1. Cria o objeto Personagem (VO/Embeddable)
-        Personagem personagemVO = new Personagem(); 
-        
-        // 2. Preenche o objeto com a String retornada pelo DTO
-        // Assumimos que dto.getPersonagem() retorna o NOME do personagem (String)
-        personagemVO.setNomePersonagem(dto.getPersonagem()); 
-        
-        // Note: Como este DTO de Criação não tem o ID externo do Personagem,
-        // o campo Personagem.externoId será null.
-        
-        // 3. Define o objeto Personagem (corrigido) na entidade Participacao
-        participacao.setPersonagem(personagemVO);
+        Personagem personagem = participacao.getPersonagem();
+
+        // Se não existe personagem ainda, cria um novo
+        if (personagem == null) {
+            personagem = new Personagem();
+        }
+
+        personagem.setNomePersonagem(dto.getPersonagem().getNomePersonagem());
+        personagem.setImagem(dto.getPersonagem().getImagem());
+        personagem = personagemRepository.save(personagem);
+
+        participacao.setPersonagem(personagem);
     }
 
-    // Busca e associa a Pessoa
     Pessoa pessoa = pessoaRepository.findById(dto.getPessoaId())
             .orElseThrow(() -> new RuntimeException("Pessoa não encontrada com ID: " + dto.getPessoaId()));
     participacao.setPessoa(pessoa);
 
-    // Busca e associa a Série
     Serie serie = serieRepository.findById(dto.getSerieId())
             .orElseThrow(() -> new RuntimeException("Série não encontrada com ID: " + dto.getSerieId()));
     participacao.setSerie(serie);

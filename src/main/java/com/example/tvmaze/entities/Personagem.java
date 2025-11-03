@@ -1,10 +1,18 @@
-package com.example.tvmaze.entities.vo;
+package com.example.tvmaze.entities;
 
-import jakarta.persistence.Embeddable;
+import com.example.tvmaze.entities.vo.Imagem;
 
-@Embeddable
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 public class Personagem {
     
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer personagemId;
 
     private Integer externoId;
