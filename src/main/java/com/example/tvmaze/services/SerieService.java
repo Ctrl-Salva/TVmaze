@@ -38,7 +38,7 @@ public class SerieService {
     }
 
     public List<SerieRespostaDTO> listarSeriesRecentes() {
-    return serieRepository.findTop5ByOrderBySerieIdDesc()
+    return serieRepository.findAllByOrderBySerieIdDesc()
         .stream()
         .map(serieMapper::toRespostaDTO)
         .collect(Collectors.toList());

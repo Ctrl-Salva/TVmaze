@@ -19,10 +19,10 @@ public class SerieWebController {
     SerieService serieService;
 
     @GetMapping
-    public String listar(Model model) {
-        List<SerieRespostaDTO> series = serieService.listarSeriesOrdenadas(); 
+    public String series(Model model) {
+        List<SerieRespostaDTO> seriesRecentes = serieService.listarSeriesRecentes();
        
-        model.addAttribute("series", series);
-        return "series/lista"; // templates/series/lista.html
+        model.addAttribute("seriesRecentes", seriesRecentes);
+        return "series/series"; // templates/series/lista.html
     }
 }

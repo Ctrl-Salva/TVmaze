@@ -13,5 +13,5 @@ public interface SerieRepository extends JpaRepository<Serie, Integer> {
     // Busca por nome (ignorando maiúsculas/minúsculas)
     Optional<Serie> findByNomeIgnoreCase(String nome);
 
-    List<Serie> findTop5ByOrderBySerieIdDesc();
+    List<Serie> findAllByOrderBySerieIdDesc();
 }

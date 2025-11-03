@@ -25,6 +25,10 @@ public class HomeController {
       seriesPopulares = seriesPopulares.subList(0, 5);
     }
 
+    if (seriesRecentes.size() > 5) {
+      seriesRecentes = seriesRecentes.subList(0, 5);
+    }
+
     model.addAttribute("seriesPopulares", seriesPopulares);
     model.addAttribute("seriesRecentes", seriesRecentes);
     return "home/index";
