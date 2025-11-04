@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/layout-admin}">
+
+<head>
+    <title>Admin - Séries</title>
+</head>
+
+<body>
+    <section layout:fragment="conteudo">
+
+        <!-- Cabeçalho -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 text-light">
+                <i class="bi bi-tv"></i> Séries
+            </h1>
+            <a th:href="@{/admin/series/criar}" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Nova Série
+            </a>
+        </div>
+
+
+
+        <!-- 🔍 Filtros -->
+        <div class="card bg-dark border-secondary mb-4 shadow-sm">
+            <div class="card-body">
+                <form class="row g-3 align-items-end" th:action="@{/admin/series}" method="get">
+
+                    <div class="col-md-2">
+                        <label for="nome" class="form-label text-light fw-semibold">Nome</label>
+                        <input type="text" id="nome" name="nome"
+                            class="form-control bg-dark text-light border-secondary" placeholder="Buscar por nome..."
+                            th:value="${param.nome}">
+                    </div>
+
+                    <div class="col-md-2">
+                        <label for="generoId" class="form-label text-light fw-semibold">Gênero</label>
+                        <select class="form-select bg-dark text-light border-secondary" id="generoId" name="generoId">
+                            <option value="">Todos</option>
+                            <option th:each="gen : ${generosDisponiveis}" th:value="${gen.generoId}"
+                                th:text="${gen.nome}" th:selected="${gen.generoId == generoIdSelecionado}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-2">
+                        <label for="linguagem" class="form-label text-light fw-semibold">Linguagem</label>
+                        <select id="linguagem" name="linguagem" class="form-select bg-dark text-light border-secondary">
+                            <option value="">Todas</option>
+                            <option th:each="lang : ${linguagensDisponiveis}" th:value="${lang}" th:text="${lang}"
+                                th:selected="${lang == linguagemSelecionada}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-2">
+                        <label for="ano" class="form-label text-light fw-semibold">Ano</label>
+                        <select id="ano" name="ano" class="form-select bg-dark text-light border-secondary">
+                            <option value="">Todos</option>
+                            <option th:each="anoOpt : ${anosDisponiveis}" th:value="${anoOpt}" th:text="${anoOpt}"
+                                th:selected="${anoOpt == anoSelecionado}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-2">
+                        <label for="notaMinima" class="form-label text-light fw-semibold">Nota mínima</label>
+                        <select id="notaMinima" name="notaMinima"
+                            class="form-select bg-dark text-light border-secondary">
+                            <option value="">Qualquer</option>
+                            <option value="7.0" th:selected="${notaMinimaSelecionada == 7.0}">7.0+</option>
+                            <option value="8.0" th:selected="${notaMinimaSelecionada == 8.0}">8.0+</option>
+                            <option value="9.0" th:selected="${notaMinimaSelecionada == 9.0}">9.0+</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-2 d-grid">
+                        <button type="submit" class="btn btn-warning fw-bold">
+                            <i class="bi bi-search"></i> Filtrar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- 📋 Tabela -->
+        <div class="card bg-dark border-secondary shadow-sm">
+            <div class="card-body">
+                <table class="table table-dark table-hover align-middle mb-0">
+                    <thead>
+                        <tr class="text-primary">
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Linguagem</th>
+                            <th>Nota</th>
+                            <th>Ano de Estreia</th>
+                            <th style="width: 160px;">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="serie : ${series}">
+                            <td th:text="${serie.serieId}">1</td>
+                            <td th:text="${serie.nome}">Breaking Bad</td>
+                            <td th:text="${serie.linguagem}">Inglês</td>
+                            <td th:text="${serie.nota}">9.5</td>
+                            <td
+                                th:text="${serie.dataEstreia != null ? #temporals.format(serie.dataEstreia, 'yyyy') : '-'}">
+                                2008</td>
+
+                            <td class="text-center">
+                                <div class="btn-group btn-group-sm" role="group" style="gap: 4px;">
+                                    <a th:href="@{/admin/series/editar/{id}(id=${serie.serieId})}"
+                                        class="btn btn-outline-info px-2 py-1">
+                                        <i class="bi bi-pencil"></i>Editar
+                                    </a>
+
+                                    <form th:action="@{/admin/series/excluir/{id}(id=${serie.serieId})}" method="post"
+                                        onsubmit="return confirm('Tem certeza que deseja excluir esta série?')"
+                                        style="display:inline;">
+                                        <button type="submit" class="btn btn-outline-danger px-2 py-1">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+
+                        <tr th:if="${series == null or #lists.isEmpty(series)}">
+                            <td colspan="6" class="text-center text-muted py-4">
+                                <i class="bi bi-info-circle"></i> Nenhuma série encontrada.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 📄 Paginação -->
+        <div th:if="${seriesPage != null}" class="d-flex justify-content-center mt-4">
+            <ul class="pagination pagination-sm">
+                <li class="page-item" th:classappend="${seriesPage.first} ? 'disabled'">
+                    <a class="page-link bg-dark text-light border-secondary"
+                        th:href="@{/admin/series(page=${seriesPage.number - 1}, nome=${param.nome}, linguagem=${param.linguagem})}">
+                        <i class="bi bi-chevron-left"></i>
+                    </a>
+                </li>
+
+                <li th:each="i : ${#numbers.sequence(0, seriesPage.totalPages - 1)}" class="page-item"
+                    th:classappend="${seriesPage.number == i} ? 'active'">
+                    <a class="page-link bg-dark text-light border-secondary"
+                        th:href="@{/admin/series(page=${i}, nome=${param.nome}, linguagem=${param.linguagem})}"
+                        th:text="${i + 1}">1</a>
+                </li>
+
+                <li class="page-item" th:classappend="${seriesPage.last} ? 'disabled'">
+                    <a class="page-link bg-dark text-light border-secondary"
+                        th:href="@{/admin/series(page=${seriesPage.number + 1}, nome=${param.nome}, linguagem=${param.linguagem})}">
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </section>
+</body>
+
+</html>

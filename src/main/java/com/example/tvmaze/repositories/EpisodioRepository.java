@@ -15,6 +15,8 @@ public interface EpisodioRepository extends JpaRepository<Episodio, Integer>{
      */
     List<Episodio> findBySerieSerieId(Integer serieId);
 
+    void deleteBySerie_SerieId(Integer serieId);
+
     Optional<Episodio> findByExternoId(Integer externoId);
 
     /**

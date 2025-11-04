@@ -17,11 +17,14 @@ import com.example.tvmaze.dtos.serie.SerieRespostaDTO;
 import com.example.tvmaze.mappers.SerieMapper;
 import com.example.tvmaze.models.Genero;
 import com.example.tvmaze.models.Serie;
+import com.example.tvmaze.repositories.EpisodioRepository;
+import com.example.tvmaze.repositories.ParticipacaoRepository;
 import com.example.tvmaze.repositories.SerieRepository;
 import com.example.tvmaze.utils.Quicksort;
 
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
+import jakarta.transaction.Transactional;
 
 @Service
 public class SerieService {
@@ -35,6 +38,12 @@ public class SerieService {
     @Autowired
     GeneroService generoService;
 
+    @Autowired
+    EpisodioRepository episodioRepository;
+
+    @Autowired
+    ParticipacaoRepository participacaoRepository;
+   
     public List<SerieRespostaDTO> listarSeries() {
         return serieRepository.findAll().stream()
                 .map(serieMapper::toRespostaDTO)
@@ -77,19 +86,30 @@ public class SerieService {
         return serieRepository.save(existente);
     }
 
+    @Transactional 
     public void deletarSerie(Integer id) {
         if (!serieRepository.existsById(id)) {
             throw new RuntimeException("Série não encontrada com ID: " + id);
         }
+        participacaoRepository.deleteBySerie_SerieId(id);
+        episodioRepository.deleteBySerie_SerieId(id);
+
         serieRepository.deleteById(id);
     }
 
     // ========== NOVOS MÉTODOS PARA PAGINAÇÃO E FILTROS ==========
     
     public Page<SerieRespostaDTO> listarSeriesComFiltros(
-            Integer generoId, String linguagem, Double notaMinima, Integer ano, Pageable pageable) {
+           String nome, Integer generoId, String linguagem, Double notaMinima, Integer ano, Pageable pageable) {
         
         Specification<Serie> spec = Specification.where(null);
+
+
+         // Filtro por nome (busca parcial, case insensitive)
+        if (nome != null && !nome.trim().isEmpty()) {
+            spec = spec.and((root, query, cb) -> 
+                cb.like(cb.lower(root.get("nome")), "%" + nome.toLowerCase() + "%"));
+        }
         
         // Filtro por gênero (usando o ID do gênero)
         if (generoId != null) {

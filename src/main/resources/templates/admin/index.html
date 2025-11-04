@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-br"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout-admin}">
+
+<head>
+  <title>Admin - Painel</title>
+</head>
+
+<body>
+<section layout:fragment="conteudo">
+
+  <!-- Hero / Cabeçalho -->
+  <div class="bg-gradient p-5 rounded-4 shadow-sm text-center text-light mb-5"
+       style="background: linear-gradient(90deg, #111 0%, #1a1a1a 100%); border: 1px solid #333;">
+    <h1 class="display-5 fw-bold mb-3">
+      <i class="bi bi-speedometer2 text-warning"></i> Painel Administrativo
+    </h1>
+    <p class="fs-5 text-secondary mb-0">Gerencie séries, pessoas, personagens e episódios.</p>
+  </div>
+
+  <!-- Cards de Acesso Rápido -->
+  <div class="row g-4">
+
+    <div class="col-md-6 col-lg-3">
+      <div class="card bg-dark text-light border-secondary h-100 shadow-sm hover-shadow">
+        <div class="card-body text-center">
+          <i class="bi bi-tv display-4 text-warning mb-3"></i>
+          <h5 class="card-title fw-bold">Séries</h5>
+          <p class="text-secondary small mb-3">Gerencie todas as séries cadastradas.</p>
+          <a th:href="@{/admin/series}" class="btn btn-outline-warning btn-sm">
+            <i class="bi bi-list"></i> Ver Séries
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+      <div class="card bg-dark text-light border-secondary h-100 shadow-sm hover-shadow">
+        <div class="card-body text-center">
+          <i class="bi bi-person-badge display-4 text-info mb-3"></i>
+          <h5 class="card-title fw-bold">Pessoas</h5>
+          <p class="text-secondary small mb-3">Atos, diretores e produtores cadastrados.</p>
+          <a th:href="@{/admin/pessoas}" class="btn btn-outline-info btn-sm">
+            <i class="bi bi-list"></i> Ver Pessoas
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+      <div class="card bg-dark text-light border-secondary h-100 shadow-sm hover-shadow">
+        <div class="card-body text-center">
+          <i class="bi bi-film display-4 text-success mb-3"></i>
+          <h5 class="card-title fw-bold">Episódios</h5>
+          <p class="text-secondary small mb-3">Controle episódios e temporadas.</p>
+          <a th:href="@{/admin/episodios}" class="btn btn-outline-success btn-sm">
+            <i class="bi bi-list"></i> Ver Episódios
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+      <div class="card bg-dark text-light border-secondary h-100 shadow-sm hover-shadow">
+        <div class="card-body text-center">
+          <i class="bi bi-people display-4 text-danger mb-3"></i>
+          <h5 class="card-title fw-bold">Personagens</h5>
+          <p class="text-secondary small mb-3">Gerencie os personagens das séries.</p>
+          <a th:href="@{/admin/personagens}" class="btn btn-outline-danger btn-sm">
+            <i class="bi bi-list"></i> Ver Personagens
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</section>
+</body>
+</html>

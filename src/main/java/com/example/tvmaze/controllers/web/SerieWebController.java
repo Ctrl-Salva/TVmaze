@@ -46,6 +46,7 @@ public class SerieWebController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "15") int size,
             @RequestParam(required = false) Integer generoId,
+            @RequestParam(required = false) String nome,
             @RequestParam(required = false) String linguagem,
             @RequestParam(required = false) Double notaMinima,
             @RequestParam(required = false) Integer ano,
@@ -57,7 +58,7 @@ public class SerieWebController {
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, ordenar));
         
         Page<SerieRespostaDTO> seriesPage = serieService.listarSeriesComFiltros(
-            generoId, linguagem, notaMinima, ano, pageable);
+           nome, generoId, linguagem, notaMinima, ano, pageable);
         
         List<GeneroRespostaDTO> generosDisponiveis = generoService.listarGeneros();
         List<String> linguagensDisponiveis = serieService.listarTodasLinguagens();
@@ -68,6 +69,7 @@ public class SerieWebController {
         model.addAttribute("linguagensDisponiveis", linguagensDisponiveis);
         model.addAttribute("anosDisponiveis", anosDisponiveis);
         
+        model.addAttribute("nomeSelecionado", nome);
         model.addAttribute("generoIdSelecionado", generoId);
         model.addAttribute("linguagemSelecionada", linguagem);
         model.addAttribute("notaMinimaSelecionada", notaMinima);

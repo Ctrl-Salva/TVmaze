@@ -17,6 +17,8 @@ public interface ParticipacaoRepository extends JpaRepository<Participacao, Inte
     
     List<Participacao> findBySerie_SerieId(Integer serieId);
     List<Participacao> findByPessoa_PessoaId(Integer pessoaId);
+
+     void deleteBySerie_SerieId(Integer serieId);
     
     // Buscar todas as séries que têm participações
     @Query("SELECT DISTINCT p.serie.serieId, p.serie.nome FROM Participacao p ORDER BY p.serie.nome")
