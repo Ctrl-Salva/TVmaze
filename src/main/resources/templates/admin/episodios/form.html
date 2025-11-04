@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/layout-admin}">
+
+<head>
+    <title th:text="${episodioId != null ? 'Admin - Editar Episódio' : 'Admin - Novo Episódio'}"></title>
+</head>
+
+<body>
+    <main layout:fragment="conteudo">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="d-flex align-items-center mb-4">
+                        <a th:href="@{/admin/episodios(serieId=${serieSelecionada})}"
+                            class="btn btn-outline-secondary me-3">
+                            <i class="bi bi-arrow-left"></i> Voltar
+                        </a>
+                        <h2 class="text-warning mb-0">
+                            <i class="bi bi-collection-play"></i>
+                            <span th:text="${episodioId != null ? 'Editar Episódio' : 'Novo Episódio'}"></span>
+                        </h2>
+                    </div>
+
+                    <div class="card bg-dark border-secondary">
+                        <div class="card-body">
+                            <form
+                                th:action="${episodioId != null ? '/admin/episodios/atualizar/' + episodioId : '/admin/episodios/salvar'}"
+                                method="post" th:object="${episodio}">
+
+                                <!-- Campo oculto para manter a série selecionada -->
+                                <input type="hidden" name="serieId" th:value="${serieSelecionada}">
+
+                                <!-- Série -->
+                                <div class="mb-3">
+                                    <label for="serieId" class="form-label text-light fw-semibold">
+                                        Série <span class="text-danger">*</span>
+                                    </label>
+                                    <select id="serieId" name="serieId"
+                                        class="form-select bg-dark text-light border-secondary" required
+                                        th:disabled="${episodioId != null}">
+                                        <option value="">-- Selecione uma série --</option>
+                                        <option th:each="serie : ${series}" th:value="${serie.serieId}"
+                                            th:text="${serie.nome}"
+                                            th:selected="${serieSelecionada != null and serieSelecionada == serie.serieId}">
+                                        </option>
+                                    </select>
+                                    <small class="form-text text-muted" th:if="${episodioId != null}">
+                                        A série não pode ser alterada ao editar um episódio
+                                    </small>
+                                </div>
+
+                                <!-- Título do Episódio -->
+                                <div class="mb-3">
+                                    <label for="nome" class="form-label text-light fw-semibold">
+                                        Título do Episódio <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text" class="form-control bg-dark text-light border-secondary"
+                                        id="nome" th:field="*{nome}" placeholder="Ex: Pilot, The Beginning, etc."
+                                        required>
+                                </div>
+
+                                <!-- Temporada e Número -->
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="temporada" class="form-label text-light fw-semibold">
+                                            Temporada <span class="text-danger">*</span>
+                                        </label>
+                                        <input type="number" class="form-control bg-dark text-light border-secondary"
+                                            id="temporada" th:field="*{temporada}" min="1" placeholder="Ex: 1" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="numero" class="form-label text-light fw-semibold">
+                                            Número do Episódio <span class="text-danger">*</span>
+                                        </label>
+                                        <input type="number" class="form-control bg-dark text-light border-secondary"
+                                            id="numero" th:field="*{numero}" min="1" placeholder="Ex: 1" required>
+                                    </div>
+                                </div>
+
+                                <!-- Data de Exibição e Duração -->
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="dataExibicao" class="form-label text-light fw-semibold">
+                                            Data de Exibição
+                                        </label>
+                                        <input type="date" class="form-control bg-dark text-light border-secondary"
+                                            id="dataExibicao" th:field="*{dataExibicao}">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="duracao" class="form-label text-light fw-semibold">
+                                            Duração (minutos)
+                                        </label>
+                                        <input type="number" class="form-control bg-dark text-light border-secondary"
+                                            id="duracao" th:field="*{duracao}" min="1" placeholder="Ex: 45">
+                                    </div>
+                                </div>
+
+                                <!-- Botões de Ação -->
+                                <div class="d-flex justify-content-end gap-2 mt-4">
+                                    <a th:href="@{/admin/episodios(serieId=${serieSelecionada})}"
+                                        class="btn btn-secondary">
+                                        <i class="bi bi-x-circle"></i> Cancelar
+                                    </a>
+                                    <button type="submit" class="btn btn-success fw-bold">
+                                        <i class="bi bi-check-circle"></i>
+                                        <span th:text="${episodioId != null ? 'Atualizar' : 'Salvar'}"></span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Informações adicionais -->
+                    <div class="alert alert-info mt-3">
+                        <i class="bi bi-info-circle"></i>
+                        <strong>Dica:</strong> Os campos marcados com <span class="text-danger">*</span> são
+                        obrigatórios.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

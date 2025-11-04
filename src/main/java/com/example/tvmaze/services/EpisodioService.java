@@ -1,5 +1,6 @@
 package com.example.tvmaze.services;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,11 +26,10 @@ public class EpisodioService {
 
     @Autowired
     SerieRepository serieRepository;
-    
 
     public List<EpisodioRespostaDTO> listarEpisodiosPorSerie(Integer serieId) {
         verificarSerieExiste(serieId);
-        
+
         return episodioRepository.findBySerieSerieId(serieId).stream()
                 .map(episodioMapper::toRespostaDTO)
                 .collect(Collectors.toList());
@@ -38,10 +38,10 @@ public class EpisodioService {
     /**
      * Lista episódios de uma temporada específica
      */
-   
+
     public List<EpisodioRespostaDTO> listarEpisodiosPorTemporada(Integer serieId, Integer temporada) {
         verificarSerieExiste(serieId);
-        
+
         return episodioRepository.findBySerieSerieIdAndTemporada(serieId, temporada).stream()
                 .map(episodioMapper::toRespostaDTO)
                 .collect(Collectors.toList());
@@ -50,7 +50,7 @@ public class EpisodioService {
     /**
      * Lista todas as temporadas de uma série
      */
-   
+
     public List<Integer> listarTemporadas(Integer serieId) {
         verificarSerieExiste(serieId);
         return episodioRepository.findTemporadasBySerieId(serieId);
@@ -66,19 +66,15 @@ public class EpisodioService {
         return episodioMapper.toRespostaDTO(episodio);
     }
 
-    public EpisodioRespostaDTO criarEpisodio(Integer serieId, EpisodioCriacaoDTO episodioCriacaoDTO){
+    public EpisodioRespostaDTO criarEpisodio(Integer serieId, EpisodioCriacaoDTO episodioCriacaoDTO) {
         Serie serie = serieRepository.findById(serieId)
                 .orElseThrow(() -> new RuntimeException("Série não encontrada com ID: " + serieId));
 
-     
         Episodio novoEpisodio = new Episodio();
 
-     
-        episodioMapper.updateEntity(episodioCriacaoDTO, novoEpisodio); 
-
+        episodioMapper.updateEntity(episodioCriacaoDTO, novoEpisodio);
 
         novoEpisodio.setSerie(serie);
-
 
         Episodio episodioSalvo = episodioRepository.save(novoEpisodio);
 
@@ -112,7 +108,7 @@ public class EpisodioService {
     /**
      * Conta total de episódios de uma série
      */
- 
+
     public long contarEpisodiosPorSerie(Integer serieId) {
         verificarSerieExiste(serieId);
         return episodioRepository.countBySerieSerieId(serieId);
