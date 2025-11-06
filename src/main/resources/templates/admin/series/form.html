@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/layout-admin}">
+
+<head>
+    <title th:text="${serieId != null ? 'Admin - Editar Serie' : 'Admin - Serie'}"></title>
+</head>
+
+<body>
+<section layout:fragment="conteudo">
+    <!-- Cabeçalho -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-warning mb-0">
+            <i class="bi bi-collection-play"></i>
+            <span th:text="${serieId != null ? 'Editar Série' : 'Nova Série'}"></span>
+        </h2>
+        <a th:href="@{/admin/series}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Voltar
+        </a>
+    </div>
+
+    <!-- Mensagens -->
+    <div th:if="${mensagem}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle"></i> <span th:text="${mensagem}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+    </div>
+
+    <div th:if="${erro}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle"></i> <span th:text="${erro}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+    </div>
+
+    <!-- Formulário -->
+    <div class="card bg-dark border-secondary shadow">
+        <div class="card-body">
+            <form th:action="@{/admin/series/atualizar/{id}(id=${serieId})}" 
+                  th:object="${serie}" 
+                  method="post"
+                  class="row g-3" 
+                  id="serieForm">
+
+                <!-- ID da Série -->
+                <div class="col-12" th:if="${serieId != null}">
+                    <div class="alert alert-info mb-3">
+                        <i class="bi bi-info-circle"></i>
+                        Editando série ID: <strong th:text="${serieId}">1</strong>
+                    </div>
+                </div>
+
+                <!-- Nome -->
+                <div class="col-md-6">
+                    <label for="nome" class="form-label text-light">
+                        <i class="bi bi-tv"></i> Nome <span class="text-danger">*</span>
+                    </label>
+                    <input type="text" 
+                           id="nome" 
+                           th:field="*{nome}"
+                           class="form-control bg-dark text-light border-secondary" 
+                           required
+                           placeholder="Nome da série">
+                </div>
+
+                <!-- Linguagem com Autocomplete -->
+                <div class="col-md-3">
+                    <label for="linguagem" class="form-label text-light">
+                        <i class="bi bi-globe"></i> Linguagem
+                    </label>
+                    <input type="text" 
+                           id="linguagem" 
+                           th:field="*{linguagem}"
+                           class="form-control bg-dark text-light border-secondary" 
+                           list="linguagensList"
+                           placeholder="Ex: Português">
+                    <datalist id="linguagensList">
+                        <option th:each="ling : ${linguagens}" th:value="${ling}"></option>
+                    </datalist>
+                </div>
+
+                <!-- Nota -->
+                <div class="col-md-3">
+                    <label for="nota" class="form-label text-light">
+                        <i class="bi bi-star-fill"></i> Nota
+                    </label>
+                    <input type="number" 
+                           id="nota" 
+                           th:field="*{nota}"
+                           class="form-control bg-dark text-light border-secondary" 
+                           step="0.1" 
+                           min="0" 
+                           max="10"
+                           placeholder="0.0 - 10.0">
+                </div>
+
+                <!-- Data Estreia -->
+                <div class="col-md-3">
+                    <label for="dataEstreia" class="form-label text-light">
+                        <i class="bi bi-calendar-event"></i> Data de Estreia
+                    </label>
+                    <input type="date" 
+                           id="dataEstreia" 
+                           th:field="*{dataEstreia}"
+                           class="form-control bg-dark text-light border-secondary">
+                </div>
+
+                <!-- Data Término -->
+                <div class="col-md-3">
+                    <label for="dataTermino" class="form-label text-light">
+                        <i class="bi bi-calendar-x"></i> Data de Término
+                    </label>
+                    <input type="date" 
+                           id="dataTermino" 
+                           th:field="*{dataTermino}"
+                           class="form-control bg-dark text-light border-secondary">
+                </div>
+
+                <!-- Gêneros com Tags Input -->
+                <div class="col-md-6">
+                    <label class="form-label text-light">
+                        <i class="bi bi-tags-fill"></i> Gêneros
+                    </label>
+                    <div class="position-relative">
+                        <div class="tag-input-container bg-dark border border-secondary rounded p-2" id="tagContainer">
+                            <input type="text" 
+                                   class="tag-input bg-dark text-light border-0 w-100" 
+                                   id="generoInput"
+                                   placeholder="Digite um gênero e pressione Enter..." 
+                                   autocomplete="off">
+                        </div>
+                        <div class="suggestions-list bg-dark border border-secondary rounded mt-1 d-none" 
+                             id="suggestionsList"></div>
+                    </div>
+                    <small class="text-secondary d-block mt-2">
+                        <i class="bi bi-lightbulb"></i> Sugestões:
+                        <span class="badge bg-secondary me-1 suggestion-badge" 
+                              th:each="g : ${generos}"
+                              th:text="${g.nome}" 
+                              th:data-genero="${g.nome}" 
+                              style="cursor: pointer;"
+                              role="button"
+                              tabindex="0">
+                        </span>
+                    </small>
+                </div>
+
+                <!-- Imagem Original -->
+                <div class="col-md-6">
+                    <label for="imagemOriginal" class="form-label text-light">
+                        <i class="bi bi-image"></i> Imagem Original (URL)
+                    </label>
+                    <input type="url" 
+                           id="imagemOriginal" 
+                           th:field="*{imagem.original}"
+                           class="form-control bg-dark text-light border-secondary"
+                           placeholder="https://exemplo.com/imagem_original.jpg">
+                    <small class="text-muted">Resolução recomendada: alta qualidade</small>
+                </div>
+
+                <!-- Imagem Média -->
+                <div class="col-md-6">
+                    <label for="imagemMedio" class="form-label text-light">
+                        <i class="bi bi-image"></i> Imagem Média (URL)
+                    </label>
+                    <input type="url" 
+                           id="imagemMedio" 
+                           th:field="*{imagem.medio}"
+                           class="form-control bg-dark text-light border-secondary"
+                           placeholder="https://exemplo.com/imagem_medio.jpg">
+                    <small class="text-muted">Resolução recomendada: média qualidade</small>
+                </div>
+
+                <!-- Preview das Imagens -->
+                <div class="col-12" th:if="${serie.imagem != null && (serie.imagem.original != null || serie.imagem.medio != null)}">
+                    <label class="form-label text-light">
+                        <i class="bi bi-eye"></i> Preview das Imagens
+                    </label>
+                    <div class="row g-3">
+                        <div class="col-md-6" th:if="${serie.imagem.original != null}">
+                            <div class="card bg-secondary">
+                                <div class="card-body text-center">
+                                    <p class="text-light small mb-2">Imagem Original:</p>
+                                    <img th:src="${serie.imagem.original}" 
+                                         class="img-fluid rounded shadow"
+                                         style="max-height: 250px; object-fit: cover;" 
+                                         alt="Preview Original"
+                                         onerror="this.src='https://via.placeholder.com/300x400?text=Imagem+Indisponível'">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6" th:if="${serie.imagem.medio != null}">
+                            <div class="card bg-secondary">
+                                <div class="card-body text-center">
+                                    <p class="text-light small mb-2">Imagem Média:</p>
+                                    <img th:src="${serie.imagem.medio}" 
+                                         class="img-fluid rounded shadow" 
+                                         style="max-height: 250px; object-fit: cover;"
+                                         alt="Preview Médio"
+                                         onerror="this.src='https://via.placeholder.com/300x400?text=Imagem+Indisponível'">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sinopse -->
+                <div class="col-12">
+                    <label for="sinopse" class="form-label text-light">
+                        <i class="bi bi-file-text"></i> Sinopse
+                    </label>
+                    <textarea id="sinopse" 
+                              th:field="*{sinopse}"
+                              class="form-control bg-dark text-light border-secondary" 
+                              rows="5"
+                              placeholder="Descreva a série, incluindo principais personagens, trama e contexto..."></textarea>
+                    <small class="text-muted">
+                        <span id="sinopseCount">0</span> caracteres
+                    </small>
+                </div>
+
+                <!-- Botões -->
+                <div class="col-12">
+                    <hr class="border-secondary">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">
+                            <span class="text-danger">*</span> Campos obrigatórios
+                        </small>
+                        <div>
+                            <a th:href="@{/admin/series}" class="btn btn-secondary me-2">
+                                <i class="bi bi-x-circle"></i> Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-success px-4">
+                                <i class="bi bi-check-circle"></i> 
+                                <span th:text="${serieId != null ? 'Atualizar' : 'Cadastrar'}"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- Script para contador de caracteres -->
+<script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        const sinopseTextarea = document.getElementById('sinopse');
+        const sinopseCount = document.getElementById('sinopseCount');
+        
+        if (sinopseTextarea && sinopseCount) {
+            function updateCount() {
+                sinopseCount.textContent = sinopseTextarea.value.length;
+            }
+            
+            sinopseTextarea.addEventListener('input', updateCount);
+            updateCount(); // Atualiza na carga inicial
+        }
+    });
+</script></body>
+
+</html>

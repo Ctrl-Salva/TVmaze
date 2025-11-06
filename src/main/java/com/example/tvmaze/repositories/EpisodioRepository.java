@@ -43,5 +43,7 @@ public interface EpisodioRepository extends JpaRepository<Episodio, Integer>{
      */
     @Query("SELECT DISTINCT e.temporada FROM Episodio e WHERE e.serie.serieId = :serieId ORDER BY e.temporada")
     List<Integer> findTemporadasBySerieId(@Param("serieId") Integer serieId);
+
+
 }
 

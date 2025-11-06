@@ -1,5 +1,5 @@
 <header th:fragment="header">
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark" data-bs-theme="dark"  style="background-color: #000000; box-shadow: 0 2px 2px rgba(0,0,0,0.8); border-bottom: 1px solid #333;">
+  <nav class="navbar shadow navbar-expand-lg navbar-dark bg-dark" data-bs-theme="dark">
     <div class="container-fluid mx-5">
       <a class="navbar-brand fw-bold" th:href="@{/}">TVmaze Manager</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
@@ -30,11 +30,6 @@
               <a class="nav-link active" th:href="@{/participacoes}">Participações</a>
             </li>
           </ul>
-          <!-- Pesquisa: visível sempre, mas alinhada corretamente -->
-          <form class="d-flex mt-3 mt-lg-0" role="search" th:action="@{/buscar}" method="get">
-            <input class="form-control me-2" type="search" name="q" placeholder="Buscar séries..." aria-label="Buscar">
-            <button class="btn btn-outline-success" type="submit">Buscar</button>
-          </form>
         </div>
       </div>
     </div>

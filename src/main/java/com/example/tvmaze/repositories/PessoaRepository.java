@@ -20,4 +20,6 @@ public interface PessoaRepository extends JpaRepository<Pessoa, Integer>, JpaSpe
     
     // Buscar pessoas ordenadas por ID descendente (mais recentes)
     List<Pessoa> findAllByOrderByPessoaIdDesc();
+
+  
 }

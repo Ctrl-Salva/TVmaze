@@ -51,7 +51,7 @@ public class AdminSerieWebController {
         model.addAttribute("generos", generos);
         model.addAttribute("linguagens", linguagens);
 
-        return "admin/series/criar";
+        return "admin/series/form";
     }
 
     @PostMapping("/salvar")
@@ -86,7 +86,7 @@ public class AdminSerieWebController {
         } catch (Exception e) {
             e.printStackTrace(); // Para debug
             redirectAttributes.addFlashAttribute("erro", "Erro ao salvar série: " + e.getMessage());
-            return "redirect:/admin/series/criar";
+            return "redirect:/admin/series/form";
         }
     }
 
@@ -125,7 +125,7 @@ public class AdminSerieWebController {
                 model.addAttribute("generosSelecionados", "");
             }
 
-            return "admin/series/editar";
+            return "admin/series/form";
 
         } catch (RuntimeException e) {
             redirectAttributes.addFlashAttribute("erro", "Série não encontrada");
@@ -166,7 +166,7 @@ public class AdminSerieWebController {
         } catch (Exception e) {
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("erro", "Erro ao atualizar série: " + e.getMessage());
-            return "redirect:/admin/series/editar/" + id;
+            return "redirect:/admin/series/form/" + id;
         }
     }
 

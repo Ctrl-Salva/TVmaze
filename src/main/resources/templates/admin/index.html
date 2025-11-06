@@ -1,82 +1,112 @@
 <!DOCTYPE html>
-<html lang="pt-br"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/layout-admin}">
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/layout-admin}">
 
 <head>
-  <title>Admin - Painel</title>
+  <title>Dashboard - Admin</title>
 </head>
 
 <body>
-<section layout:fragment="conteudo">
+  <main layout:fragment="conteudo">
 
-  <!-- Hero / Cabeçalho -->
-  <div class="bg-gradient p-5 rounded-4 shadow-sm text-center text-light mb-5"
-       style="background: linear-gradient(90deg, #111 0%, #1a1a1a 100%); border: 1px solid #333;">
-    <h1 class="display-5 fw-bold mb-3">
-      <i class="bi bi-speedometer2 text-warning"></i> Painel Administrativo
-    </h1>
-    <p class="fs-5 text-secondary mb-0">Gerencie séries, pessoas, personagens e episódios.</p>
-  </div>
+    <h1 class="mb-4">Dashboard</h1>
 
-  <!-- Cards de Acesso Rápido -->
-  <div class="row g-4">
+    <!-- Cards de Estatísticas -->
+    <div class="row g-4">
+      <div class="col-md-6 col-xl-3">
+        <div class="card bg-dark text-white">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="text-secondary text-uppercase mb-2">Total Séries</h6>
+                <h2 class="mb-0" th:text="${totalSeries}">0</h2>
+              </div>
+              <div class="fs-1 text-primary">
+                <i class="bi bi-tv"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-    <div class="col-md-6 col-lg-3">
-      <div class="card bg-dark text-light border-secondary h-100 shadow-sm hover-shadow">
-        <div class="card-body text-center">
-          <i class="bi bi-tv display-4 text-warning mb-3"></i>
-          <h5 class="card-title fw-bold">Séries</h5>
-          <p class="text-secondary small mb-3">Gerencie todas as séries cadastradas.</p>
-          <a th:href="@{/admin/series}" class="btn btn-outline-warning btn-sm">
-            <i class="bi bi-list"></i> Ver Séries
-          </a>
+      <div class="col-md-6 col-xl-3">
+        <div class="card bg-dark text-white">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="text-secondary text-uppercase mb-2">Episódios</h6>
+                <h2 class="mb-0" th:text="${totalEpisodios}">0</h2>
+              </div>
+              <div class="fs-1 text-success">
+                <i class="bi bi-collection-play"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-xl-3">
+        <div class="card bg-dark text-white">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="text-secondary text-uppercase mb-2">Pessoas</h6>
+                <h2 class="mb-0" th:text="${totalPessoas}">0</h2>
+              </div>
+              <div class="fs-1 text-warning">
+                <i class="bi bi-person"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-xl-3">
+        <div class="card bg-dark text-white">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="text-secondary text-uppercase mb-2">Personagens</h6>
+                <h2 class="mb-0" th:text="${totalPersonagens}">0</h2>
+              </div>
+              <div class="fs-1 text-info">
+                <i class="bi bi-mask"></i>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="col-md-6 col-lg-3">
-      <div class="card bg-dark text-light border-secondary h-100 shadow-sm hover-shadow">
-        <div class="card-body text-center">
-          <i class="bi bi-person-badge display-4 text-info mb-3"></i>
-          <h5 class="card-title fw-bold">Pessoas</h5>
-          <p class="text-secondary small mb-3">Atos, diretores e produtores cadastrados.</p>
-          <a th:href="@{/admin/pessoas}" class="btn btn-outline-info btn-sm">
-            <i class="bi bi-list"></i> Ver Pessoas
-          </a>
+    <!-- Últimas Séries Adicionadas -->
+    <div class="row mt-4">
+      <div class="col-12">
+        <div class="card bg-dark text-white">
+          <div class="card-header">
+            <h5 class="mb-0"><i class="bi bi-tv"></i> Últimas Séries Adicionadas</h5>
+          </div>
+          <div class="card-body">
+            <ul class="list-group list-group-flush" th:if="${ultimasSeries != null and !ultimasSeries.isEmpty()}">
+              <li
+                class="list-group-item bg-transparent text-light border-secondary d-flex justify-content-between align-items-center"
+                th:each="serie : ${ultimasSeries}">
+                <span>
+                  <i class="bi bi-tv text-primary"></i>
+                  <a th:href="@{/admin/series/{id}(id=${serie.serieId})}" class="text-light text-decoration-none ms-2"
+                    th:text="${serie.nome}">
+                    Nome da Série
+                  </a>
+                </span>
+                <span class="badge bg-secondary" th:text="${serie.dataEstreia}">2024</span>
+              </li>
+            </ul>
+            <p class="text-center text-secondary mb-0" th:if="${ultimasSeries == null or ultimasSeries.isEmpty()}">
+              Nenhuma série cadastrada
+            </p>
+          </div>
         </div>
       </div>
     </div>
-
-    <div class="col-md-6 col-lg-3">
-      <div class="card bg-dark text-light border-secondary h-100 shadow-sm hover-shadow">
-        <div class="card-body text-center">
-          <i class="bi bi-film display-4 text-success mb-3"></i>
-          <h5 class="card-title fw-bold">Episódios</h5>
-          <p class="text-secondary small mb-3">Controle episódios e temporadas.</p>
-          <a th:href="@{/admin/episodios}" class="btn btn-outline-success btn-sm">
-            <i class="bi bi-list"></i> Ver Episódios
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-6 col-lg-3">
-      <div class="card bg-dark text-light border-secondary h-100 shadow-sm hover-shadow">
-        <div class="card-body text-center">
-          <i class="bi bi-people display-4 text-danger mb-3"></i>
-          <h5 class="card-title fw-bold">Personagens</h5>
-          <p class="text-secondary small mb-3">Gerencie os personagens das séries.</p>
-          <a th:href="@{/admin/personagens}" class="btn btn-outline-danger btn-sm">
-            <i class="bi bi-list"></i> Ver Personagens
-          </a>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-</section>
 </body>
+
 </html>

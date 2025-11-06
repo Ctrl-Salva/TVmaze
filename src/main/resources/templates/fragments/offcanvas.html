@@ -1,0 +1,62 @@
+<div th:fragment="offcanvas">
+    <!-- Botão para abrir menu (só aparece no mobile) -->
+    <button class="btn btn-outline-light d-lg-none mb-3"
+            type="button"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#sidebarOffcanvas"
+            aria-controls="sidebarOffcanvas">
+        <i class="bi bi-list"></i> Menu
+    </button>
+
+    <!-- Sidebar Offcanvas (mobile) -->
+    <div class="offcanvas offcanvas-start bg-dark-subtle shadow"
+         tabindex="-1"
+         id="sidebarOffcanvas"
+         aria-labelledby="sidebarOffcanvasLabel">
+
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title text-white" id="sidebarOffcanvasLabel">
+                <i class="bi bi-gear"></i> Admin
+            </h5>
+            <button type="button"
+                    class="btn-close btn-close-white"
+                    data-bs-dismiss="offcanvas"
+                    aria-label="Fechar"></button>
+        </div>
+
+        <div class="offcanvas-body p-3">
+            <ul class="nav flex-column">
+                <li class="nav-item mb-1">
+                    <a th:href="@{/admin/series}" class="nav-link text-light" >
+                        <i class="bi bi-tv"></i> Séries
+                    </a>
+                </li>
+                <li class="nav-item mb-1">
+                    <a th:href="@{/admin/episodios}" class="nav-link text-light">
+                        <i class="bi bi-collection-play"></i> Episódios
+                    </a>
+                </li>
+                <li class="nav-item mb-1">
+                    <a th:href="@{/admin/pessoas}" class="nav-link text-light" >
+                        <i class="bi bi-person"></i> Pessoas
+                    </a>
+                </li>
+                <li class="nav-item mb-1">
+                    <a th:href="@{/admin/personagens}" class="nav-link text-light">
+                        <i class="bi bi-mask"></i> Personagens
+                    </a>
+                </li>
+                <li class="nav-item mb-1">
+                    <a th:href="@{/admin/participacoes}" class="nav-link text-light">
+                        <i class="bi bi-link-45deg"></i> Participações
+                    </a>
+                </li>
+                <li class="nav-item mb-1">
+                    <a th:href="@{/}" class="nav-link text-light">
+                        <i class="bi bi-house-door"></i> Home
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

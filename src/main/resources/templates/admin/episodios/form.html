@@ -10,7 +10,7 @@
     <main layout:fragment="conteudo">
         <div class="container-fluid">
             <div class="row justify-content-center">
-                <div class="col-lg-8">
+                <div class="col-lg-9">
                     <div class="d-flex align-items-center mb-4">
                         <a th:href="@{/admin/episodios(serieId=${serieSelecionada})}"
                             class="btn btn-outline-secondary me-3">
@@ -93,6 +93,48 @@
                                         </label>
                                         <input type="number" class="form-control bg-dark text-light border-secondary"
                                             id="duracao" th:field="*{duracao}" min="1" placeholder="Ex: 45">
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <!-- Imagem Original -->
+                                    <div class="col-md-6">
+                                        <label for="imagemOriginal" class="form-label text-light">
+                                            <i class="bi bi-image"></i> Imagem Original (URL)
+                                        </label>
+                                        <input type="text" id="imagemOriginal" th:field="*{imagem.original}"
+                                            class="form-control bg-dark text-light border-secondary"
+                                            placeholder="https://exemplo.com/imagem_original.jpg">
+                                    </div>
+
+                                    <!-- Imagem Média -->
+                                    <div class="col-md-6">
+                                        <label for="imagemMedio" class="form-label text-light">
+                                            <i class="bi bi-image"></i> Imagem Média (URL)
+                                        </label>
+                                        <input type="text" id="imagemMedio" th:field="*{imagem.medio}"
+                                            class="form-control bg-dark text-light border-secondary"
+                                            placeholder="https://exemplo.com/imagem_medio.jpg">
+                                    </div>
+
+                                    <!-- Preview das Imagens -->
+                                    <div class="col-12"
+                                        th:if="${serie.imagem != null && (serie.imagem.original != null || serie.imagem.medio != null)}">
+                                        <label class="form-label text-light">
+                                            <i class="bi bi-eye"></i> Preview das Imagens
+                                        </label>
+                                        <div class="row">
+                                            <div class="col-md-6" th:if="${serie.imagem.original != null}">
+                                                <p class="text-muted small">Imagem Original:</p>
+                                                <img th:src="${serie.imagem.original}" class="img-fluid rounded"
+                                                    style="max-height: 200px;" alt="Preview Original">
+                                            </div>
+                                            <div class="col-md-6" th:if="${serie.imagem.medio != null}">
+                                                <p class="text-muted small">Imagem Média:</p>
+                                                <img th:src="${serie.imagem.medio}" class="img-fluid rounded"
+                                                    style="max-height: 200px;" alt="Preview Médio">
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 

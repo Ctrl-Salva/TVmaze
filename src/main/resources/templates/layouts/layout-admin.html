@@ -1,73 +1,82 @@
-!DOCTYPE html>
-<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layouts">
+<!DOCTYPE html>
+<html lang="pt-BR"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 
 <head>
     <meta charset="UTF-8">
-    <title>Admin - TVMaze</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+
+    <style>
+        @media (min-width: 992px) {
+            .sidebar-desktop {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 250px;
+                z-index: 1000;
+            }
+
+            .content-with-sidebar {
+                margin-left: 250px;
+            }
+        }
+    </style>
 </head>
 
-<body class="bg-dark text-light">
-    <div class="d-flex">
-        <!-- Sidebar -->
-        <nav class="bg-secondary bg-opacity-25 p-3 vh-100 d-flex flex-column"
-            style="min-width: 250px; border-right: 1px solid rgba(255,255,255,0.1);">
+<body class="bg-dark text-white" data-bs-theme="dark">
+<div class="d-flex">
+    <!-- Sidebar Desktop -->
+    <nav class="sidebar-desktop vh-100 overflow-auto bg-dark-subtle shadow p-3 d-none d-lg-flex flex-column"
+         style="border-right: 1px solid rgba(255,255,255,0.1);">
 
-            <!-- Seção Home -->
-            
-            <!-- Seção Admin -->
-            <div class="text-center ">
-                <h4 class="text-white">
-                    <a class="nav-link text-white" th:href="@{/admin}">
-                        <i class="bi bi-gear"></i> Admin
-                    </a>
-                </h4>
-            </div>
-            <hr class="border-light opacity-50 ">
-            
-            <!-- Menu principal -->
-            <ul class="nav flex-column">
-                <li class="nav-item mb-1">
-                    <a th:href="@{/admin/series}" class="nav-link text-light">
-                        <i class="bi bi-tv"></i> Séries
-                    </a>
-                </li>
-                <li class="nav-item mb-1">
-                    <a th:href="@{/admin/episodios}" class="nav-link text-light">
-                        <i class="bi bi-collection-play"></i> Episódios
-                    </a>
-                </li>
-                <li class="nav-item mb-1">
-                    <a th:href="@{/admin/pessoas}" class="nav-link text-light">
-                        <i class="bi bi-person"></i> Pessoas
-                    </a>
-                </li>
-                <li class="nav-item mb-1">
-                    <a th:href="@{/admin/personagens}" class="nav-link text-light">
-                        <i class="bi bi-mask"></i> Personagens
-                    </a>
-                </li>
-                <li class="nav-item mb-1">
-                    <a th:href="@{/admin/participacoes}" class="nav-link text-light">
-                        <i class="bi bi-link-45deg"></i> Participações
-                    </a>
-                </li>
-                <li class="nav-item mb-1">
-                    <a th:href="@{/}" class="nav-link text-light">
-                        <i class="bi bi-house-door"></i> Home
-                    </a>
-                </li>
-            </ul>
+        <div class="text-center">
+            <h4 class="text-white">
+                <a class="nav-link text-white" th:href="@{/admin}">
+                    <i class="bi bi-gear"></i> Admin
+                </a>
+            </h4>
+        </div>
+        <hr class="border-light opacity-50">
 
-           
-        </nav>
+        <ul class="nav flex-column">
+            <li class="nav-item mb-1">
+                <a th:href="@{/admin/series}" class="nav-link text-light"><i class="bi bi-tv"></i> Séries</a>
+            </li>
+            <li class="nav-item mb-1">
+                <a th:href="@{/admin/episodios}" class="nav-link text-light"><i class="bi bi-collection-play"></i> Episódios</a>
+            </li>
+            <li class="nav-item mb-1">
+                <a th:href="@{/admin/pessoas}" class="nav-link text-light"><i class="bi bi-person"></i> Pessoas</a>
+            </li>
+            <li class="nav-item mb-1">
+                <a th:href="@{/admin/personagens}" class="nav-link text-light"><i class="bi bi-mask"></i> Personagens</a>
+            </li>
+            <li class="nav-item mb-1">
+                <a th:href="@{/admin/participacoes}" class="nav-link text-light"><i class="bi bi-link-45deg"></i> Participações</a>
+            </li>
+            <li class="nav-item mb-1">
+                <a th:href="@{/}" class="nav-link text-light"><i class="bi bi-house-door"></i> Home</a>
+            </li>
+        </ul>
+    </nav>
 
-        <!-- Conteúdo -->
-        <main class="flex-grow-1 p-4" layout:fragment="conteudo">
-            <!-- Aqui entram as telas -->
-        </main>
-    </div>
+    <!-- Conteúdo Principal -->
+    <main class="content-with-sidebar flex-grow-1 min-vh-100">
+        <div class="m-3">
+            <!-- Offcanvas fragment (aparece só em telas pequenas) -->
+            <div th:replace="~{fragments/offcanvas :: offcanvas}"></div>
+
+            <!-- Área de conteúdo das páginas filhas -->
+            <div layout:fragment="conteudo"></div>
+        </div>
+    </main>
+</div>
 </body>
-
 </html>

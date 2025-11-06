@@ -1,18 +1,17 @@
 <!DOCTYPE html>
-<html lang="pt-br"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/layout-admin}">
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/layout-admin}">
+
 <head>
     <title>Admin - Episódios</title>
 </head>
+
 <body>
-<main layout:fragment="conteudo">
-    <div class="container-fluid">
-        <h2 class="text-warning mb-4">
-            <i class="bi bi-collection-play"></i> Gerenciar Episódios
-        </h2>
+    <main layout:fragment="conteudo">
         
+        <h2 class=" mb-4">
+            <i class="bi bi-collection-play text-success"></i> Gerenciar Episódios
+        </h2>
         <!-- Filtro por série, temporada e busca -->
         <form th:action="@{/admin/episodios}" method="get" class="mb-4">
             <div class="row align-items-end">
@@ -20,13 +19,10 @@
                     <label for="serieId" class="form-label text-light fw-semibold">
                         Selecione a Série
                     </label>
-                    <select id="serieId" name="serieId"
-                            class="form-select bg-dark text-light border-secondary">
+                    <select id="serieId" name="serieId" class="form-select bg-dark text-light border-secondary">
                         <option value="">-- Escolha uma série --</option>
-                        <option th:each="serie : ${series}"
-                                th:value="${serie.serieId}"
-                                th:text="${serie.nome}"
-                                th:selected="${serieSelecionada != null and serieSelecionada == serie.serieId}">
+                        <option th:each="serie : ${series}" th:value="${serie.serieId}" th:text="${serie.nome}"
+                            th:selected="${serieSelecionada != null and serieSelecionada == serie.serieId}">
                         </option>
                     </select>
                 </div>
@@ -34,24 +30,16 @@
                     <label for="temporada" class="form-label text-light fw-semibold">
                         Temporada
                     </label>
-                    <input type="number" 
-                           id="temporada" 
-                           name="temporada" 
-                           class="form-control bg-dark text-light border-secondary"
-                           placeholder="Ex: 1"
-                           min="1"
-                           th:value="${temporada}">
+                    <input type="number" id="temporada" name="temporada"
+                        class="form-control bg-dark text-light border-secondary" placeholder="Ex: 1" min="1"
+                        th:value="${temporada}">
                 </div>
                 <div class="col-md-3">
                     <label for="busca" class="form-label text-light fw-semibold">
                         Buscar por Título
                     </label>
-                    <input type="text" 
-                           id="busca" 
-                           name="busca" 
-                           class="form-control bg-dark text-light border-secondary"
-                           placeholder="Digite o título..."
-                           th:value="${busca}">
+                    <input type="text" id="busca" name="busca" class="form-control bg-dark text-light border-secondary"
+                        placeholder="Digite o título..." th:value="${busca}">
                 </div>
                 <div class="col-md-4">
                     <button type="submit" class="btn btn-warning fw-bold">
@@ -63,136 +51,137 @@
                 </div>
             </div>
         </form>
-        
+
         <!-- Lista de episódios -->
         <div th:if="${serieSelecionada != null}">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div>
-                    <h4 class="text-light mb-1" th:text="${nomeSerie != null ? 'Episódios da série: ' + nomeSerie : 'Episódios da série'}"></h4>
+                    <h4 class="text-light mb-1"
+                        th:text="${nomeSerie != null ? 'Episódios da série: ' + nomeSerie : 'Episódios da série'}"></h4>
                     <small class="text-muted" th:if="${totalEpisodios != null}">
                         Total: <span th:text="${totalEpisodios}"></span> episódio(s)
                     </small>
                 </div>
-                <a th:href="@{/admin/episodios/novo(serieId=${serieSelecionada})}" 
-                   class="btn btn-success btn-sm fw-bold">
+                <a th:href="@{/admin/episodios/novo(serieId=${serieSelecionada})}"
+                    class="btn btn-success btn-sm fw-bold">
                     <i class="bi bi-plus-lg"></i> Novo Episódio
                 </a>
             </div>
-            
+
             <div class="table-responsive">
                 <table class="table table-dark table-hover table-bordered align-middle">
                     <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Título</th>
-                        <th>Temporada</th>
-                        <th>Número</th>
-                        <th>Data Exibição</th>
-                        <th class="text-center">Ações</th>
-                    </tr>
+                        <tr>
+                            <th>ID</th>
+                            <th>Título</th>
+                            <th>Temporada</th>
+                            <th>Número</th>
+                            <th>Data Exibição</th>
+                            <th class="text-center">Ações</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="ep : ${episodios}" th:if="${episodios != null}">
-                        <td th:text="${ep.episodioId}"></td>
-                        <td th:text="${ep.nome}"></td>
-                        <td th:text="${ep.temporada}"></td>
-                        <td th:text="${ep.numero}"></td>
-                        <td>
-                            <span th:if="${ep.dataExibicao != null}" th:text="${#temporals.format(ep.dataExibicao, 'dd/MM/yyyy')}"></span>
-                            <span th:unless="${ep.dataExibicao != null}">—</span>
-                        </td>
-                        <td class="text-center">
-                            <div class="btn-group btn-group-sm">
-                                <a th:href="@{/admin/episodios/editar/{id}(id=${ep.episodioId})}"
-                                   class="btn btn-outline-info btn-sm"
-                                   title="Editar">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
-                                <a th:href="@{/admin/episodios/excluir/{id}(id=${ep.episodioId}, serieId=${serieSelecionada})}"
-                                   class="btn btn-outline-danger btn-sm"
-                                   title="Excluir"
-                                   onclick="return confirm('Tem certeza que deseja excluir este episódio?')">
-                                    <i class="bi bi-trash"></i>
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr th:if="${episodios == null or #lists.isEmpty(episodios)}">
-                        <td colspan="6" class="text-center text-muted">
-                            Nenhum episódio encontrado para esta série.
-                        </td>
-                    </tr>
+                        <tr th:each="ep : ${episodios}" th:if="${episodios != null}">
+                            <td th:text="${ep.episodioId}"></td>
+                            <td th:text="${ep.nome}"></td>
+                            <td th:text="${ep.temporada}"></td>
+                            <td th:text="${ep.numero}"></td>
+                            <td>
+                                <span th:if="${ep.dataExibicao != null}"
+                                    th:text="${#temporals.format(ep.dataExibicao, 'dd/MM/yyyy')}"></span>
+                                <span th:unless="${ep.dataExibicao != null}">—</span>
+                            </td>
+                            <td class="text-center">
+                                <div class="btn-group btn-group-sm">
+                                    <a th:href="@{/admin/episodios/editar/{id}(id=${ep.episodioId})}"
+                                        class="btn btn-outline-info btn-sm" title="Editar">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a th:href="@{/admin/episodios/excluir/{id}(id=${ep.episodioId}, serieId=${serieSelecionada})}"
+                                        class="btn btn-outline-danger btn-sm" title="Excluir"
+                                        onclick="return confirm('Tem certeza que deseja excluir este episódio?')">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:if="${episodios == null or #lists.isEmpty(episodios)}">
+                            <td colspan="6" class="text-center text-muted">
+                                Nenhum episódio encontrado para esta série.
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
-            
+
             <!-- Paginação -->
             <div th:if="${totalPages > 1}" class="d-flex justify-content-between align-items-center mt-4">
                 <!-- Informações da página -->
                 <div class="text-light">
-                    Mostrando 
-                    <span th:text="${currentPage * pageSize + 1}"></span> - 
-                    <span th:text="${(currentPage + 1) * pageSize > totalEpisodios ? totalEpisodios : (currentPage + 1) * pageSize}"></span> 
+                    Mostrando
+                    <span th:text="${currentPage * pageSize + 1}"></span> -
+                    <span
+                        th:text="${(currentPage + 1) * pageSize > totalEpisodios ? totalEpisodios : (currentPage + 1) * pageSize}"></span>
                     de <span th:text="${totalEpisodios}"></span>
                 </div>
-                
+
                 <!-- Controles de paginação -->
                 <nav>
                     <ul class="pagination pagination-sm mb-0">
                         <!-- Primeira página -->
                         <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
-                            <a class="page-link bg-dark text-light border-secondary" 
-                               th:href="@{/admin/episodios(serieId=${serieSelecionada}, temporada=${temporada}, busca=${busca}, page=0, size=${pageSize})}">
+                            <a class="page-link bg-dark text-light border-secondary"
+                                th:href="@{/admin/episodios(serieId=${serieSelecionada}, temporada=${temporada}, busca=${busca}, page=0, size=${pageSize})}">
                                 <i class="bi bi-chevron-double-left"></i>
                             </a>
                         </li>
-                        
+
                         <!-- Página anterior -->
                         <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
-                            <a class="page-link bg-dark text-light border-secondary" 
-                               th:href="@{/admin/episodios(serieId=${serieSelecionada}, temporada=${temporada}, busca=${busca}, page=${currentPage - 1}, size=${pageSize})}">
+                            <a class="page-link bg-dark text-light border-secondary"
+                                th:href="@{/admin/episodios(serieId=${serieSelecionada}, temporada=${temporada}, busca=${busca}, page=${currentPage - 1}, size=${pageSize})}">
                                 <i class="bi bi-chevron-left"></i>
                             </a>
                         </li>
-                        
+
                         <!-- Números das páginas -->
-                        <li class="page-item" 
-                            th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                        <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
                             th:if="${i >= (currentPage - 2) and i <= (currentPage + 2)}"
                             th:classappend="${i == currentPage} ? 'active'">
-                            <a class="page-link" 
-                               th:classappend="${i == currentPage} ? 'bg-warning text-dark border-warning' : 'bg-dark text-light border-secondary'"
-                               th:href="@{/admin/episodios(serieId=${serieSelecionada}, temporada=${temporada}, busca=${busca}, page=${i}, size=${pageSize})}"
-                               th:text="${i + 1}">
+                            <a class="page-link"
+                                th:classappend="${i == currentPage} ? 'bg-warning text-dark border-warning' : 'bg-dark text-light border-secondary'"
+                                th:href="@{/admin/episodios(serieId=${serieSelecionada}, temporada=${temporada}, busca=${busca}, page=${i}, size=${pageSize})}"
+                                th:text="${i + 1}">
                             </a>
                         </li>
-                        
+
                         <!-- Próxima página -->
                         <li class="page-item" th:classappend="${currentPage >= totalPages - 1} ? 'disabled'">
-                            <a class="page-link bg-dark text-light border-secondary" 
-                               th:href="@{/admin/episodios(serieId=${serieSelecionada}, temporada=${temporada}, busca=${busca}, page=${currentPage + 1}, size=${pageSize})}">
+                            <a class="page-link bg-dark text-light border-secondary"
+                                th:href="@{/admin/episodios(serieId=${serieSelecionada}, temporada=${temporada}, busca=${busca}, page=${currentPage + 1}, size=${pageSize})}">
                                 <i class="bi bi-chevron-right"></i>
                             </a>
                         </li>
-                        
+
                         <!-- Última página -->
                         <li class="page-item" th:classappend="${currentPage >= totalPages - 1} ? 'disabled'">
-                            <a class="page-link bg-dark text-light border-secondary" 
-                               th:href="@{/admin/episodios(serieId=${serieSelecionada}, temporada=${temporada}, busca=${busca}, page=${totalPages - 1}, size=${pageSize})}">
+                            <a class="page-link bg-dark text-light border-secondary"
+                                th:href="@{/admin/episodios(serieId=${serieSelecionada}, temporada=${temporada}, busca=${busca}, page=${totalPages - 1}, size=${pageSize})}">
                                 <i class="bi bi-chevron-double-right"></i>
                             </a>
                         </li>
                     </ul>
                 </nav>
-                
+
                 <!-- Seletor de itens por página -->
                 <div>
                     <form th:action="@{/admin/episodios}" method="get" class="d-inline">
                         <input type="hidden" name="serieId" th:value="${serieSelecionada}">
                         <input type="hidden" name="temporada" th:value="${temporada}">
                         <input type="hidden" name="busca" th:value="${busca}">
-                        <select name="size" class="form-select form-select-sm bg-dark text-light border-secondary d-inline-block w-auto" 
-                                onchange="this.form.submit()">
+                        <select name="size"
+                            class="form-select form-select-sm bg-dark text-light border-secondary d-inline-block w-auto"
+                            onchange="this.form.submit()">
                             <option value="5" th:selected="${pageSize == 5}">5</option>
                             <option value="10" th:selected="${pageSize == 10}">10</option>
                             <option value="20" th:selected="${pageSize == 20}">20</option>
@@ -203,13 +192,13 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Mensagem quando nenhuma série está selecionada -->
         <div th:if="${serieSelecionada == null}" class="alert alert-info text-center mt-4">
-            <i class="bi bi-info-circle"></i> 
+            <i class="bi bi-info-circle"></i>
             Selecione uma série acima para visualizar seus episódios.
         </div>
-    </div>
-</main>
+    </main>
 </body>
+
 </html>

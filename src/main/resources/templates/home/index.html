@@ -18,7 +18,7 @@
                 <div class="col" th:each="serie : ${seriesPopulares}">
                     <div class="card h-100 shadow-sm hover-card">
                         <img th:src="${serie.imagem != null ? serie.imagem.medio : 'https://via.placeholder.com/210x295?text=Sem+Imagem'}" 
-                             class="card-img-top" 
+                             class="card-img-top " 
                              th:alt="${serie.nome}"
                              style="height: 295px; object-fit: cover;">
                         
