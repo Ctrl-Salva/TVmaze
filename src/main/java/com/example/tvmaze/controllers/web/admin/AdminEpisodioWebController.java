@@ -29,6 +29,7 @@ public class AdminEpisodioWebController {
             @RequestParam(required = false) String busca,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "7") int size,
+            @RequestParam(required = false) String nomeSerieBusca,
             Model model) {
         List<SerieRespostaDTO> series = serieService.listarSeries();
         model.addAttribute("series", series);
@@ -82,6 +83,7 @@ public class AdminEpisodioWebController {
             model.addAttribute("totalPages", totalPages);
             model.addAttribute("totalEpisodios", totalEpisodios);
             model.addAttribute("pageSize", size);
+            model.addAttribute("nomeSerieBusca", nomeSerieBusca);
         }
 
         return "admin/episodios/listar";
@@ -105,20 +107,25 @@ public class AdminEpisodioWebController {
 
     @GetMapping("/editar/{id}")
     public String editarEpisodio(@PathVariable Integer id, Model model) {
-        EpisodioRespostaDTO episodio = episodioService.buscarPorId(id);
+        EpisodioRespostaDTO episodioResposta = episodioService.buscarPorId(id);
 
         // Converter EpisodioRespostaDTO para EpisodioCriacaoDTO para edição
-        EpisodioCriacaoDTO episodioDTO = new EpisodioCriacaoDTO();
-        episodioDTO.setNome(episodio.getNome());
-        episodioDTO.setTemporada(episodio.getTemporada());
-        episodioDTO.setNumero(episodio.getNumero());
-        episodioDTO.setDataExibicao(episodio.getDataExibicao());
-        episodioDTO.setDuracao(episodio.getDuracao());
+        EpisodioCriacaoDTO episodio = new EpisodioCriacaoDTO();
+        episodio.setNome(episodioResposta.getNome());
+        episodio.setTemporada(episodioResposta.getTemporada());
+        episodio.setNumero(episodioResposta.getNumero());
+        episodio.setDataExibicao(episodioResposta.getDataExibicao());
+        episodio.setDuracao(episodioResposta.getDuracao());
+        
+        // ✅ COPIAR AS IMAGENS - ESSENCIAL PARA O PREVIEW
+        if (episodioResposta.getImagem() != null) {
+            episodio.setImagem(episodioResposta.getImagem());
+        }
 
-        model.addAttribute("episodio", episodioDTO);
-        model.addAttribute("episodioId", episodio.getEpisodioId());
+        model.addAttribute("episodio", episodio);
+        model.addAttribute("episodioId", episodioResposta.getEpisodioId());
         model.addAttribute("series", serieService.listarSeries());
-        model.addAttribute("serieSelecionada", episodio.getSerieId());
+        model.addAttribute("serieSelecionada", episodioResposta.getSerieId());
 
         return "admin/episodios/form";
     }

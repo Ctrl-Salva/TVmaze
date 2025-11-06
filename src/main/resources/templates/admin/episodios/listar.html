@@ -8,24 +8,33 @@
 
 <body>
     <main layout:fragment="conteudo">
-        
+
         <h2 class=" mb-4">
             <i class="bi bi-collection-play text-success"></i> Gerenciar Episódios
         </h2>
         <!-- Filtro por série, temporada e busca -->
         <form th:action="@{/admin/episodios}" method="get" class="mb-4">
             <div class="row align-items-end">
+
                 <div class="col-md-3">
-                    <label for="serieId" class="form-label text-light fw-semibold">
-                        Selecione a Série
+                    <label for="filtroSerie" class="form-label text-light fw-semibold">
+                        Selecione ou Busque a Série
                     </label>
-                    <select id="serieId" name="serieId" class="form-select bg-dark text-light border-secondary">
-                        <option value="">-- Escolha uma série --</option>
-                        <option th:each="serie : ${series}" th:value="${serie.serieId}" th:text="${serie.nome}"
-                            th:selected="${serieSelecionada != null and serieSelecionada == serie.serieId}">
-                        </option>
-                    </select>
+
+                    <input type="text" id="filtroSerie" name="nomeSerieBusca" list="listaSeries"
+                        class="form-control bg-dark text-light border-secondary" placeholder="Digite o nome da série..."
+                        th:value="${nomeSerieSelecionada ?: nomeSerieBusca ?: ''}">
+
+                    <input type="hidden" id="serieId" name="serieId" th:value="${serieSelecionada}">
                 </div>
+
+                <datalist id="listaSeries">
+                    <option th:each="serie : ${series}" th:value="${serie.nome}" th:data-id="${serie.serieId}"></option>
+                </datalist>
+
+
+
+
                 <div class="col-md-2">
                     <label for="temporada" class="form-label text-light fw-semibold">
                         Temporada
@@ -198,6 +207,32 @@
             <i class="bi bi-info-circle"></i>
             Selecione uma série acima para visualizar seus episódios.
         </div>
+
+        <script>
+            const inputSerie = document.getElementById('filtroSerie');
+            const hiddenSerieId = document.getElementById('serieId');
+            const datalist = document.getElementById('listaSeries');
+
+            // Adiciona um listener para quando o valor do input mudar (seleção ou digitação)
+            inputSerie.addEventListener('input', function () {
+                let selectedId = '';
+
+                // Percorre as opções do datalist
+                for (let i = 0; i < datalist.options.length; i++) {
+                    const option = datalist.options[i];
+
+                    // Se o texto digitado (ou selecionado) for igual ao valor da opção
+                    if (option.value === inputSerie.value) {
+                        // Pega o 'data-id' da opção correspondente
+                        selectedId = option.getAttribute('data-id');
+                        break;
+                    }
+                }
+
+                // Atualiza o campo oculto 'serieId' com o ID correto (ou limpa se não houver correspondência)
+                hiddenSerieId.value = selectedId;
+            });
+        </script>
     </main>
 </body>
 
