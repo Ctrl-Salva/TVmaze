@@ -1,8 +1,11 @@
 package com.example.tvmaze.controllers.rest;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,95 +15,93 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.tvmaze.dtos.participacao.ParticipacaoCriacaoDTO;
 import com.example.tvmaze.dtos.participacao.ParticipacaoRespostaDTO;
 import com.example.tvmaze.services.ParticipacaoService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("api/participacoes") // Define a URL base para este controller
 public class ParticipacaoRestController {
 
-    @Autowired
-    private ParticipacaoService participacaoService; // Injeta o serviço de Participacao
-
-    /**
-     * Endpoint para criar uma nova participação.
-     * Recebe um ParticipacaoCriacaoDTO no corpo da requisição.
-     * Retorna a ParticipacaoRespostaDTO da participação criada.
-     */
-    @PostMapping
-    public ResponseEntity<ParticipacaoRespostaDTO> criarParticipacao(@RequestBody ParticipacaoCriacaoDTO dtoCriacao) {
-        try {
-            ParticipacaoRespostaDTO novaParticipacao = participacaoService.criarParticipacao(dtoCriacao);
-            return new ResponseEntity<>(novaParticipacao, HttpStatus.CREATED); // Retorna 201 Created
-        } catch (RuntimeException e) {
-            // Pode ser mais específico aqui, ex: Pessoa/Serie não encontrada
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // Retorna 400 Bad Request em caso de erro
-        }
-    }
-
-    /**
-     * Endpoint para listar todas as participações.
-     * Retorna uma lista de ParticipacaoRespostaDTO.
-     */
+   @Autowired
+    private ParticipacaoService participacaoService;
+    
     @GetMapping
-    public ResponseEntity<List<ParticipacaoRespostaDTO>> listarTodasParticipacoes() {
+    public ResponseEntity<List<ParticipacaoRespostaDTO>> listarTodas() {
         List<ParticipacaoRespostaDTO> participacoes = participacaoService.listarTodasParticipacoes();
-        return new ResponseEntity<>(participacoes, HttpStatus.OK); // Retorna 200 OK
+        return ResponseEntity.ok(participacoes);
     }
-
-    /**
-     * Endpoint para buscar uma participação por ID.
-     * O ID é passado como parte da URL (path variable).
-     * Retorna a ParticipacaoRespostaDTO se encontrada, ou 404 Not Found.
-     */
+    
+    @GetMapping("/recentes")
+    public ResponseEntity<List<ParticipacaoRespostaDTO>> listarRecentes() {
+        List<ParticipacaoRespostaDTO> participacoes = participacaoService.listarParticipacoesRecentes();
+        return ResponseEntity.ok(participacoes);
+    }
+    
     @GetMapping("/{id}")
-    public ResponseEntity<ParticipacaoRespostaDTO> buscarParticipacaoPorId(@PathVariable Integer id) {
+    public ResponseEntity<ParticipacaoRespostaDTO> buscarPorId(@PathVariable Integer id) {
         return participacaoService.buscarParticipacaoPorId(id)
-                .map(participacao -> new ResponseEntity<>(participacao, HttpStatus.OK)) // Retorna 200 OK se encontrada
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND)); // Retorna 404 Not Found se não encontrada
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
-
-    @GetMapping("/serie/{serieId}") // Exemplo de URL: /api/participacoes/serie/1
-    public ResponseEntity<List<ParticipacaoRespostaDTO>> listarParticipantesPorSerie(@PathVariable Integer serieId) {
-        List<ParticipacaoRespostaDTO> participantes = participacaoService.listarParticipacoesPorSerieId(serieId);
-        if (participantes.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT); // Retorna 204 se não houver participantes para a série
-        }
-        return new ResponseEntity<>(participantes, HttpStatus.OK); // Retorna 200 OK
+    
+    @GetMapping("/serie/{serieId}")
+    public ResponseEntity<List<ParticipacaoRespostaDTO>> listarPorSerie(@PathVariable Integer serieId) {
+        List<ParticipacaoRespostaDTO> participacoes = participacaoService.listarParticipacoesPorSerieId(serieId);
+        return ResponseEntity.ok(participacoes);
     }
-
-    /**
-     * Endpoint para atualizar uma participação existente.
-     * O ID da participação a ser atualizada é passado na URL.
-     * Recebe um ParticipacaoCriacaoDTO com os novos dados no corpo da requisição.
-     * Retorna a ParticipacaoRespostaDTO da participação atualizada.
-     */
+    
+    @GetMapping("/pessoa/{pessoaId}")
+    public ResponseEntity<List<ParticipacaoRespostaDTO>> listarPorPessoa(@PathVariable Integer pessoaId) {
+        List<ParticipacaoRespostaDTO> participacoes = participacaoService.listarParticipacoesPorPessoaId(pessoaId);
+        return ResponseEntity.ok(participacoes);
+    }
+    
+    @GetMapping("/filtros")
+    public ResponseEntity<Page<ParticipacaoRespostaDTO>> listarComFiltros(
+            @RequestParam(required = false) Integer serieId,
+            @RequestParam(required = false) Integer pessoaId,
+            @RequestParam(required = false) String nomePersonagem,
+            Pageable pageable) {
+        Page<ParticipacaoRespostaDTO> participacoes = participacaoService.listarParticipacoesComFiltros(
+                serieId, pessoaId, nomePersonagem, pageable);
+        return ResponseEntity.ok(participacoes);
+    }
+    
+    @GetMapping("/series")
+    public ResponseEntity<Map<Integer, String>> listarSeries() {
+        Map<Integer, String> series = participacaoService.listarSeriesComParticipacoes();
+        return ResponseEntity.ok(series);
+    }
+    
+    @GetMapping("/pessoas")
+    public ResponseEntity<Map<Integer, String>> listarPessoas() {
+        Map<Integer, String> pessoas = participacaoService.listarPessoasComParticipacoes();
+        return ResponseEntity.ok(pessoas);
+    }
+    
+    @PostMapping
+    public ResponseEntity<ParticipacaoRespostaDTO> criar(@Valid @RequestBody ParticipacaoCriacaoDTO dto) {
+        ParticipacaoRespostaDTO participacao = participacaoService.criarParticipacao(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(participacao);
+    }
+    
     @PutMapping("/{id}")
-    public ResponseEntity<ParticipacaoRespostaDTO> atualizarParticipacao(@PathVariable Integer id, @RequestBody ParticipacaoCriacaoDTO dtoAtualizacao) {
-        try {
-            ParticipacaoRespostaDTO participacaoAtualizada = participacaoService.atualizarParticipacao(id, dtoAtualizacao);
-            return new ResponseEntity<>(participacaoAtualizada, HttpStatus.OK); // Retorna 200 OK
-        } catch (RuntimeException e) {
-            // Se a participação não for encontrada, ou Pessoa/Serie não existirem
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Retorna 404 Not Found
-        }
+    public ResponseEntity<ParticipacaoRespostaDTO> atualizar(
+            @PathVariable Integer id,
+            @Valid @RequestBody ParticipacaoCriacaoDTO dto) {
+        ParticipacaoRespostaDTO participacao = participacaoService.atualizarParticipacao(id, dto);
+        return ResponseEntity.ok(participacao);
     }
-
-    /**
-     * Endpoint para deletar uma participação por ID.
-     * Retorna 204 No Content se a deleção for bem-sucedida, ou 404 Not Found.
-     */
+    
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarParticipacao(@PathVariable Integer id) {
-        try {
-            participacaoService.deletarParticipacao(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT); // Retorna 204 No Content
-        } catch (RuntimeException e) {
-            // Se a participação não for encontrada
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Retorna 404 Not Found
-        }
+    public ResponseEntity<Void> deletar(@PathVariable Integer id) {
+        participacaoService.deletarParticipacao(id);
+        return ResponseEntity.noContent().build();
     }
 }

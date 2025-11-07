@@ -8,7 +8,8 @@ import org.springframework.stereotype.Component;
 import com.example.tvmaze.dtos.participacao.ParticipacaoApiDTO;
 import com.example.tvmaze.dtos.participacao.ParticipacaoCriacaoDTO;
 import com.example.tvmaze.dtos.participacao.ParticipacaoRespostaDTO;
-import com.example.tvmaze.dtos.participacao.PersonagemApiDTO;
+import com.example.tvmaze.dtos.personagem.PersonagemApiDTO;
+import com.example.tvmaze.dtos.personagem.PersonagemRespostaDTO;
 import com.example.tvmaze.dtos.pessoa.PessoaApiDTO;
 import com.example.tvmaze.dtos.pessoa.PessoaRespostaDTO;
 import com.example.tvmaze.models.Participacao;
@@ -24,79 +25,56 @@ import com.example.tvmaze.repositories.SerieRepository;
 public class ParticipacaoMapper {
 
     @Autowired
-    private PessoaRepository pessoaRepository; // Para buscar a Pessoa
+    private PessoaRepository pessoaRepository;
+
     @Autowired
     private SerieRepository serieRepository;
+
+    @Autowired
+    private PersonagemRepository personagemRepository;
+
+    @Autowired
+    private PessoaMapper pessoaMapper;
 
     @Autowired
     private ParticipacaoRepository participacaoRepository;
 
     @Autowired
-    private PersonagemRepository personagemRepository;
-
-    // Para buscar a Série
+    private PersonagemMapper personagemMapper;
 
     /**
-     * Converte uma entidade Participacao para ParticipacaoRespostaDTO.
+     * Converte Participacao para ParticipacaoRespostaDTO
      */
     public ParticipacaoRespostaDTO toRespostaDTO(Participacao participacao) {
         ParticipacaoRespostaDTO dto = new ParticipacaoRespostaDTO();
-        dto.setParticipacao_id(participacao.getParticipacaoId());
-        dto.setSerie_id(participacao.getSerie().getSerieId());
-        dto.setSerie_nome(participacao.getSerie().getNome());
+        dto.setParticipacaoId(participacao.getParticipacaoId());
+        dto.setSerieId(participacao.getSerie().getSerieId());
+        dto.setSerieNome(participacao.getSerie().getNome());
 
-        PessoaRespostaDTO pessoaDTO = new PessoaRespostaDTO();
-
-        // Preenche o DTO da Pessoa com os dados da entidade participacao.getPessoa()
-        Pessoa pessoa = participacao.getPessoa();
-        pessoaDTO.setPessoaId(pessoa.getPessoaId());
-        pessoaDTO.setExternoId(pessoa.getExternoId());
-        pessoaDTO.setNome(pessoa.getNome());
-        pessoaDTO.setImagem(pessoa.getImagem());
-        pessoaDTO.setDataNascimento(pessoa.getDataNascimento());
+        // Converte Pessoa usando PessoaMapper
+        PessoaRespostaDTO pessoaDTO = pessoaMapper.toRespostaDTO(participacao.getPessoa());
         dto.setPessoa(pessoaDTO);
 
-        // O PersonagemApiDTO não é ideal para resposta, mas vamos usá-lo se não houver
-        // um DTO de PersonagemResposta
-        PersonagemApiDTO personagemDTO = new PersonagemApiDTO();
-        if (participacao.getPersonagem() != null) {
-            // A Entidade Participacao tem um VO Personagem, que armazena o nome e o id
-            personagemDTO.setExternoId(participacao.getPersonagem().getExternoId());
-            personagemDTO.setNomePersonagem(participacao.getPersonagem().getNomePersonagem());
-            personagemDTO.setImagem(participacao.getPersonagem().getImagem());
-        }
+        // Converte Personagem usando PersonagemMapper
+        PersonagemRespostaDTO personagemDTO = personagemMapper.toRespostaDTO(participacao.getPersonagem());
         dto.setPersonagem(personagemDTO);
+
         return dto;
     }
 
+    /**
+     * Converte ParticipacaoApiDTO para Participacao (vindo de API externa)
+     */
     public Participacao toEntity(ParticipacaoApiDTO dto, Serie serie) {
         Participacao participacao = new Participacao();
 
-        // 1. Gerenciar a Pessoa
+        // 1. Gerenciar a Pessoa (busca ou cria)
         Pessoa pessoa = findOrCreatePessoa(dto.getPessoa());
         participacao.setPessoa(pessoa);
 
-        // 2. Mapear o personagem (A CORREÇÃO DE TIPO ESTÁ AQUI)
-        if (dto.getPersonagem() != null) {
-
-            // DTOs de integração (ApiDTO) geralmente usam o nome do personagem
-            String nomeDoPersonagem = dto.getPersonagem().getNomePersonagem();
-            Integer idExternoPersonagem = dto.getPersonagem().getExternoId();
-
-            // Cria uma nova instância do Value Object Personagem
-            Personagem personagemVO = new Personagem();
-
-            // Preenche o VO Personagem com os dados
-            personagemVO.setNomePersonagem(nomeDoPersonagem);
-            personagemVO.setExternoId(idExternoPersonagem);
-            personagemVO.setImagem(dto.getPersonagem().getImagem());
-
-            // Define o objeto Personagem na entidade Participacao (CORRIGIDO)
-            participacao.setPersonagem(personagemVO);
-
-            // Define o ID externo da Participação (usando o ID do Personagem da API)
-
-        }
+        // 2. Gerenciar o Personagem (busca ou cria)
+        Personagem personagem = findOrCreatePersonagem(dto.getPersonagem());
+        participacao.setPersonagem(personagem);
 
         // 3. Associar a Série
         participacao.setSerie(serie);
@@ -104,125 +82,117 @@ public class ParticipacaoMapper {
         return participacao;
     }
 
-    public Pessoa findOrCreatePessoa(PessoaApiDTO pessoaApiDTO) { // AGORA RECEBE SEU PessoaApiDTO
+    /**
+     * Converte ParticipacaoCriacaoDTO para Participacao (criação manual)
+     */
+    public Participacao toEntity(ParticipacaoCriacaoDTO dto) {
+        Participacao participacao = new Participacao();
+
+        // Busca Pessoa
+        Pessoa pessoa = pessoaRepository.findById(dto.getPessoaId())
+                .orElseThrow(() -> new RuntimeException("Pessoa não encontrada com ID: " + dto.getPessoaId()));
+        participacao.setPessoa(pessoa);
+
+        // Busca Serie
+        Serie serie = serieRepository.findById(dto.getSerieId())
+                .orElseThrow(() -> new RuntimeException("Série não encontrada com ID: " + dto.getSerieId()));
+        participacao.setSerie(serie);
+
+        // Busca Personagem
+        Personagem personagem = personagemRepository.findById(dto.getPersonagemId())
+                .orElseThrow(() -> new RuntimeException("Personagem não encontrado com ID: " + dto.getPersonagemId()));
+        participacao.setPersonagem(personagem);
+
+        return participacao;
+    }
+
+    /**
+     * Atualiza uma Participacao existente com dados de ParticipacaoCriacaoDTO
+     */
+    public void updateEntity(ParticipacaoCriacaoDTO dto, Participacao participacao) {
+        // Atualiza Pessoa
+        Pessoa pessoa = pessoaRepository.findById(dto.getPessoaId())
+                .orElseThrow(() -> new RuntimeException("Pessoa não encontrada com ID: " + dto.getPessoaId()));
+        participacao.setPessoa(pessoa);
+
+        // Atualiza Serie
+        Serie serie = serieRepository.findById(dto.getSerieId())
+                .orElseThrow(() -> new RuntimeException("Série não encontrada com ID: " + dto.getSerieId()));
+        participacao.setSerie(serie);
+
+        // Atualiza Personagem
+        Personagem personagem = personagemRepository.findById(dto.getPersonagemId())
+                .orElseThrow(() -> new RuntimeException("Personagem não encontrado com ID: " + dto.getPersonagemId()));
+        participacao.setPersonagem(personagem);
+    }
+
+    /**
+     * Atualiza uma Participacao existente com dados de ParticipacaoApiDTO
+     */
+    public void updateEntity(ParticipacaoApiDTO dto, Participacao participacao) {
+        // Atualiza Pessoa
+        Pessoa pessoa = findOrCreatePessoa(dto.getPessoa());
+        participacao.setPessoa(pessoa);
+
+        // Atualiza Personagem
+        Personagem personagem = findOrCreatePersonagem(dto.getPersonagem());
+        participacao.setPersonagem(personagem);
+    }
+
+    /**
+     * Busca ou cria Pessoa a partir de PessoaApiDTO
+     */
+    public Pessoa findOrCreatePessoa(PessoaApiDTO pessoaApiDTO) {
         if (pessoaApiDTO == null || pessoaApiDTO.getExternoId() == null) {
-            throw new IllegalArgumentException("Dados de pessoa da API inválidos para mapeamento.");
+            throw new IllegalArgumentException("Dados de pessoa da API inválidos");
         }
 
         return pessoaRepository.findByExternoId(pessoaApiDTO.getExternoId())
-                .map(existingPessoa -> {
-                    // Se a pessoa já existe, atualiza seus dados (nome, dataNascimento)
-                    existingPessoa.setNome(pessoaApiDTO.getNome());
-                    existingPessoa.setDataNascimento(pessoaApiDTO.getDataNascimento());
-                    existingPessoa.setImagem(pessoaApiDTO.getImagem());
-                    return pessoaRepository.save(existingPessoa); // Salva as atualizações
+                .map(pessoaExistente -> {
+                    // Atualiza dados da pessoa existente
+                    pessoaExistente.setNome(pessoaApiDTO.getNome());
+                    pessoaExistente.setDataNascimento(pessoaApiDTO.getDataNascimento());
+                    pessoaExistente.setImagem(pessoaApiDTO.getImagem());
+                    return pessoaRepository.save(pessoaExistente);
                 })
                 .orElseGet(() -> {
-                    // Se a pessoa não existe, cria uma nova
+                    // Cria nova pessoa
                     Pessoa novaPessoa = new Pessoa();
                     novaPessoa.setExternoId(pessoaApiDTO.getExternoId());
                     novaPessoa.setNome(pessoaApiDTO.getNome());
                     novaPessoa.setDataNascimento(pessoaApiDTO.getDataNascimento());
-                    novaPessoa.setImagem(pessoaApiDTO.getImagem()); // Define dataNascimento
-                    return pessoaRepository.save(novaPessoa); // Salva a nova pessoa
+                    novaPessoa.setImagem(pessoaApiDTO.getImagem());
+                    return pessoaRepository.save(novaPessoa);
                 });
     }
 
-    public void updateEntity(ParticipacaoApiDTO dto, Participacao participacao) {
-        // Atualiza a Pessoa (mesmo que seja só para garantir que exista e esteja
-        // atualizada)
-        Pessoa pessoa = findOrCreatePessoa(dto.getPessoa());
-        participacao.setPessoa(pessoa);
-
-        // Atualiza o personagem
-        if (dto.getPersonagem() != null) {
-
-            // 1. Cria ou obtém o Value Object Personagem existente
-            Personagem personagemVO = participacao.getPersonagem();
-
-            // Se a entidade ainda não tem um VO Personagem, cria um novo.
-            if (personagemVO == null) {
-                personagemVO = new Personagem();
-            }
-
-            // 2. Atualiza os campos do VO Personagem com os dados do DTO
-            personagemVO.setNomePersonagem(dto.getPersonagem().getNomePersonagem());
-            personagemVO.setExternoId(dto.getPersonagem().getExternoId());
-
-            // 3. Define o objeto Personagem (corrigido) na entidade Participacao
-            participacao.setPersonagem(personagemVO);
-
-            // 4. Atualiza o ID externo da Participação (se ele for o ID do personagem)
-
-        }
-    }
-
     /**
-     * Converte um ParticipacaoCriacaoDTO para uma nova entidade Participacao.
-     * Lança RuntimeException se Pessoa ou Serie não forem encontradas.
+     * Busca ou cria Personagem a partir de PersonagemApiDTO
      */
-    public Participacao toEntity(ParticipacaoCriacaoDTO dto) {
-    Participacao participacao = new Participacao();
-
-    // --- Associa a pessoa ---
-    Pessoa pessoa = pessoaRepository.findById(dto.getPessoaId())
-            .orElseThrow(() -> new RuntimeException("Pessoa não encontrada com ID: " + dto.getPessoaId()));
-    participacao.setPessoa(pessoa);
-
-    // --- Associa a série ---
-    Serie serie = serieRepository.findById(dto.getSerieId())
-            .orElseThrow(() -> new RuntimeException("Série não encontrada com ID: " + dto.getSerieId()));
-    participacao.setSerie(serie);
-
-    // --- Cria o personagem (SEM externoId, pois é criação manual/local) ---
-    if (dto.getPersonagem() != null) {
-        Personagem personagem = new Personagem();
-        personagem.setNomePersonagem(dto.getPersonagem().getNomePersonagem());
-        personagem.setImagem(dto.getPersonagem().getImagem());
-
-        // ID será gerado automaticamente no banco
-        personagem = personagemRepository.save(personagem);
-
-        participacao.setPersonagem(personagem);
-    }
-
-    return participacao;
-}
-
-    /**
-     * Atualiza uma entidade Participacao existente com dados de
-     * ParticipacaoCriacaoDTO.
-     * Lança RuntimeException se Pessoa ou Serie não forem encontradas.
-     */
-   public void toEntity(ParticipacaoCriacaoDTO dto, Participacao participacao) {
-
-    if (dto.getPersonagem() != null) {
-        Personagem personagem = participacao.getPersonagem();
-
-        // Se não existe personagem ainda, cria um novo
-        if (personagem == null) {
-            personagem = new Personagem();
+    public Personagem findOrCreatePersonagem(PersonagemApiDTO personagemApiDTO) {
+        if (personagemApiDTO == null || personagemApiDTO.getExternoId() == null) {
+            throw new IllegalArgumentException("Dados de personagem da API inválidos");
         }
 
-        personagem.setNomePersonagem(dto.getPersonagem().getNomePersonagem());
-        personagem.setImagem(dto.getPersonagem().getImagem());
-        personagem = personagemRepository.save(personagem);
-
-        participacao.setPersonagem(personagem);
+        return personagemRepository.findByExternoId(personagemApiDTO.getExternoId())
+                .map(personagemExistente -> {
+                    // Atualiza dados do personagem existente
+                    personagemExistente.setNomePersonagem(personagemApiDTO.getNomePersonagem());
+                    personagemExistente.setImagem(personagemApiDTO.getImagem());
+                    return personagemRepository.save(personagemExistente);
+                })
+                .orElseGet(() -> {
+                    // Cria novo personagem
+                    Personagem novoPersonagem = new Personagem();
+                    novoPersonagem.setExternoId(personagemApiDTO.getExternoId());
+                    novoPersonagem.setNomePersonagem(personagemApiDTO.getNomePersonagem());
+                    novoPersonagem.setImagem(personagemApiDTO.getImagem());
+                    return personagemRepository.save(novoPersonagem);
+                });
     }
 
-    Pessoa pessoa = pessoaRepository.findById(dto.getPessoaId())
-            .orElseThrow(() -> new RuntimeException("Pessoa não encontrada com ID: " + dto.getPessoaId()));
-    participacao.setPessoa(pessoa);
-
-    Serie serie = serieRepository.findById(dto.getSerieId())
-            .orElseThrow(() -> new RuntimeException("Série não encontrada com ID: " + dto.getSerieId()));
-    participacao.setSerie(serie);
-}
-
     /**
-     * Verifica se já existe uma Participacao com a mesma Pessoa e Serie.
-     * ATUALIZADO para usar PessoaApiDTO.
+     * Verifica se já existe uma Participacao com mesma Pessoa, Serie e Personagem
      */
     public boolean exists(ParticipacaoApiDTO dto, Serie serie) {
         if (dto.getPessoa() == null || dto.getPessoa().getExternoId() == null ||
@@ -240,4 +210,19 @@ public class ParticipacaoMapper {
                 serie,
                 dto.getPersonagem().getNomePersonagem()).isPresent();
     }
+
+    /**
+     * Busca uma Participacao existente por Pessoa, Serie e nome do Personagem
+     */
+    public Optional<Participacao> findExisting(ParticipacaoApiDTO dto, Serie serie) {
+        if (dto.getPessoa() == null || dto.getPessoa().getExternoId() == null ||
+                dto.getPersonagem() == null || dto.getPersonagem().getNomePersonagem() == null) {
+            return Optional.empty();
+        }
+
+        return pessoaRepository.findByExternoId(dto.getPessoa().getExternoId())
+                .flatMap(pessoa -> participacaoRepository.findByPessoaAndSerieAndPersonagem_NomePersonagem(
+                        pessoa, serie, dto.getPersonagem().getNomePersonagem()));
+    }
+
 }

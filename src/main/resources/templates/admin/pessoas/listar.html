@@ -7,12 +7,208 @@
 </head>
 
 <body>
-    <main layout:fragment="conteudo">
-        <div class="container-fluid">
-            <h2 class="mb-4">
+    <section layout:fragment="conteudo">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>
                 <i class="bi bi-person text-warning"></i> Gerenciar Pessoas
             </h2>
-    </main>
+            <a th:href="@{/admin/pessoas/criar}" class="btn btn-success fw-bold">
+                <i class="bi bi-plus-lg"></i> Nova Pessoa
+            </a>
+        </div>
+
+        <!-- Mensagens de Sucesso/Erro -->
+        <div th:if="${mensagem}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i> <span th:text="${mensagem}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        
+        <div th:if="${erro}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle"></i> <span th:text="${erro}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <!-- 🔍 Filtros -->
+        <div class="card bg-dark border-secondary mb-4 shadow-sm">
+            <div class="card-body">
+                <form class="row g-3 align-items-end" th:action="@{/admin/pessoas}" method="get">
+
+                    <div class="col-md-4">
+                        <label for="nome" class="form-label text-light fw-semibold">Nome</label>
+                        <input type="text" id="nome" name="nome"
+                            class="form-control bg-dark text-light border-secondary" 
+                            placeholder="Buscar por nome..."
+                            th:value="${nomeSelecionado}">
+                    </div>
+
+                    <div class="col-md-2">
+                        <label for="decadaNascimento" class="form-label text-light fw-semibold">Década de Nascimento</label>
+                        <select id="decadaNascimento" name="decadaNascimento" 
+                                class="form-select bg-dark text-light border-secondary">
+                            <option value="">Todas</option>
+                            <option value="1940" th:selected="${decadaSelecionada == 1940}">1940s</option>
+                            <option value="1950" th:selected="${decadaSelecionada == 1950}">1950s</option>
+                            <option value="1960" th:selected="${decadaSelecionada == 1960}">1960s</option>
+                            <option value="1970" th:selected="${decadaSelecionada == 1970}">1970s</option>
+                            <option value="1980" th:selected="${decadaSelecionada == 1980}">1980s</option>
+                            <option value="1990" th:selected="${decadaSelecionada == 1990}">1990s</option>
+                            <option value="2000" th:selected="${decadaSelecionada == 2000}">2000s</option>
+                            <option value="2010" th:selected="${decadaSelecionada == 2010}">2010s</option>
+                            <option value="2020" th:selected="${decadaSelecionada == 2020}">2020s</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-2">
+                        <label for="ordenar" class="form-label text-light fw-semibold">Ordenar por</label>
+                        <select id="ordenar" name="ordenar" class="form-select bg-dark text-light border-secondary">
+                            <option value="pessoaId" th:selected="${ordenarSelecionado == 'pessoaId'}">ID</option>
+                            <option value="nome" th:selected="${ordenarSelecionado == 'nome'}">Nome</option>
+                            <option value="dataNascimento" th:selected="${ordenarSelecionado == 'dataNascimento'}">Data de Nascimento</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-2">
+                        <label for="direcao" class="form-label text-light fw-semibold">Direção</label>
+                        <select id="direcao" name="direcao" class="form-select bg-dark text-light border-secondary">
+                            <option value="asc" th:selected="${direcaoSelecionada == 'asc'}">↑ Crescente</option>
+                            <option value="desc" th:selected="${direcaoSelecionada == 'desc'}">↓ Decrescente</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-2 d-grid">
+                        <button type="submit" class="btn btn-warning fw-bold">
+                            <i class="bi bi-search"></i> Filtrar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- 📋 Tabela -->
+        <div class="card bg-dark border-secondary shadow-sm">
+            <div class="card-body">
+                <table class="table table-dark table-hover align-middle mb-0">
+                    <thead>
+                        <tr class="text-warning">
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Data de Nascimento</th>
+                            <th>Idade</th>
+                            <th style="width: 180px;">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="pessoa : ${pessoas}">
+                            <td th:text="${pessoa.pessoaId}">1</td>
+                            <td th:text="${pessoa.nome}">Bryan Cranston</td>
+                            <td th:text="${pessoa.dataNascimento != null ? #temporals.format(pessoa.dataNascimento, 'dd/MM/yyyy') : '-'}">
+                                07/03/1956
+                            </td>
+                            <td>
+                                <span th:if="${pessoa.dataNascimento != null}" 
+                                      th:text="${#temporals.year(#temporals.createNow()) - #temporals.year(pessoa.dataNascimento)} + ' anos'">
+                                    68 anos
+                                </span>
+                                <span th:if="${pessoa.dataNascimento == null}" class="text-muted">-</span>
+                            </td>
+                            <td class="text-center">
+                                <div class="btn-group btn-group-sm" role="group" style="gap: 4px;">
+                                    <a th:href="@{/admin/pessoas/editar/{id}(id=${pessoa.pessoaId})}"
+                                        class="btn btn-outline-info px-2 py-1">
+                                        <i class="bi bi-pencil"></i> Editar
+                                    </a>
+
+                                    <form th:action="@{/admin/pessoas/excluir/{id}(id=${pessoa.pessoaId})}" 
+                                          method="post"
+                                          onsubmit="return confirm('Tem certeza que deseja excluir esta pessoa?')"
+                                          style="display:inline;">
+                                        <button type="submit" class="btn btn-outline-danger px-2 py-1">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr th:if="${pessoas == null or #lists.isEmpty(pessoas)}">
+                            <td colspan="5" class="text-center text-muted py-4">
+                                <i class="bi bi-info-circle"></i> Nenhuma pessoa encontrada.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 📄 Paginação -->
+        <div th:if="${pessoasPage != null && pessoasPage.totalPages > 0}" class="d-flex justify-content-center mt-4">
+            <ul class="pagination pagination-sm">
+                <!-- Botão Anterior -->
+                <li class="page-item" th:classappend="${pessoasPage.first} ? 'disabled'">
+                    <a class="page-link bg-dark text-light border-secondary"
+                        th:href="@{/admin/pessoas(page=${pessoasPage.number - 1}, nome=${nomeSelecionado}, decadaNascimento=${decadaSelecionada}, ordenar=${ordenarSelecionado}, direcao=${direcaoSelecionada})}">
+                        <i class="bi bi-chevron-left"></i>
+                    </a>
+                </li>
+
+                <!-- Primeira página -->
+                <li th:if="${pessoasPage.number > 2}" class="page-item">
+                    <a class="page-link bg-dark text-light border-secondary"
+                        th:href="@{/admin/pessoas(page=0, nome=${nomeSelecionado}, decadaNascimento=${decadaSelecionada}, ordenar=${ordenarSelecionado}, direcao=${direcaoSelecionada})}">
+                        1
+                    </a>
+                </li>
+
+                <!-- Reticências iniciais -->
+                <li th:if="${pessoasPage.number > 3}" class="page-item disabled">
+                    <span class="page-link bg-dark text-light border-secondary">...</span>
+                </li>
+
+                <!-- Páginas ao redor da atual -->
+                <li th:each="i : ${#numbers.sequence(
+                        pessoasPage.number - 2 < 0 ? 0 : pessoasPage.number - 2, 
+                        pessoasPage.number + 2 >= pessoasPage.totalPages ? pessoasPage.totalPages - 1 : pessoasPage.number + 2
+                    )}" 
+                    class="page-item"
+                    th:classappend="${pessoasPage.number == i} ? 'active'">
+                    <a class="page-link bg-dark text-light border-secondary"
+                        th:href="@{/admin/pessoas(page=${i}, nome=${nomeSelecionado}, decadaNascimento=${decadaSelecionada}, ordenar=${ordenarSelecionado}, direcao=${direcaoSelecionada})}"
+                        th:text="${i + 1}">1</a>
+                </li>
+
+                <!-- Reticências finais -->
+                <li th:if="${pessoasPage.number < pessoasPage.totalPages - 4}" class="page-item disabled">
+                    <span class="page-link bg-dark text-light border-secondary">...</span>
+                </li>
+
+                <!-- Última página -->
+                <li th:if="${pessoasPage.number < pessoasPage.totalPages - 3}" class="page-item">
+                    <a class="page-link bg-dark text-light border-secondary"
+                        th:href="@{/admin/pessoas(page=${pessoasPage.totalPages - 1}, nome=${nomeSelecionado}, decadaNascimento=${decadaSelecionada}, ordenar=${ordenarSelecionado}, direcao=${direcaoSelecionada})}"
+                        th:text="${pessoasPage.totalPages}">
+                    </a>
+                </li>
+
+                <!-- Botão Próximo -->
+                <li class="page-item" th:classappend="${pessoasPage.last} ? 'disabled'">
+                    <a class="page-link bg-dark text-light border-secondary"
+                        th:href="@{/admin/pessoas(page=${pessoasPage.number + 1}, nome=${nomeSelecionado}, decadaNascimento=${decadaSelecionada}, ordenar=${ordenarSelecionado}, direcao=${direcaoSelecionada})}">
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Info de Paginação -->
+        <div th:if="${pessoasPage != null}" class="text-center text-muted mt-2">
+            <small>
+                Mostrando <strong th:text="${pessoasPage.numberOfElements}">0</strong> de 
+                <strong th:text="${pessoasPage.totalElements}">0</strong> pessoas
+            </small>
+        </div>
+
+    </section>
 </body>
 
 </html>

@@ -4,8 +4,6 @@
 
 <head>
   <title>Elenco e Participações</title>
-  
-  </style>
 </head>
 
 <body>
@@ -101,41 +99,43 @@
             <div class="card-body p-0">
               <!-- Imagem do Personagem -->
               <div class="position-relative">
-                <img th:src="${part.personagem?.imagem != null ? part.personagem.imagem.medio : (part.pessoa?.imagem != null ? part.pessoa.imagem.medio : 'https://via.placeholder.com/250x280?text=Sem+Imagem')}" 
+                <img th:src="${part.personagem != null and part.personagem.imagem != null ? part.personagem.imagem.medio : (part.pessoa != null and part.pessoa.imagem != null ? part.pessoa.imagem.medio : 'https://via.placeholder.com/250x280?text=Sem+Imagem')}" 
                      class="w-100 character-img" 
-                     th:alt="${part.personagem?.nomePersonagem}">
+                     style="height: 350px; object-fit: cover;"
+                     th:alt="${part.personagem != null ? part.personagem.nomePersonagem : 'Sem imagem'}">
                 
                 <!-- Badge com nome do ator -->
                 <div class="position-absolute bottom-0 start-0 m-3">
-                  <span class=" bg-white bg-opacity-25 p-2 rounded-pill">
-                    <small><strong th:text="${part.pessoa?.nome}">Nome do Ator</strong></small>
+                  <span class="bg-white bg-opacity-75 p-2 rounded-pill">
+                    <small><strong th:text="${part.pessoa != null ? part.pessoa.nome : 'Desconhecido'}">Nome do Ator</strong></small>
                   </span>
                 </div>
               </div>
               
               <!-- Informações -->
               <div class="p-3">
-                <h5 class="card-title text-center mb-2" th:if="${part.personagem?.nomePersonagem != null}">
+                <h5 class="card-title text-center mb-2" th:if="${part.personagem != null and part.personagem.nomePersonagem != null}">
                   <strong th:text="${part.personagem.nomePersonagem}">Personagem</strong>
                 </h5>
-                <h5 class="card-title text-center mb-2 text-muted" th:unless="${part.personagem?.nomePersonagem != null}">
+                <h5 class="card-title text-center mb-2 text-muted" th:if="${part.personagem == null or part.personagem.nomePersonagem == null}">
                   <em>Personagem não informado</em>
                 </h5>
                 
                 <div class="text-center">
                   <small class="d-block mb-2">
-                    📺 <strong th:text="${part.serie_nome}">Nome da Série</strong>
+                    📺 <strong th:text="${part.serieNome}">Nome da Série</strong>
                   </small>
                 </div>
                 
                 <div class="d-flex justify-content-center gap-2 mt-3">
-                  <a th:href="@{/series/{id}(id=${part.serie_id})}" 
-                     class="btn btn-primary  rounded"
+                  <a th:href="@{/series/{id}(id=${part.serieId})}" 
+                     class="btn btn-primary btn-sm rounded"
                      title="Ver Série">
                     📺 Série
                   </a>
-                  <a th:href="@{/pessoas/{id}(id=${part.pessoa?.pessoaId})}" 
-                     class="btn btn-primary  rounded"
+                  <a th:if="${part.pessoa != null}" 
+                     th:href="@{/pessoas/{id}(id=${part.pessoa.pessoaId})}" 
+                     class="btn btn-primary btn-sm rounded"
                      title="Ver Ator/Atriz">
                     👤 Ator
                   </a>

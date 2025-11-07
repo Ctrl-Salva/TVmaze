@@ -3,7 +3,7 @@ package com.example.tvmaze.controllers.web.admin;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,17 +18,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.tvmaze.dtos.genero.GeneroRespostaDTO;
 import com.example.tvmaze.dtos.serie.SerieCriacaoDTO;
 import com.example.tvmaze.dtos.serie.SerieRespostaDTO;
-import com.example.tvmaze.models.Serie;
+
 import com.example.tvmaze.services.GeneroService;
 import com.example.tvmaze.services.SerieService;
 
-import jakarta.transaction.Transactional;
+
 
 @Controller
 @RequestMapping("/admin/series")

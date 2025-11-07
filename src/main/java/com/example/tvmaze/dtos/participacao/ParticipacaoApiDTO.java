@@ -1,20 +1,24 @@
 package com.example.tvmaze.dtos.participacao;
 
 
+import com.example.tvmaze.dtos.personagem.PersonagemApiDTO;
 import com.example.tvmaze.dtos.pessoa.PessoaApiDTO;
 import com.google.gson.annotations.SerializedName;
 
 public class ParticipacaoApiDTO {
-
-    @SerializedName("person") // ou @JsonProperty("person")
+    
+    @SerializedName("person")
     private PessoaApiDTO pessoa;
-     // AGORA USA SEU PessoaApiDTO
-    @SerializedName("character") // ou @JsonProperty("character")
+    
+    @SerializedName("character")
     private PersonagemApiDTO personagem;
 
     public ParticipacaoApiDTO() {}
 
-    // Getters e Setters
+    public ParticipacaoApiDTO(PessoaApiDTO pessoa, PersonagemApiDTO personagem) {
+        this.pessoa = pessoa;
+        this.personagem = personagem;
+    }
 
     public PessoaApiDTO getPessoa() {
         return pessoa;
@@ -31,5 +35,4 @@ public class ParticipacaoApiDTO {
     public void setPersonagem(PersonagemApiDTO personagem) {
         this.personagem = personagem;
     }
-
 }

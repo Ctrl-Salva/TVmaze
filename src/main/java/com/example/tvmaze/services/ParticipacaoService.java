@@ -18,6 +18,8 @@ import com.example.tvmaze.mappers.ParticipacaoMapper;
 import com.example.tvmaze.models.Participacao;
 import com.example.tvmaze.repositories.ParticipacaoRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class ParticipacaoService {
     
@@ -25,20 +27,24 @@ public class ParticipacaoService {
     private ParticipacaoRepository participacaoRepository;
     
     @Autowired
-    private ParticipacaoMapper participacaoMapper; 
+    private ParticipacaoMapper participacaoMapper;
 
-    public ParticipacaoRespostaDTO criarParticipacao(ParticipacaoCriacaoDTO dtoCriacao) {
-        Participacao participacao = participacaoMapper.toEntity(dtoCriacao);
+    @Transactional
+    public ParticipacaoRespostaDTO criarParticipacao(ParticipacaoCriacaoDTO dto) {
+        Participacao participacao = participacaoMapper.toEntity(dto);
         Participacao participacaoSalva = participacaoRepository.save(participacao);
         return participacaoMapper.toRespostaDTO(participacaoSalva);
     }
 
+    @Transactional
     public List<ParticipacaoRespostaDTO> listarTodasParticipacoes() {
-        return participacaoRepository.findAll().stream()
-                .map(participacaoMapper::toRespostaDTO) 
+        return participacaoRepository.findAll()
+                .stream()
+                .map(participacaoMapper::toRespostaDTO)
                 .collect(Collectors.toList());
     }
     
+    @Transactional
     public List<ParticipacaoRespostaDTO> listarParticipacoesRecentes() {
         return participacaoRepository.findAllByOrderByParticipacaoIdDesc()
                 .stream()
@@ -46,6 +52,7 @@ public class ParticipacaoService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public List<ParticipacaoRespostaDTO> listarParticipacoesPorSerieId(Integer serieId) {
         return participacaoRepository.findBySerie_SerieId(serieId)
                 .stream()
@@ -53,6 +60,7 @@ public class ParticipacaoService {
                 .collect(Collectors.toList());
     }
     
+    @Transactional
     public List<ParticipacaoRespostaDTO> listarParticipacoesPorPessoaId(Integer pessoaId) {
         return participacaoRepository.findByPessoa_PessoaId(pessoaId)
                 .stream()
@@ -60,20 +68,23 @@ public class ParticipacaoService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public Optional<ParticipacaoRespostaDTO> buscarParticipacaoPorId(Integer id) {
         return participacaoRepository.findById(id)
-                .map(participacaoMapper::toRespostaDTO); 
+                .map(participacaoMapper::toRespostaDTO);
     }
 
-    public ParticipacaoRespostaDTO atualizarParticipacao(Integer id, ParticipacaoCriacaoDTO dtoAtualizacao) {
+    @Transactional
+    public ParticipacaoRespostaDTO atualizarParticipacao(Integer id, ParticipacaoCriacaoDTO dto) {
         Participacao participacaoExistente = participacaoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Participação não encontrada com ID: " + id));
         
-        participacaoMapper.toEntity(dtoAtualizacao, participacaoExistente);
+        participacaoMapper.updateEntity(dto, participacaoExistente);
         Participacao participacaoAtualizada = participacaoRepository.save(participacaoExistente);
         return participacaoMapper.toRespostaDTO(participacaoAtualizada);
     }
 
+    @Transactional
     public void deletarParticipacao(Integer id) {
         if (!participacaoRepository.existsById(id)) {
             throw new RuntimeException("Participação não encontrada com ID: " + id);
@@ -81,26 +92,22 @@ public class ParticipacaoService {
         participacaoRepository.deleteById(id);
     }
 
-    // ========== NOVOS MÉTODOS PARA PAGINAÇÃO E FILTROS ==========
-    
+    @Transactional
     public Page<ParticipacaoRespostaDTO> listarParticipacoesComFiltros(
             Integer serieId, Integer pessoaId, String nomePersonagem, Pageable pageable) {
         
         Specification<Participacao> spec = Specification.where(null);
         
-        // Filtro por série
         if (serieId != null) {
             spec = spec.and((root, query, cb) -> 
                 cb.equal(root.get("serie").get("serieId"), serieId));
         }
         
-        // Filtro por pessoa
         if (pessoaId != null) {
             spec = spec.and((root, query, cb) -> 
                 cb.equal(root.get("pessoa").get("pessoaId"), pessoaId));
         }
         
-        // Filtro por nome do personagem (busca parcial)
         if (nomePersonagem != null && !nomePersonagem.trim().isEmpty()) {
             spec = spec.and((root, query, cb) -> 
                 cb.like(cb.lower(root.get("personagem").get("nomePersonagem")), 
@@ -111,6 +118,7 @@ public class ParticipacaoService {
         return participacoesPage.map(participacaoMapper::toRespostaDTO);
     }
     
+    @Transactional
     public Map<Integer, String> listarSeriesComParticipacoes() {
         List<Object[]> resultado = participacaoRepository.findAllSeriesComParticipacoes();
         Map<Integer, String> series = new HashMap<>();
@@ -120,6 +128,7 @@ public class ParticipacaoService {
         return series;
     }
     
+    @Transactional
     public Map<Integer, String> listarPessoasComParticipacoes() {
         List<Object[]> resultado = participacaoRepository.findAllPessoasComParticipacoes();
         Map<Integer, String> pessoas = new HashMap<>();

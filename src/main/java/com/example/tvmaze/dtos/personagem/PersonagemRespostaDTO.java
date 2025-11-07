@@ -1,29 +1,17 @@
-package com.example.tvmaze.models;
+package com.example.tvmaze.dtos.personagem;
 
 import com.example.tvmaze.models.vo.Imagem;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-
-@Entity
-public class Personagem {
+public class PersonagemRespostaDTO {
     
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer personagemId;
-
     private Integer externoId;
-
     private String nomePersonagem;
-
     private Imagem imagem;
 
-    public Personagem() {
-    }
+    public PersonagemRespostaDTO() {}
 
-     public Personagem(Integer personagemId, Integer externoId, String nomePersonagem, Imagem imagem) {
+    public PersonagemRespostaDTO(Integer personagemId, Integer externoId, String nomePersonagem, Imagem imagem) {
         this.personagemId = personagemId;
         this.externoId = externoId;
         this.nomePersonagem = nomePersonagem;
@@ -61,6 +49,4 @@ public class Personagem {
     public void setImagem(Imagem imagem) {
         this.imagem = imagem;
     }
-
-    
 }

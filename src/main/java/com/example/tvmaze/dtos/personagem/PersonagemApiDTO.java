@@ -1,24 +1,27 @@
-package com.example.tvmaze.dtos.participacao;
+package com.example.tvmaze.dtos.personagem;
 
 import com.example.tvmaze.models.vo.Imagem;
 import com.google.gson.annotations.SerializedName;
 
 public class PersonagemApiDTO {
-
+    
     @SerializedName("id")
     private Integer externoId;
     
-    @SerializedName("name") // ou @JsonProperty("name")
+    @SerializedName("name")
     private String nomePersonagem;
-
+    
     @SerializedName("image")
     private Imagem imagem;
 
     public PersonagemApiDTO() {}
 
-    // Getters e Setters
+    public PersonagemApiDTO(Integer externoId, String nomePersonagem, Imagem imagem) {
+        this.externoId = externoId;
+        this.nomePersonagem = nomePersonagem;
+        this.imagem = imagem;
+    }
 
-    
     public Integer getExternoId() {
         return externoId;
     }
@@ -42,6 +45,4 @@ public class PersonagemApiDTO {
     public void setImagem(Imagem imagem) {
         this.imagem = imagem;
     }
-
-    
 }
