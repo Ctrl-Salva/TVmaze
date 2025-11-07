@@ -3,12 +3,17 @@ package com.example.tvmaze.services;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.example.tvmaze.dtos.personagem.PersonagemRequestDTO;
 import com.example.tvmaze.dtos.personagem.PersonagemRespostaDTO;
+import com.example.tvmaze.dtos.pessoa.PessoaRespostaDTO;
 import com.example.tvmaze.mappers.PersonagemMapper;
 import com.example.tvmaze.models.Personagem;
+import com.example.tvmaze.models.Pessoa;
 import com.example.tvmaze.repositories.PersonagemRepository;
 
 import jakarta.transaction.Transactional;
@@ -23,6 +28,24 @@ public class PersonagemService {
         this.repository = repository;
         this.mapper = mapper;
     }
+
+    public Page<PersonagemRespostaDTO> listarPessoasComFiltros(
+            String nome, String ordenar, String direcao, Pageable pageable) {
+        
+        Specification<Personagem> spec = Specification.where(null);
+        
+        // Filtro por nome (busca parcial, case insensitive)
+        if (nome != null && !nome.trim().isEmpty()) {
+            spec = spec.and((root, query, cb) -> 
+                cb.like(cb.lower(root.get("nome")), "%" + nome.toLowerCase() + "%"));
+        }
+        
+        Page<Personagem> personagemPage = repository.findAll(spec, pageable);
+
+
+        return personagemPage.map(mapper::toRespostaDTO);
+    }
+
 
     @Transactional
     public List<PersonagemRespostaDTO> listarTodos() {

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/layout-admin}">
+
+<head>
+    <title th:text="${pessoaId != null ? 'Admin - Editar Personagem' : 'Admin - Novo Personagem'}"></title>
+</head>
+
+<body>
+    <section layout:fragment="conteudo">
+        <!-- Cabeçalho -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="text-warning mb-0">
+                <i class="bi bi-mask"></i>
+                <span th:text="${pessoaId != null ? 'Editar Personagem' : 'Novo Personagem'}"></span>
+            </h2>
+            <a th:href="@{/admin/personagem}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Voltar
+            </a>
+        </div>
+
+        <!-- Mensagens -->
+        <div th:if="${mensagem}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i> <span th:text="${mensagem}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+        </div>
+
+        <div th:if="${erro}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle"></i> <span th:text="${erro}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+        </div>
+
+        <!-- Formulário -->
+        <div class="card bg-dark border-secondary shadow">
+            <div class="card-body">
+                <form th:action="${pessoaId != null ? '/admin/personagem/atualizar/' + pessoaId : '/admin/personagem/salvar'}"
+                    th:object="${pessoa}" method="post" class="row g-3" id="personagemForm">
+
+                    <!-- ID do personagem -->
+                    <div class="col-12" th:if="${pessoaId != null}">
+                        <div class="alert alert-info mb-3">
+                            <i class="bi bi-info-circle"></i>
+                            Editando Personagem ID: <strong th:text="${pessoaId}">1</strong>
+                        </div>
+                    </div>
+
+                    <!-- Nome do Personagem -->
+                    <div class="col-md-12">
+                        <label for="nomePersonagem" class="form-label text-light">
+                            <i class="bi bi-mask"></i> Nome do Personagem <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" id="nomePersonagem" th:field="*{nomePersonagem}"
+                            class="form-control bg-dark text-light border-secondary" required
+                            placeholder="Ex: Walter White, Jesse Pinkman">
+                    </div>
+
+                    <!-- Imagem Original -->
+                    <div class="col-md-6">
+                        <label for="imagemOriginal" class="form-label text-light">
+                            <i class="bi bi-image"></i> Imagem Original (URL)
+                        </label>
+                        <input type="url" id="imagemOriginal" th:field="*{imagem.original}"
+                            class="form-control bg-dark text-light border-secondary"
+                            placeholder="https://exemplo.com/personagem_original.jpg">
+                        <small class="text-muted">Resolução recomendada: alta qualidade</small>
+                    </div>
+
+                    <!-- Imagem Média -->
+                    <div class="col-md-6">
+                        <label for="imagemMedio" class="form-label text-light">
+                            <i class="bi bi-image"></i> Imagem Média (URL)
+                        </label>
+                        <input type="url" id="imagemMedio" th:field="*{imagem.medio}"
+                            class="form-control bg-dark text-light border-secondary"
+                            placeholder="https://exemplo.com/personagem_medio.jpg">
+                        <small class="text-muted">Resolução recomendada: média qualidade</small>
+                    </div>
+
+                    <!-- Preview das Imagens -->
+                    <div class="col-12"
+                        th:if="${pessoa.imagem != null && (pessoa.imagem.original != null || pessoa.imagem.medio != null)}">
+                        <label class="form-label text-light">
+                            <i class="bi bi-eye"></i> Preview das Imagens
+                        </label>
+                        <div class="row g-3">
+                            <div class="col-md-6" th:if="${pessoa.imagem.original != null}">
+                                <div class="card bg-secondary">
+                                    <div class="card-body text-center">
+                                        <p class="text-light small mb-2">Imagem Original:</p>
+                                        <img th:src="${pessoa.imagem.original}" class="img-fluid rounded shadow"
+                                            style="max-height: 300px; object-fit: cover;" alt="Preview Original"
+                                            onerror="this.src='https://via.placeholder.com/300x400?text=Imagem+Indisponível'">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6" th:if="${pessoa.imagem.medio != null}">
+                                <div class="card bg-secondary">
+                                    <div class="card-body text-center">
+                                        <p class="text-light small mb-2">Imagem Média:</p>
+                                        <img th:src="${pessoa.imagem.medio}" class="img-fluid rounded shadow"
+                                            style="max-height: 300px; object-fit: cover;" alt="Preview Médio"
+                                            onerror="this.src='https://via.placeholder.com/300x400?text=Imagem+Indisponível'">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botões -->
+                    <div class="col-12">
+                        <hr class="border-secondary">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">
+                                <span class="text-danger">*</span> Campos obrigatórios
+                            </small>
+                            <div>
+                                <a th:href="@{/admin/personagem}" class="btn btn-secondary me-2">
+                                    <i class="bi bi-x-circle"></i> Cancelar
+                                </a>
+                                <button type="submit" class="btn btn-success px-4">
+                                    <i class="bi bi-check-circle"></i>
+                                    <span th:text="${pessoaId != null ? 'Atualizar' : 'Cadastrar'}"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+        <script th:inline="javascript">
+            document.addEventListener('DOMContentLoaded', function () {
+                const form = document.getElementById('personagemForm');
+
+                // Adicionar animação ao submeter
+                form.addEventListener('submit', function (e) {
+                    const submitButton = form.querySelector('button[type="submit"]');
+                    submitButton.disabled = true;
+                    submitButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Salvando...';
+                });
+            });
+        </script>
+
+    </section>
+</body>
+
+</html>

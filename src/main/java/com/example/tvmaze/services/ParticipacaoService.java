@@ -22,10 +22,10 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class ParticipacaoService {
-    
+
     @Autowired
     private ParticipacaoRepository participacaoRepository;
-    
+
     @Autowired
     private ParticipacaoMapper participacaoMapper;
 
@@ -43,7 +43,7 @@ public class ParticipacaoService {
                 .map(participacaoMapper::toRespostaDTO)
                 .collect(Collectors.toList());
     }
-    
+
     @Transactional
     public List<ParticipacaoRespostaDTO> listarParticipacoesRecentes() {
         return participacaoRepository.findAllByOrderByParticipacaoIdDesc()
@@ -59,7 +59,7 @@ public class ParticipacaoService {
                 .map(participacaoMapper::toRespostaDTO)
                 .collect(Collectors.toList());
     }
-    
+
     @Transactional
     public List<ParticipacaoRespostaDTO> listarParticipacoesPorPessoaId(Integer pessoaId) {
         return participacaoRepository.findByPessoa_PessoaId(pessoaId)
@@ -78,7 +78,7 @@ public class ParticipacaoService {
     public ParticipacaoRespostaDTO atualizarParticipacao(Integer id, ParticipacaoCriacaoDTO dto) {
         Participacao participacaoExistente = participacaoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Participação não encontrada com ID: " + id));
-        
+
         participacaoMapper.updateEntity(dto, participacaoExistente);
         Participacao participacaoAtualizada = participacaoRepository.save(participacaoExistente);
         return participacaoMapper.toRespostaDTO(participacaoAtualizada);
@@ -95,29 +95,62 @@ public class ParticipacaoService {
     @Transactional
     public Page<ParticipacaoRespostaDTO> listarParticipacoesComFiltros(
             Integer serieId, Integer pessoaId, String nomePersonagem, Pageable pageable) {
-        
+
         Specification<Participacao> spec = Specification.where(null);
-        
+
         if (serieId != null) {
-            spec = spec.and((root, query, cb) -> 
-                cb.equal(root.get("serie").get("serieId"), serieId));
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("serie").get("serieId"), serieId));
         }
-        
+
         if (pessoaId != null) {
-            spec = spec.and((root, query, cb) -> 
-                cb.equal(root.get("pessoa").get("pessoaId"), pessoaId));
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("pessoa").get("pessoaId"), pessoaId));
         }
-        
+
         if (nomePersonagem != null && !nomePersonagem.trim().isEmpty()) {
-            spec = spec.and((root, query, cb) -> 
-                cb.like(cb.lower(root.get("personagem").get("nomePersonagem")), 
-                        "%" + nomePersonagem.toLowerCase() + "%"));
+            spec = spec.and((root, query, cb) -> cb.like(cb.lower(root.get("personagem").get("nomePersonagem")),
+                    "%" + nomePersonagem.toLowerCase() + "%"));
         }
-        
+
         Page<Participacao> participacoesPage = participacaoRepository.findAll(spec, pageable);
         return participacoesPage.map(participacaoMapper::toRespostaDTO);
     }
-    
+
+    public Page<ParticipacaoRespostaDTO> listarComFiltros(
+            String serieNome,
+            String pessoaNome,
+            String personagemNome,
+            String ordenarCampo,
+            String direcao,
+            Pageable pageable) {
+
+        // Cria Specification dinâmica para filtros
+        Specification<Participacao> spec = Specification.where(null);
+
+        // Filtro por nome da série
+        if (serieNome != null && !serieNome.isBlank()) {
+            spec = spec.and((root, query, cb) -> cb.like(cb.lower(root.get("serie").get("nome")),
+                    "%" + serieNome.toLowerCase() + "%"));
+        }
+
+        // Filtro por nome da pessoa (ator/atriz)
+        if (pessoaNome != null && !pessoaNome.isBlank()) {
+            spec = spec.and((root, query, cb) -> cb.like(cb.lower(root.get("pessoa").get("nome")),
+                    "%" + pessoaNome.toLowerCase() + "%"));
+        }
+
+        // Filtro por nome do personagem
+        if (personagemNome != null && !personagemNome.isBlank()) {
+            spec = spec.and((root, query, cb) -> cb.like(cb.lower(root.get("personagem").get("nomePersonagem")),
+                    "%" + personagemNome.toLowerCase() + "%"));
+        }
+
+        // Busca com filtros e paginação
+        Page<Participacao> participacoes = participacaoRepository.findAll(spec, pageable);
+
+        // Converte para DTO usando o mapper existente
+        return participacoes.map(participacaoMapper::toRespostaDTO);
+    }
+
     @Transactional
     public Map<Integer, String> listarSeriesComParticipacoes() {
         List<Object[]> resultado = participacaoRepository.findAllSeriesComParticipacoes();
@@ -127,7 +160,7 @@ public class ParticipacaoService {
         }
         return series;
     }
-    
+
     @Transactional
     public Map<Integer, String> listarPessoasComParticipacoes() {
         List<Object[]> resultado = participacaoRepository.findAllPessoasComParticipacoes();

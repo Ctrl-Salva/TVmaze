@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/layout-admin}">
+
+<head>
+    <title>Admin - Participações</title>
+</head>
+
+<body>
+    <main layout:fragment="conteudo">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>
+                <i class="bi bi-people-fill text-info"></i> Gerenciar Participações
+            </h2>
+            <a th:href="@{/admin/participacao/criar}" class="btn btn-success fw-bold">
+                <i class="bi bi-plus-lg"></i> Nova Participação
+            </a>
+        </div>
+
+        <!-- Mensagens de Sucesso/Erro -->
+        <div th:if="${mensagem}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i> <span th:text="${mensagem}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div th:if="${erro}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle"></i> <span th:text="${erro}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <!-- 🔍 Filtros -->
+        <div class="card bg-dark border-secondary mb-4 shadow-sm">
+            <div class="card-body">
+                <form class="row g-3 align-items-end" th:action="@{/admin/participacao}" method="get">
+
+                    <div class="col-md-3">
+                        <label for="serieNome" class="form-label text-light fw-semibold">Série</label>
+                        <input type="text" id="serieNome" name="serieNome"
+                            class="form-control bg-dark text-light border-secondary" placeholder="Buscar por série..."
+                            th:value="${serieNomeSelecionado}">
+                    </div>
+
+                    <div class="col-md-3">
+                        <label for="pessoaNome" class="form-label text-light fw-semibold">Ator/Atriz</label>
+                        <input type="text" id="pessoaNome" name="pessoaNome"
+                            class="form-control bg-dark text-light border-secondary" placeholder="Buscar por ator..."
+                            th:value="${pessoaNomeSelecionado}">
+                    </div>
+
+                    <div class="col-md-2">
+                        <label for="personagemNome" class="form-label text-light fw-semibold">Personagem</label>
+                        <input type="text" id="personagemNome" name="personagemNome"
+                            class="form-control bg-dark text-light border-secondary" placeholder="Personagem..."
+                            th:value="${personagemNomeSelecionado}">
+                    </div>
+
+                    <div class="col-md-2">
+                        <label for="ordenar" class="form-label text-light fw-semibold">Ordenar por</label>
+                        <select id="ordenar" name="ordenar" class="form-select bg-dark text-light border-secondary">
+                            <option value="participacaoId" th:selected="${ordenarSelecionado == 'participacaoId'}">ID</option>
+                            <option value="serieNome" th:selected="${ordenarSelecionado == 'serieNome'}">Série</option>
+                            <option value="pessoaNome" th:selected="${ordenarSelecionado == 'pessoaNome'}">Ator</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-1">
+                        <label for="direcao" class="form-label text-light fw-semibold">Direção</label>
+                        <select id="direcao" name="direcao" class="form-select bg-dark text-light border-secondary">
+                            <option value="asc" th:selected="${direcaoSelecionada == 'asc'}">↑</option>
+                            <option value="desc" th:selected="${direcaoSelecionada == 'desc'}">↓</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-1 d-grid">
+                        <button type="submit" class="btn btn-warning fw-bold">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- 📋 Tabela -->
+        <div class="card bg-dark border-secondary shadow-sm">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover align-middle mb-0">
+                        <thead>
+                            <tr class="text-warning">
+                                <th style="width: 60px;">ID</th>
+                                <th>Série</th>
+                                <th>Ator/Atriz</th>
+                                <th>Personagem</th>
+                                <th style="width: 180px;">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="participacao : ${participacoes}">
+                                <td th:text="${participacao.participacaoId}">1</td>
+                                <td>
+                                    <span th:text="${participacao.serieNome}">Breaking Bad</span>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img th:if="${participacao.pessoa.imagem != null && participacao.pessoa.imagem.medio != null}"
+                                            th:src="${participacao.pessoa.imagem.medio}"
+                                            class="rounded-circle me-2"
+                                            style="width: 40px; height: 40px; object-fit: cover;"
+                                            alt="Foto"
+                                            onerror="this.src='https://via.placeholder.com/40?text=?'">
+                                        <span th:text="${participacao.pessoa.nome}">Bryan Cranston</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img th:if="${participacao.personagem.imagem != null && participacao.personagem.imagem.medio != null}"
+                                            th:src="${participacao.personagem.imagem.medio}"
+                                            class="rounded-circle me-2"
+                                            style="width: 40px; height: 40px; object-fit: cover;"
+                                            alt="Foto"
+                                            onerror="this.src='https://via.placeholder.com/40?text=?'">
+                                        <span th:text="${participacao.personagem.nomePersonagem}">Walter White</span>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group btn-group-sm" role="group" style="gap: 4px;">
+                                        <a th:href="@{/admin/participacao/editar/{id}(id=${participacao.participacaoId})}"
+                                            class="btn btn-outline-info px-2 py-1">
+                                            <i class="bi bi-pencil"></i> Editar
+                                        </a>
+
+                                        <form th:action="@{/admin/participacao/excluir/{id}(id=${participacao.participacaoId})}"
+                                            method="post"
+                                            onsubmit="return confirm('Tem certeza que deseja excluir essa participação?')"
+                                            style="display:inline;">
+                                            <button type="submit" class="btn btn-outline-danger px-2 py-1">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr th:if="${participacoes == null or #lists.isEmpty(participacoes)}">
+                                <td colspan="5" class="text-center text-muted py-4">
+                                    <i class="bi bi-info-circle"></i> Nenhuma participação encontrada.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 📄 Paginação -->
+        <div th:if="${participacaoPage != null && participacaoPage.totalPages > 0}"
+            class="d-flex justify-content-center mt-4">
+            <ul class="pagination pagination-sm">
+                <!-- Botão Anterior -->
+                <li class="page-item" th:classappend="${participacaoPage.first} ? 'disabled'">
+                    <a class="page-link bg-dark text-light border-secondary"
+                        th:href="@{/admin/participacao(page=${participacaoPage.number - 1}, serieNome=${serieNomeSelecionado}, pessoaNome=${pessoaNomeSelecionado}, personagemNome=${personagemNomeSelecionado}, ordenar=${ordenarSelecionado}, direcao=${direcaoSelecionada})}">
+                        <i class="bi bi-chevron-left"></i>
+                    </a>
+                </li>
+
+                <!-- Primeira página -->
+                <li th:if="${participacaoPage.number > 2}" class="page-item">
+                    <a class="page-link bg-dark text-light border-secondary"
+                        th:href="@{/admin/participacao(page=0, serieNome=${serieNomeSelecionado}, pessoaNome=${pessoaNomeSelecionado}, personagemNome=${personagemNomeSelecionado}, ordenar=${ordenarSelecionado}, direcao=${direcaoSelecionada})}">
+                        1
+                    </a>
+                </li>
+
+                <!-- Reticências iniciais -->
+                <li th:if="${participacaoPage.number > 3}" class="page-item disabled">
+                    <span class="page-link bg-dark text-light border-secondary">...</span>
+                </li>
+
+                <!-- Páginas ao redor da atual -->
+                <li th:each="i : ${#numbers.sequence(
+                        participacaoPage.number - 2 < 0 ? 0 : participacaoPage.number - 2, 
+                        participacaoPage.number + 2 >= participacaoPage.totalPages ? participacaoPage.totalPages - 1 : participacaoPage.number + 2
+                    )}" class="page-item" th:classappend="${participacaoPage.number == i} ? 'active'">
+                    <a class="page-link bg-dark text-light border-secondary"
+                        th:href="@{/admin/participacao(page=${i}, serieNome=${serieNomeSelecionado}, pessoaNome=${pessoaNomeSelecionado}, personagemNome=${personagemNomeSelecionado}, ordenar=${ordenarSelecionado}, direcao=${direcaoSelecionada})}"
+                        th:text="${i + 1}">1</a>
+                </li>
+
+                <!-- Reticências finais -->
+                <li th:if="${participacaoPage.number < participacaoPage.totalPages - 4}" class="page-item disabled">
+                    <span class="page-link bg-dark text-light border-secondary">...</span>
+                </li>
+
+                <!-- Última página -->
+                <li th:if="${participacaoPage.number < participacaoPage.totalPages - 3}" class="page-item">
+                    <a class="page-link bg-dark text-light border-secondary"
+                        th:href="@{/admin/participacao(page=${participacaoPage.totalPages - 1}, serieNome=${serieNomeSelecionado}, pessoaNome=${pessoaNomeSelecionado}, personagemNome=${personagemNomeSelecionado}, ordenar=${ordenarSelecionado}, direcao=${direcaoSelecionada})}"
+                        th:text="${participacaoPage.totalPages}">
+                    </a>
+                </li>
+
+                <!-- Botão Próximo -->
+                <li class="page-item" th:classappend="${participacaoPage.last} ? 'disabled'">
+                    <a class="page-link bg-dark text-light border-secondary"
+                        th:href="@{/admin/participacao(page=${participacaoPage.number + 1}, serieNome=${serieNomeSelecionado}, pessoaNome=${pessoaNomeSelecionado}, personagemNome=${personagemNomeSelecionado}, ordenar=${ordenarSelecionado}, direcao=${direcaoSelecionada})}">
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Info de Paginação -->
+        <div th:if="${participacaoPage != null}" class="text-center text-muted mt-2">
+            <small>
+                Mostrando <strong th:text="${participacaoPage.numberOfElements}">0</strong> de
+                <strong th:text="${participacaoPage.totalElements}">0</strong> participações
+            </small>
+        </div>
+
+    </main>
+</body>
+
+</html>
