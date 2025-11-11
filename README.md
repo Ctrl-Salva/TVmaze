@@ -57,12 +57,11 @@ Senha: (vazia)
 - ☕ **Java 17+**
 - ⚙️ **Spring Boot**
 - 🌐 **Spring Web**
-- 🧩 **Thymeleaf**
 - 🗄️ **Spring Data JPA**
 - 🧮 **H2 Database**
-- 🐬 **MySQL**
 - 📘 **Swagger / OpenAPI**
 - 🔗 **Gson**
+- 🧩 **Thymeleaf**
 - 🧰 **Maven**
 
 ---
