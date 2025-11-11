@@ -1,6 +1,6 @@
-# 🖥️ Interface Web
+# 🎬 TVMaze Catalog Manager
 
-Aplicação web desenvolvida com **Spring Boot**, integrando **Swagger** para testes de requisições JSON e banco de dados **H2 em memória**.
+Sistema de gerenciamento de séries desenvolvido em **Java com Spring Boot**, que consome dados reais da API pública **TVMaze**, armazena localmente, permite operações CRUD completas e demonstra o uso de **Programação Orientada a Objetos (POO)** e **estruturas de dados**.
 
 ---
 
@@ -59,7 +59,9 @@ Senha: (vazia)
 - 🌐 **Spring Web**
 - 🗄️ **Spring Data JPA**
 - 🧮 **H2 Database**
+- 🐬 **MySQL**
 - 📘 **Swagger / OpenAPI**
+- 🔗 **Gson**
 - 🧰 **Maven**
 
 ---
