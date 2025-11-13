@@ -28,7 +28,6 @@ public class PessoaMapper {
         if (dto == null) return null;
 
         Pessoa pessoa = new Pessoa();
-        pessoa.setExternoId(dto.getExternoId());
         pessoa.setNome(dto.getNome());
         pessoa.setDataNascimento(dto.getDataNascimento());
         pessoa.setImagem(dto.getImagem());
@@ -47,9 +46,6 @@ public class PessoaMapper {
 
         if (dto.getImagem() != null)
             pessoa.setImagem(dto.getImagem());
-
-        if (dto.getExternoId() != null)
-            pessoa.setExternoId(dto.getExternoId());
     }
 
     // Entidade → Resposta DTO

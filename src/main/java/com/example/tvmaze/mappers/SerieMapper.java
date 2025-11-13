@@ -49,7 +49,6 @@ public class SerieMapper {
      * Atualiza a série existente com os dados do DTO
      */
     public void toEntity(SerieCriacaoDTO dto, Serie serie) {
-        serie.setExternoId(dto.getExternoId());
         serie.setNome(dto.getNome());
         serie.setLinguagem(dto.getLinguagem());
         serie.setSinopse(dto.getSinopse());

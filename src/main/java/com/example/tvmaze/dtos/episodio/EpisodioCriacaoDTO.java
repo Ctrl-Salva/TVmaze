@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import com.example.tvmaze.models.vo.Imagem;
 
 public class EpisodioCriacaoDTO {
-    private Integer externoId;
     private String nome;
     private Integer temporada;
     private Integer numero;
@@ -16,14 +15,6 @@ public class EpisodioCriacaoDTO {
 
     // Construtores
     public EpisodioCriacaoDTO() {
-    }
-
-    public Integer getExternoId() {
-        return externoId;
-    }
-
-    public void setExternoId(Integer externoId) {
-        this.externoId = externoId;
     }
 
     public Integer getTemporada() {
