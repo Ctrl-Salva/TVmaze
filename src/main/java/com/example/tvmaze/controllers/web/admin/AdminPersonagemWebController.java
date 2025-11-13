@@ -30,7 +30,7 @@ public class AdminPersonagemWebController {
 
     @GetMapping("/criar")
     public String criarPersonagem(Model model) {
-        model.addAttribute("pessoa", new PessoaCriacaoDTO());
+        model.addAttribute("pessoa", new PersonagemRequestDTO());
         return "admin/personagem/form";
     }
 
@@ -53,21 +53,20 @@ public class AdminPersonagemWebController {
     public String editarPersonagem(@PathVariable Integer id, Model model, RedirectAttributes redirectAttributes) {
         try {
             PersonagemRespostaDTO personagemExistente = personagemService.buscarPorId(id);
-            
+
             PersonagemRequestDTO personagem = new PersonagemRequestDTO();
             personagem.setNomePersonagem(personagemExistente.getNomePersonagem());
             personagem.setImagem(personagemExistente.getImagem());
-            
+
             model.addAttribute("pessoa", personagem);
             model.addAttribute("pessoaId", id);
-            
+
             return "admin/personagem/form";
         } catch (RuntimeException e) {
             redirectAttributes.addFlashAttribute("erro", "Personagem não encontrada");
             return "redirect:/admin/personagem";
         }
     }
-
 
     @PostMapping("/atualizar/{id}")
     public String atualizarPersonagem(
@@ -96,7 +95,7 @@ public class AdminPersonagemWebController {
         return "redirect:/admin/personagem";
     }
 
-     @GetMapping
+    @GetMapping
     public String listarPessoas(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -106,7 +105,7 @@ public class AdminPersonagemWebController {
             Model model) {
 
         String ordenarCampo = (ordenar == null || ordenar.isBlank()) ? "personagemId" : ordenar;
-        
+
         Sort.Direction direction = direcao.equalsIgnoreCase("asc")
                 ? Sort.Direction.ASC
                 : Sort.Direction.DESC;
@@ -114,7 +113,7 @@ public class AdminPersonagemWebController {
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, ordenarCampo));
 
         Page<PersonagemRespostaDTO> personagemPage = personagemService.listarPessoasComFiltros(
-                nomePersonagem ,ordenarCampo, direcao, pageable);
+                nomePersonagem, ordenarCampo, direcao, pageable);
 
         model.addAttribute("personagemPage", personagemPage);
         model.addAttribute("personagem", personagemPage.getContent());
