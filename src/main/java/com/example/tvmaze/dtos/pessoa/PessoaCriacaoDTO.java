@@ -7,7 +7,6 @@ import com.example.tvmaze.models.vo.Imagem;
 
 public class PessoaCriacaoDTO {
 
-    private Integer externoId;
 
     private String nome;
 
@@ -16,14 +15,6 @@ public class PessoaCriacaoDTO {
     private Imagem imagem;
 
     public PessoaCriacaoDTO() {
-    }
-
-    public Integer getExternoId() {
-        return externoId;
-    }
-
-    public void setExternoId(Integer externoId) {
-        this.externoId = externoId;
     }
 
     public String getNome() {

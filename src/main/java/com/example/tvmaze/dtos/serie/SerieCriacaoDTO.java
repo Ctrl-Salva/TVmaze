@@ -7,7 +7,6 @@ import com.example.tvmaze.models.vo.Imagem;
 
 
 public class SerieCriacaoDTO {
-    private Integer externoId;
     private String nome;
     private String linguagem;
     private String sinopse;
@@ -20,13 +19,7 @@ public class SerieCriacaoDTO {
 
     public SerieCriacaoDTO(){}
 
-    public Integer getExternoId() {
-        return externoId;
-    }
-
-    public void setExternoId(Integer externoId) {
-        this.externoId = externoId;
-    }
+    
 
     public String getNome() {
         return nome;

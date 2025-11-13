@@ -37,7 +37,6 @@ public class PessoaRestController {
 
     @PostMapping
     public Pessoa salvar(@RequestBody PessoaCriacaoDTO dto){
-
         return pessoaService.criarPessoa(dto);
     }
 
