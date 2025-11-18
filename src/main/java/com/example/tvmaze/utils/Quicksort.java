@@ -6,26 +6,26 @@ import com.example.tvmaze.models.Serie;
 
 public class Quicksort {
 
-    public static void quickSort(List<Serie> list, int low, int high) {
-        if (low < high) {
-            int p = partition(list, low, high);
-            quickSort(list, low, p - 1);
-            quickSort(list, p + 1, high);
+    public static void quickSort(List<Serie> list, int baixo, int alto) {
+        if (baixo < alto) {
+            int p = partition(list, baixo, alto);
+            quickSort(list, baixo, p - 1);
+            quickSort(list, p + 1, alto);
         }
     }
 
-    private static int partition(List<Serie> list, int low, int high) {
-        Serie pivot = list.get(high);
-        int i = low - 1;
+    private static int partition(List<Serie> list, int baixo, int alto) {
+        Serie pivot = list.get(alto);
+        int i = baixo - 1;
 
-        for (int j = low; j < high; j++) {
+        for (int j = baixo; j < alto; j++) {
             if (compareSeries(list.get(j), pivot) > 0) { // decrescente por nota
                 i++;
                 swap(list, i, j);
             }
         }
 
-        swap(list, i + 1, high);
+        swap(list, i + 1, alto);
         return i + 1;
     }
 
@@ -35,7 +35,7 @@ public class Quicksort {
         list.set(j, temp);
     }
 
-    // 🧠 Critério de comparação
+    // Critério de comparação
     private static int compareSeries(Serie a, Serie b) {
         int cmp = Double.compare(a.getNota() == null ? 0.0 : a.getNota(),
                                  b.getNota() == null ? 0.0 : b.getNota());
